@@ -7,11 +7,14 @@
 #define PCE_MAIN_WINDOW_HPP
 
 
+#include "graphics_manager.hpp"
+
 #include <QMainWindow>
 
 
 namespace Ui
 {class main_window;}
+
 
 namespace pce
 {
@@ -19,11 +22,17 @@ namespace pce
 	{
 		Q_OBJECT
 
+		// ui
 		Ui::main_window* m_ui;
+		
+		graphics_manager m_graphicsmgr;
 
 	public:
 		explicit main_window(QWidget* parent = nullptr);
+		virtual ~main_window();
 
+	private:
+		void init();
 	};
 }
 
