@@ -16,11 +16,19 @@ QMAKE_CXXFLAGS += -std=c++1y -Wno-deprecated-register
 TARGET = pixelcat-editor
 TEMPLATE = app
 
-INCLUDEPATH +=	include/
+INCLUDEPATH +=	include/ \
+		../external/mlk/include/
 
 SOURCES	    +=	src/pce/main.cpp \
-		src/pce/main_window.cpp
+		src/pce/main_window.cpp \
+		src/pce/edit_area.cpp \
+		src/pce/graphics_manager.cpp
 
-HEADERS	    +=	include/pce/main_window.hpp
+HEADERS	    +=	include/pce/main_window.hpp \
+		include/pce/edit_area.hpp \
+		include/pce/graphics_manager.hpp \
+		include/pce/graphicslist_widget.hpp
 
 FORMS	    +=	main_window.ui
+
+RESOURCES   +=	assets.qrc
