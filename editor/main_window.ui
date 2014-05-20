@@ -7,15 +7,75 @@
     <x>0</x>
     <y>0</y>
     <width>1265</width>
-    <height>698</height>
+    <height>745</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>main_window</string>
+   <string>Pixelcat Editor</string>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="pce::edit_area" name="w_edit_area" native="true">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>60</y>
+      <width>991</width>
+      <height>661</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="pce::graphicslist_widget" name="lw_tilesets">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>197</width>
+      <height>661</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>40</y>
+      <width>111</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Loaded Graphics</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>40</y>
+      <width>111</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Edit Area</string>
+    </property>
+   </widget>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>pce::edit_area</class>
+   <extends>QWidget</extends>
+   <header location="global">pce/edit_area.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>pce::graphicslist_widget</class>
+   <extends>QListWidget</extends>
+   <header location="global">pce/graphicslist_widget.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
