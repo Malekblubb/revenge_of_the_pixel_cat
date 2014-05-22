@@ -23,7 +23,7 @@ namespace pce
 		QWidget{parent},
 		m_graphic_preview_active{false},
 		m_mouse_pressed{false},
-		m_selected{false}
+		m_select_mode{select_mode::none}
 	{this->init();}
 	
 	
@@ -40,6 +40,7 @@ namespace pce
 	void edit_area::key_released(QKeyEvent* ev)
 	{this->keyReleaseEvent(ev);}
 	
+	
 	void edit_area::init()
 	{
 		// set focus policy
@@ -51,6 +52,17 @@ namespace pce
 		// set stylesheet
 		this->setStyleSheet("background-image:url(://assets/checker.png);");
 	}
+	
+	
+	void edit_area::reset_select_mode() noexcept
+	{m_select_mode = select_mode::none;}
+	
+	bool edit_area::is_select_mode(select_mode mode) const noexcept
+	{return m_select_mode == mode;}
+	
+	bool edit_area::is_select_mode_any() const noexcept
+	{return m_select_mode != select_mode::none;}
+	
 	
 	void edit_area::paintEvent(QPaintEvent*)
 	{
@@ -72,7 +84,7 @@ namespace pce
 		// draw selected shape
 		p.setBrush({{0, 0, 0, 0}});
 		p.drawRect(m_selected_rect);
-		if(current_img != nullptr)
+		if((current_img != nullptr) && this->is_select_mode(select_mode::preview))
 			p.drawImage(m_selected_rect, *current_img, m_source_selected_rect);
 		
 		std::cout << "repaint" << std::endl;
@@ -114,7 +126,7 @@ namespace pce
 	void edit_area::mousePressEvent(QMouseEvent* ev)
 	{
 		m_mouse_pressed = true;
-		m_selected = false;
+		this->reset_select_mode();
 		
 		m_selected_rect.setX(mlk::math::round_to(ev->x(), 8));
 		m_selected_rect.setY(mlk::math::round_to(ev->y(), 8));
@@ -126,6 +138,7 @@ namespace pce
 		m_source_selected_rect.setWidth(0);
 		m_source_selected_rect.setHeight(0);
 		this->repaint();
+		ev->accept();
 	}
 	
 	void edit_area::mouseMoveEvent(QMouseEvent* ev)
@@ -137,16 +150,22 @@ namespace pce
 		}
 		else
 		{
-			if(m_selected) // why need i "-1" here ??
+			if(this->is_select_mode_any()) // why need i "-1" here ??
 				m_selected_rect.setCoords(ev->x(), ev->y(), ev->x() + m_selected_rect.width() - 1, ev->y() + m_selected_rect.height() - 1);
 		}
 		this->repaint();
+		ev->accept();
 	}
 	
-	void edit_area::mouseReleaseEvent(QMouseEvent* ev)
+	void edit_area::mouseReleaseEvent(QMouseEvent*)
 	{
 		m_mouse_pressed = false;
-		m_selected = true;
+		
+		// change select mode
+		if(m_graphic_preview_active)
+			m_select_mode = select_mode::preview;
+		else
+			m_select_mode = select_mode::edit;
 		
 		m_source_selected_rect.setWidth(m_selected_rect.width());
 		m_source_selected_rect.setHeight(m_selected_rect.height());
