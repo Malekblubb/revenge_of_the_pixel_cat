@@ -25,6 +25,10 @@ namespace pce
 
 	void main_window::init()
 	{
+		// init all pointers
+		m_ui->w_edit_area->set_graphicsmgr(&m_graphicsmgr);
+		m_ui->w_edit_area->set_ui(m_ui);
+		
 		// connect
 		// send key input from list widget to edit area
 		this->connect(m_ui->lw_tilesets, SIGNAL(key_pressed(QKeyEvent*)), m_ui->w_edit_area, SLOT(key_pressed(QKeyEvent*)));
