@@ -36,7 +36,7 @@ namespace pce
 	
 	void edit_area::key_pressed(QKeyEvent* ev)
 	{this->keyPressEvent(ev);}
-
+	
 	void edit_area::key_released(QKeyEvent* ev)
 	{this->keyReleaseEvent(ev);}
 	
@@ -45,7 +45,7 @@ namespace pce
 	{
 		// set focus policy
 		this->setFocusPolicy(Qt::StrongFocus);
-	
+		
 		// set mousetracking
 		this->setMouseTracking(true);
 		
@@ -68,9 +68,9 @@ namespace pce
 	{
 		// draw the stylsheet
 		QStyleOption opt;
-	    opt.init(this);
+		opt.init(this);
 		QPainter p{this};
-	    this->style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+		this->style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 		
 		// get current selected image
 		const QImage* current_img{nullptr};
@@ -81,9 +81,19 @@ namespace pce
 		if(m_graphic_preview_active && m_ui->lw_tilesets->currentIndex().row() != -1)
 			p.drawImage(QPoint{0, 0}, *current_img);
 		
-		// draw selected shape
-		p.setBrush({{0, 0, 0, 0}});
-		p.drawRect(m_selected_rect);
+		if(this->is_select_mode_any())
+		{
+			// draw selected shape
+			p.setBrush({{255, 255, 255, 100}});
+			p.setPen(Qt::white);
+			p.drawRect(m_selected_rect);
+			
+			// draw info text
+			p.setPen({0, 0, 0});
+			auto w(m_selected_rect.width()), h(m_selected_rect.height());
+			p.drawText(QPoint{m_selected_rect.x() + 5, m_selected_rect.y() + 13}, QString{"w: %1(%2), h: %3(%4)"}.arg(w / 64).arg(w).arg(h / 64).arg(h));
+		}
+		
 		if((current_img != nullptr) && this->is_select_mode(select_mode::preview))
 			p.drawImage(m_selected_rect, *current_img, m_source_selected_rect);
 		
@@ -128,8 +138,8 @@ namespace pce
 		m_mouse_pressed = true;
 		this->reset_select_mode();
 		
-		m_selected_rect.setX(mlk::math::round_to(ev->x(), 8));
-		m_selected_rect.setY(mlk::math::round_to(ev->y(), 8));
+		m_selected_rect.setX(mlk::math::round_to(ev->x(), 64));
+		m_selected_rect.setY(mlk::math::round_to(ev->y(), 64));
 		m_selected_rect.setWidth(0);
 		m_selected_rect.setHeight(0);
 		
@@ -145,8 +155,9 @@ namespace pce
 	{
 		if(m_mouse_pressed)
 		{
-			m_selected_rect.setWidth(mlk::math::round_to(ev->x() - m_selected_rect.x(), 8));
-			m_selected_rect.setHeight(mlk::math::round_to(ev->y() - m_selected_rect.y(), 8));
+			m_select_mode = select_mode::selecting;
+			m_selected_rect.setWidth(mlk::math::round_to(ev->x() - m_selected_rect.x(), 64));
+			m_selected_rect.setHeight(mlk::math::round_to(ev->y() - m_selected_rect.y(), 64));
 		}
 		else
 		{
@@ -169,5 +180,11 @@ namespace pce
 		
 		m_source_selected_rect.setWidth(m_selected_rect.width());
 		m_source_selected_rect.setHeight(m_selected_rect.height());
+		
+		// reset invalid size
+		if(m_selected_rect.width() == 0 || m_selected_rect.height() == 0)
+			m_select_mode = select_mode::none;
+		
+		this->repaint();
 	}
 }
