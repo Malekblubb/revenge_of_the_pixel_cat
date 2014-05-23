@@ -34,6 +34,11 @@ namespace pce
 		this->connect(m_ui->lw_tilesets, SIGNAL(key_pressed(QKeyEvent*)), m_ui->w_edit_area, SLOT(key_pressed(QKeyEvent*)));
 		this->connect(m_ui->lw_tilesets, SIGNAL(key_released(QKeyEvent*)), m_ui->w_edit_area, SLOT(key_released(QKeyEvent*)));
 		
+		// grid
+		this->connect(m_ui->cb_showgrid, SIGNAL(toggled(bool)), m_ui->w_edit_area, SLOT(grid_state_changed(bool)));
+		this->connect(m_ui->sb_grid_x, SIGNAL(valueChanged(int)), m_ui->w_edit_area, SLOT(recalc_grid_requested(int)));
+		this->connect(m_ui->sb_grid_y, SIGNAL(valueChanged(int)), m_ui->w_edit_area, SLOT(recalc_grid_requested(int)));
+		
 		// add image names to list
 		for(const auto& a : m_graphicsmgr.images())
 			m_ui->lw_tilesets->addItem(a.first.c_str());
