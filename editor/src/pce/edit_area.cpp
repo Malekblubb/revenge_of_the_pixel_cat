@@ -21,9 +21,10 @@ namespace pce
 {	
 	edit_area::edit_area(QWidget* parent) :
 		QWidget{parent},
+		m_select_mode{select_mode::none},
 		m_graphic_preview_active{false},
 		m_mouse_pressed{false},
-		m_select_mode{select_mode::none}
+		m_grid_active{false}
 	{this->init();}
 	
 	
@@ -40,9 +41,23 @@ namespace pce
 	void edit_area::key_released(QKeyEvent* ev)
 	{this->keyReleaseEvent(ev);}
 	
+	void edit_area::grid_state_changed(bool b)
+	{
+		m_grid_active = b;
+		if(b)
+			this->recalc_grid();
+		this->repaint();
+	}
+	
+	void edit_area::recalc_grid_requested(int)
+	{
+		this->recalc_grid();
+		this->repaint();
+	}
+	
 	
 	void edit_area::init()
-	{
+	{		
 		// set focus policy
 		this->setFocusPolicy(Qt::StrongFocus);
 		
@@ -62,6 +77,17 @@ namespace pce
 	
 	bool edit_area::is_select_mode_any() const noexcept
 	{return m_select_mode != select_mode::none;}
+	
+	
+	void edit_area::recalc_grid()
+	{
+		m_grid_lines.clear();
+		auto sizex(m_ui->sb_grid_x->value()), sizey(m_ui->sb_grid_y->value());
+		for(auto i(sizex); i < m_ui->w_edit_area->width(); i += sizex)
+			m_grid_lines.push_back({i, 0, i, m_ui->w_edit_area->height()});
+		for(auto i(sizey); i < m_ui->w_edit_area->height(); i += sizey)
+			m_grid_lines.push_back({0, i, m_ui->w_edit_area->width(), i});
+	}
 	
 	
 	void edit_area::paintEvent(QPaintEvent*)
@@ -91,11 +117,18 @@ namespace pce
 			// draw info text
 			p.setPen({0, 0, 0});
 			auto w(m_selected_rect.width()), h(m_selected_rect.height());
-			p.drawText(QPoint{m_selected_rect.x() + 5, m_selected_rect.y() + 13}, QString{"w: %1(%2), h: %3(%4)"}.arg(w / 64).arg(w).arg(h / 64).arg(h));
+			p.drawText(QPoint{m_selected_rect.x(), m_selected_rect.y()}, QString{"w: %1(%2), h: %3(%4)"}.arg(w / 64).arg(w).arg(h / 64).arg(h));
 		}
 		
 		if((current_img != nullptr) && this->is_select_mode(select_mode::preview))
 			p.drawImage(m_selected_rect, *current_img, m_source_selected_rect);
+		
+		// draw the grid
+		if(m_grid_active)
+		{
+			p.setPen(Qt::red);
+			p.drawLines(m_grid_lines);
+		}
 		
 		std::cout << "repaint" << std::endl;
 		

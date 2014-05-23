@@ -8,6 +8,7 @@
 
 
 #include <QRect>
+#include <QVector>
 #include <QWidget>
 
 
@@ -28,11 +29,17 @@ namespace pce
 	{
 		Q_OBJECT
 
+		// selection
 		QRect m_selected_rect;
 		QRect m_source_selected_rect;
+		select_mode m_select_mode;
+		
+		// grid
+		QVector<QLine> m_grid_lines;
+		
 		bool m_graphic_preview_active;
 		bool m_mouse_pressed;
-		select_mode m_select_mode;
+		bool m_grid_active;
 		
 		class graphics_manager* m_graphicsmgr;
 		Ui::main_window* m_ui;
@@ -49,6 +56,10 @@ namespace pce
 		void key_pressed(QKeyEvent* ev);
 		void key_released(QKeyEvent* ev);
 		
+		// settings slots
+		void grid_state_changed(bool b);
+		void recalc_grid_requested(int);
+		
 	private:
 		void init();
 		
@@ -56,6 +67,8 @@ namespace pce
 		void reset_select_mode() noexcept;
 		bool is_select_mode(select_mode mode) const noexcept;
 		bool is_select_mode_any() const noexcept;
+		
+		void recalc_grid();
 		
 		// events
 		void paintEvent(QPaintEvent*) override;
