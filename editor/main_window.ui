@@ -75,8 +75,8 @@
     <widget class="QCheckBox" name="cb_showgrid">
      <property name="geometry">
       <rect>
-       <x>100</x>
-       <y>64</y>
+       <x>110</x>
+       <y>61</y>
        <width>85</width>
        <height>20</height>
       </rect>
@@ -153,6 +153,22 @@
      </property>
      <property name="text">
       <string>Grid X:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="le_gridcolor">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>60</y>
+       <width>101</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="inputMask">
+      <string>HHHHHH;#</string>
+     </property>
+     <property name="placeholderText">
+      <string>Grid color (hex)</string>
      </property>
     </widget>
    </widget>
