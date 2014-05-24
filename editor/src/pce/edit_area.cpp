@@ -168,18 +168,33 @@ namespace pce
 	
 	void edit_area::mousePressEvent(QMouseEvent* ev)
 	{
-		m_mouse_pressed = true;
 		this->reset_select_mode();
 		
-		m_selected_rect.setX(mlk::math::round_to(ev->x(), 64));
-		m_selected_rect.setY(mlk::math::round_to(ev->y(), 64));
-		m_selected_rect.setWidth(0);
-		m_selected_rect.setHeight(0);
+		if(ev->button() == Qt::LeftButton)
+		{
+			m_mouse_pressed = true;
+			
+			m_selected_rect.setX(mlk::math::round_to(ev->x(), 64));
+			m_selected_rect.setY(mlk::math::round_to(ev->y(), 64));
+			m_selected_rect.setWidth(64);
+			m_selected_rect.setHeight(64);
+			
+			m_source_selected_rect.setX(m_selected_rect.x());
+			m_source_selected_rect.setY(m_selected_rect.y());
+			m_source_selected_rect.setWidth(m_selected_rect.width());
+			m_source_selected_rect.setHeight(m_selected_rect.height());
+		}
+		else
+		{
+			m_mouse_pressed = false;
+			
+			m_selected_rect.setWidth(0);
+			m_selected_rect.setHeight(0);
+			
+			m_source_selected_rect.setWidth(0);
+			m_source_selected_rect.setHeight(0);
+		}
 		
-		m_source_selected_rect.setX(m_selected_rect.x());
-		m_source_selected_rect.setY(m_selected_rect.y());
-		m_source_selected_rect.setWidth(0);
-		m_source_selected_rect.setHeight(0);
 		this->repaint();
 		ev->accept();
 	}
