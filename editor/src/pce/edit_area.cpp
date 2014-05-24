@@ -204,8 +204,11 @@ namespace pce
 		if(m_mouse_pressed)
 		{
 			m_select_mode = select_mode::selecting;
-			m_selected_rect.setWidth(mlk::math::round_to(ev->x() - m_selected_rect.x(), 64));
-			m_selected_rect.setHeight(mlk::math::round_to(ev->y() - m_selected_rect.y(), 64));
+			auto w(mlk::math::round_to(ev->x() - m_selected_rect.x(), 64)), h(mlk::math::round_to(ev->y() - m_selected_rect.y(), 64));
+			w = w < 0 ? -w : w;
+			h = h < 0 ? -h : h;			
+			m_selected_rect.setWidth(w);
+			m_selected_rect.setHeight(h);
 		}
 		else
 		{
