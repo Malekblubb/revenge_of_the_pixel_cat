@@ -49,7 +49,7 @@ namespace pce
 		this->repaint();
 	}
 	
-	void edit_area::recalc_grid_requested(int)
+	void edit_area::grid_update_requested(QString)
 	{
 		this->recalc_grid();
 		this->repaint();
@@ -126,7 +126,7 @@ namespace pce
 		// draw the grid
 		if(m_grid_active)
 		{
-			p.setPen(Qt::red);
+			p.setPen(QColor{"#" + m_ui->le_gridcolor->text()});
 			p.drawLines(m_grid_lines);
 		}
 		

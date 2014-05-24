@@ -58,7 +58,7 @@ namespace pce
 		
 		// settings slots
 		void grid_state_changed(bool b);
-		void recalc_grid_requested(int);
+		void grid_update_requested(QString);
 		
 	private:
 		void init();

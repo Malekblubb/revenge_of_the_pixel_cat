@@ -36,8 +36,9 @@ namespace pce
 		
 		// grid
 		this->connect(m_ui->cb_showgrid, SIGNAL(toggled(bool)), m_ui->w_edit_area, SLOT(grid_state_changed(bool)));
-		this->connect(m_ui->sb_grid_x, SIGNAL(valueChanged(int)), m_ui->w_edit_area, SLOT(recalc_grid_requested(int)));
-		this->connect(m_ui->sb_grid_y, SIGNAL(valueChanged(int)), m_ui->w_edit_area, SLOT(recalc_grid_requested(int)));
+		this->connect(m_ui->sb_grid_x, SIGNAL(valueChanged(QString)), m_ui->w_edit_area, SLOT(grid_update_requested(QString)));
+		this->connect(m_ui->sb_grid_y, SIGNAL(valueChanged(QString)), m_ui->w_edit_area, SLOT(grid_update_requested(QString)));
+		this->connect(m_ui->le_gridcolor, SIGNAL(textChanged(QString)), m_ui->w_edit_area, SLOT(grid_update_requested(QString)));
 		
 		// add image names to list
 		for(const auto& a : m_graphicsmgr.images())
