@@ -27,7 +27,8 @@ SOURCES	    +=	src/pce/main.cpp \
 HEADERS	    +=	include/pce/main_window.hpp \
 		include/pce/edit_area.hpp \
 		include/pce/graphics_manager.hpp \
-		include/pce/graphicslist_widget.hpp
+		include/pce/graphicslist_widget.hpp \
+		include/pce/constants.hpp
 
 FORMS	    +=	main_window.ui
 

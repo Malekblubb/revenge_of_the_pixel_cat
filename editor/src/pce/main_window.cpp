@@ -3,6 +3,7 @@
 // See LICENSE for more information.
 //
 
+#include <pce/constants.hpp>
 #include <pce/main_window.hpp>
 #include "ui_main_window.h"
 
@@ -12,7 +13,7 @@ namespace pce
 	main_window::main_window(QWidget* parent) :
 		QMainWindow{parent},
 		m_ui{new Ui::main_window},
-		m_graphicsmgr{"graphics"}
+		m_graphicsmgr{constants::graphics_path()}
 	{
 		m_ui->setupUi(this);
 		this->init();
