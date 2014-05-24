@@ -195,7 +195,10 @@ namespace pce
 		else
 		{
 			if(this->is_select_mode_any()) // why need i "-1" here ??
-				m_selected_rect.setCoords(ev->x(), ev->y(), ev->x() + m_selected_rect.width() - 1, ev->y() + m_selected_rect.height() - 1);
+			{
+				auto x(mlk::math::round_to(ev->x(), 64)), y(mlk::math::round_to(ev->y(), 64));
+				m_selected_rect.setCoords(x, y, x + m_selected_rect.width() - 1, y + m_selected_rect.height() - 1);
+			}
 		}
 		this->repaint();
 		ev->accept();
