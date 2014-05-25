@@ -37,9 +37,9 @@ namespace pce
 		select_mode m_select_mode;
 		
 		// grid
-		QVector<QLine> m_grid_lines;
+		QVector<QLineF> m_grid_lines;
 		
-
+		qreal m_scale;
 		
 		bool m_graphic_preview_active;
 		bool m_mouse_pressed;
@@ -83,6 +83,7 @@ namespace pce
 		void mousePressEvent(QMouseEvent* ev) override;
 		void mouseMoveEvent(QMouseEvent* ev) override;
 		void mouseReleaseEvent(QMouseEvent*) override;
+		void wheelEvent(QWheelEvent*) override;
 	};
 }
 

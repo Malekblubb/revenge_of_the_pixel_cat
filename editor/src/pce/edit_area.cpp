@@ -7,6 +7,7 @@
 #include <pce/edit_area.hpp>
 #include <pce/graphics_manager.hpp>
 
+#include <mlk/containers/container_utl.h>
 #include <mlk/tools/math.h>
 
 #include <QBrush>
@@ -22,7 +23,7 @@ namespace pce
 	edit_area::edit_area(QWidget* parent) :
 		QWidget{parent},
 		m_select_mode{select_mode::none},
-
+		m_scale{1.},
 		m_graphic_preview_active{false},
 		m_mouse_pressed{false},
 		m_grid_active{false}
@@ -83,11 +84,13 @@ namespace pce
 	void edit_area::recalc_grid()
 	{
 		m_grid_lines.clear();
-		auto sizex(m_ui->sb_grid_x->value()), sizey(m_ui->sb_grid_y->value());
-		for(auto i(sizex); i < m_ui->w_edit_area->width(); i += sizex)
-			m_grid_lines.push_back({i, 0, i, m_ui->w_edit_area->height()});
-		for(auto i(sizey); i < m_ui->w_edit_area->height(); i += sizey)
-			m_grid_lines.push_back({0, i, m_ui->w_edit_area->width(), i});
+		qreal sizex(m_ui->sb_grid_x->value()), sizey(m_ui->sb_grid_y->value());
+		
+		for(auto i(sizex); i < m_ui->w_edit_area->width() / m_scale; i += sizex)
+			m_grid_lines.push_back({i, 0, i, m_ui->w_edit_area->height() / m_scale});
+		
+		for(auto i(sizey); i < m_ui->w_edit_area->height() / m_scale; i += sizey)
+			m_grid_lines.push_back({0, i, m_ui->w_edit_area->width() / m_scale, i});
 	}
 	
 	
@@ -100,7 +103,10 @@ namespace pce
 		opt.init(this);
 		this->style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 		
-
+		// transform
+		QTransform t;
+		t.scale(m_scale, m_scale);
+		p.setTransform(t);
 		
 		// get current selected image
 		const QImage* current_img{nullptr};
@@ -184,7 +190,7 @@ namespace pce
 			m_mouse_pressed = true;
 			
 			// start the selection
-			m_brush.selection_begin(ev->pos());
+			m_brush.selection_begin(ev->pos() / m_scale);
 			
 			// target begin == brush
 			m_target_rect = m_brush.rect();
@@ -207,13 +213,14 @@ namespace pce
 		if(m_mouse_pressed)
 		{
 			m_select_mode = select_mode::selecting;
-			m_brush.selecting(ev->pos());
+			m_brush.selecting(ev->pos() / m_scale);
 		}
 		else
 		{
 			if(this->is_select_mode_any()) // why need i "-1" here ??
 			{
-				auto x(mlk::math::round_to(ev->x(), 64)), y(mlk::math::round_to(ev->y(), 64));
+				auto x(mlk::math::round_to(static_cast<qreal>(ev->x()), 64 * m_scale) / m_scale);
+				auto y(mlk::math::round_to(static_cast<qreal>(ev->y()), 64 * m_scale) / m_scale);
 				m_target_rect.setCoords(x, y, x + m_target_rect.width() - 1, y + m_target_rect.height() - 1);
 			}
 		}
@@ -238,6 +245,17 @@ namespace pce
 		if(!m_brush.selection_end())
 			m_select_mode = select_mode::none;
 		
+		this->repaint();
+	}
+	
+	void edit_area::wheelEvent(QWheelEvent* ev)
+	{
+		auto d(ev->delta() / 8 / 15);
+		m_scale += d < 0 ? -0.1 : 0.1;
+		if(m_scale >= 1.9) m_scale = 1.9;
+		else if(m_scale <= 0.1) m_scale = 0.1;
+		
+		this->recalc_grid();
 		this->repaint();
 	}
 }
