@@ -7,6 +7,8 @@
 #define PCE_EDIT_AREA_HPP
 
 
+#include "brush.hpp"
+
 #include <QRect>
 #include <QVector>
 #include <QWidget>
@@ -30,12 +32,14 @@ namespace pce
 		Q_OBJECT
 
 		// selection
-		QRect m_selected_rect;
-		QRect m_source_selected_rect;
+		brush m_brush;
+		QRect m_target_rect;
 		select_mode m_select_mode;
 		
 		// grid
 		QVector<QLine> m_grid_lines;
+		
+
 		
 		bool m_graphic_preview_active;
 		bool m_mouse_pressed;
