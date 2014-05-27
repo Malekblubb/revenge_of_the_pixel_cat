@@ -31,6 +31,9 @@ namespace pce
 		explicit main_window(QWidget* parent = nullptr);
 		virtual ~main_window();
 
+	private slots:
+		void on_pb_reset_scale_clicked();
+		
 	private:
 		void init();
 	};

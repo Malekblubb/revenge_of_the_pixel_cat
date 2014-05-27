@@ -18,12 +18,12 @@ namespace pce
 		m_ui->setupUi(this);
 		this->init();
 	}
-
+	
 	main_window::~main_window()
 	{
 		delete m_ui;
 	}
-
+	
 	void main_window::init()
 	{
 		// init all pointers
@@ -41,8 +41,17 @@ namespace pce
 		this->connect(m_ui->sb_grid_y, SIGNAL(valueChanged(QString)), m_ui->w_edit_area, SLOT(grid_update_requested(QString)));
 		this->connect(m_ui->le_gridcolor, SIGNAL(textChanged(QString)), m_ui->w_edit_area, SLOT(grid_update_requested(QString)));
 		
+		// scale
+		this->connect(m_ui->sb_scale, SIGNAL(valueChanged(int)), m_ui->w_edit_area, SLOT(scale_change_requested(int)));
+		
 		// add image names to list
 		for(const auto& a : m_graphicsmgr.images())
 			m_ui->lw_tilesets->addItem(a.first.c_str());
+	}
+	
+	// custom slots
+	void main_window::on_pb_reset_scale_clicked()
+	{
+		m_ui->w_edit_area->scale_change_requested(100);
 	}
 }

@@ -57,6 +57,14 @@ namespace pce
 		this->repaint();
 	}
 	
+	void edit_area::scale_change_requested(int i)
+	{
+		m_scale = i % 10 == 0 ? static_cast<qreal>(i) / 100 : 1.f;
+		m_ui->sb_scale->setValue(m_scale * 100);
+		this->recalc_grid();
+		this->repaint();
+	}
+	
 	
 	void edit_area::init()
 	{		
@@ -255,7 +263,6 @@ namespace pce
 		if(m_scale >= 1.9) m_scale = 1.9;
 		else if(m_scale <= 0.1) m_scale = 0.1;
 		
-		this->recalc_grid();
-		this->repaint();
+		this->scale_change_requested(m_scale * 100);
 	}
 }
