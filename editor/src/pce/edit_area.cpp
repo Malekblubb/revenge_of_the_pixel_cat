@@ -221,7 +221,7 @@ namespace pce
 			{
 				auto x(mlk::math::round_to(static_cast<qreal>(ev->x()), 64 * m_scale) / m_scale);
 				auto y(mlk::math::round_to(static_cast<qreal>(ev->y()), 64 * m_scale) / m_scale);
-				m_target_rect.setCoords(x, y, x + m_target_rect.width() - 1, y + m_target_rect.height() - 1);
+				m_target_rect.setCoords(x, y, x + m_brush.rect().width() - 1, y + m_brush.rect().height() - 1);
 			}
 		}
 		this->repaint();
