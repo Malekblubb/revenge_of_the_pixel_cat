@@ -191,21 +191,26 @@ namespace pce
 	
 	void edit_area::mousePressEvent(QMouseEvent* ev)
 	{
-		this->reset_select_mode();
+		ev->accept();
 		
 		if(ev->button() == Qt::LeftButton)
 		{
-			m_mouse_pressed = true;
-			
-			// start the selection
-			m_brush.selection_begin(ev->pos() / m_scale);
-			
-			// target begin == brush
-			m_target_rect = m_brush.rect();
+			if(this->is_select_mode(select_mode::none))
+			{
+				m_mouse_pressed = true;
+				m_select_mode = select_mode::selecting;
+				
+				// start the selection
+				m_brush.selection_begin(ev->pos() / m_scale);
+				
+				// target begin == brush
+				m_target_rect = m_brush.rect();
+			}
 		}
-		else
+		else if(ev->button() == Qt::RightButton)
 		{
 			m_mouse_pressed = false;
+			m_select_mode = select_mode::abort;
 			
 			m_brush.reset();
 			m_target_rect.setWidth(0);
@@ -213,16 +218,14 @@ namespace pce
 		}
 		
 		this->repaint();
-		ev->accept();
 	}
 	
 	void edit_area::mouseMoveEvent(QMouseEvent* ev)
 	{
+		ev->accept();
+		
 		if(m_mouse_pressed)
-		{
-			m_select_mode = select_mode::selecting;
 			m_brush.selecting(ev->pos() / m_scale);
-		}
 		else
 		{
 			if(this->is_select_mode_any()) // why need i "-1" here ??
@@ -232,32 +235,38 @@ namespace pce
 				m_target_rect.setCoords(x, y, x + m_brush.rect().width() - 1, y + m_brush.rect().height() - 1);
 			}
 		}
+		
 		this->repaint();
-		ev->accept();
 	}
 	
 	void edit_area::mouseReleaseEvent(QMouseEvent*)
-	{
+	{		
 		m_mouse_pressed = false;
 		
-		// change select mode
-		if(m_graphic_preview_active)
-			m_select_mode = select_mode::preview;
-		else
-			m_select_mode = select_mode::edit;
-		
-		m_target_rect.setWidth(m_brush.rect().width());
-		m_target_rect.setHeight(m_brush.rect().height());
-		
-		// reset invalid size
-		if(!m_brush.selection_end())
-			m_select_mode = select_mode::none;
+		if(this->is_select_mode(select_mode::selecting) || this->is_select_mode(select_mode::abort))
+		{
+			
+			// change select mode
+			if(m_graphic_preview_active)
+				m_select_mode = select_mode::preview;
+			else
+				m_select_mode = select_mode::edit;
+			
+			m_target_rect.setWidth(m_brush.rect().width());
+			m_target_rect.setHeight(m_brush.rect().height());
+			
+			// reset invalid size
+			if(!m_brush.selection_end())
+				m_select_mode = select_mode::none;
+		}
 		
 		this->repaint();
 	}
 	
 	void edit_area::wheelEvent(QWheelEvent* ev)
 	{
+		ev->accept();
+		
 		auto d(ev->delta() / 8 / 15);
 		m_scale += d < 0 ? -0.1 : 0.1;
 		if(m_scale >= 1.9) m_scale = 1.9;

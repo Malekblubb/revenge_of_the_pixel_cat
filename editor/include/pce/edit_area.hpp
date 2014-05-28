@@ -22,6 +22,7 @@ namespace pce
 	enum class select_mode : char
 	{
 		none,
+		abort,
 		selecting,	// currently selecting
 		preview,	// selection in the preview-area
 		edit		// selection in the edit-area
