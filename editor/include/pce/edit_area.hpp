@@ -8,6 +8,7 @@
 
 
 #include "brush.hpp"
+#include "layer.hpp"
 
 #include <QRect>
 #include <QVector>
@@ -41,6 +42,9 @@ namespace pce
 		QVector<QLineF> m_grid_lines;
 		
 		qreal m_scale;
+		
+		// layers
+		QVector<layer> m_layers;
 		
 		bool m_graphic_preview_active;
 		bool m_mouse_pressed;

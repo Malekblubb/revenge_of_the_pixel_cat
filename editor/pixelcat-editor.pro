@@ -24,7 +24,8 @@ SOURCES	    +=	src/pce/main.cpp \
 		src/pce/edit_area.cpp \
 		src/pce/graphics_manager.cpp \
 		src/pce/start_checker.cpp \
-		src/pce/brush.cpp
+		src/pce/brush.cpp \
+		src/pce/layer.cpp
 
 HEADERS	    +=	include/pce/main_window.hpp \
 		include/pce/edit_area.hpp \
@@ -32,7 +33,9 @@ HEADERS	    +=	include/pce/main_window.hpp \
 		include/pce/graphicslist_widget.hpp \
 		include/pce/constants.hpp \
 		include/pce/start_checker.hpp \
-		include/pce/brush.hpp
+		include/pce/brush.hpp \
+		include/pce/layer.hpp \
+		include/pce/tile.hpp
 
 FORMS	    +=	main_window.ui
 
