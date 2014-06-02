@@ -42,12 +42,16 @@ namespace pce
 		QVector<QLineF> m_grid_lines;
 		
 		qreal m_scale;
+		const QImage* m_current_img;
 		
 		// layers
 		QVector<layer> m_layers;
 		
+		QPointF m_last_mousepos;
+		
 		bool m_graphic_preview_active;
 		bool m_mouse_pressed;
+		bool m_mousewheel_pressed;
 		bool m_grid_active;
 		
 		class graphics_manager* m_graphicsmgr;
@@ -77,6 +81,8 @@ namespace pce
 		void reset_select_mode() noexcept;
 		bool is_select_mode(select_mode mode) const noexcept;
 		bool is_select_mode_any() const noexcept;
+		
+		QPoint validate_mousepos(int x, int y) const noexcept;
 		
 		void recalc_grid();
 		

@@ -79,9 +79,9 @@
     <property name="geometry">
      <rect>
       <x>215</x>
-      <y>29</y>
+      <y>31</y>
       <width>936</width>
-      <height>678</height>
+      <height>671</height>
      </rect>
     </property>
    </widget>
@@ -359,15 +359,15 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
+   <class>pce::graphicslist_widget</class>
+   <extends>QListWidget</extends>
+   <header location="global">pce/graphicslist_widget.hpp</header>
+  </customwidget>
+  <customwidget>
    <class>pce::edit_area</class>
    <extends>QWidget</extends>
    <header location="global">pce/edit_area.hpp</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>pce::graphicslist_widget</class>
-   <extends>QListWidget</extends>
-   <header location="global">pce/graphicslist_widget.hpp</header>
   </customwidget>
  </customwidgets>
  <resources/>

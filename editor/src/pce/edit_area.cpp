@@ -23,9 +23,12 @@ namespace pce
 	edit_area::edit_area(QWidget* parent) :
 		QWidget{parent},
 		m_select_mode{select_mode::none},
-		m_scale{1.},
+		m_scale{1.f},
+		m_current_img{nullptr},
+		m_last_mousepos{0.f, 0.f},
 		m_graphic_preview_active{false},
 		m_mouse_pressed{false},
+		m_mousewheel_pressed{false},
 		m_grid_active{false}
 	{this->init();}
 	
@@ -67,7 +70,9 @@ namespace pce
 	
 	
 	void edit_area::init()
-	{		
+	{
+		m_layers.push_back({5000,5000});
+		
 		// set focus policy
 		this->setFocusPolicy(Qt::StrongFocus);
 		
@@ -87,6 +92,16 @@ namespace pce
 	
 	bool edit_area::is_select_mode_any() const noexcept
 	{return m_select_mode != select_mode::none;}
+	
+	
+	QPoint edit_area::validate_mousepos(int x, int y) const noexcept
+	{		
+		return 
+		{
+			static_cast<int>(mlk::math::round_to(static_cast<qreal>(x /*- m_view_point.x()*/), 64 * m_scale) / m_scale),
+			static_cast<int>(mlk::math::round_to(static_cast<qreal>(y /*- m_view_point.y()*/), 64 * m_scale) / m_scale)
+		};
+	}
 	
 	
 	void edit_area::recalc_grid()
@@ -111,19 +126,44 @@ namespace pce
 		opt.init(this);
 		this->style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 		
+		
+		// ---------------------------------------------------------------
+		
+		
 		// transform
 		QTransform t;
 		t.scale(m_scale, m_scale);
 		p.setTransform(t);
+		p.save(); // save the painter before translating
 		
+		t.translate(m_layers[0].position().x(), m_layers[0].position().y());
+		p.setTransform(t);
+		
+		
+		// -------- draw ON translation --------
+		// draw layers outrect
+		p.setPen(Qt::red);
+		p.setBrush(QColor{0, 0, 0, 0});
+		p.drawRect(m_layers[0].drawarea().rect());
+			
+		// draw layers
+		for(const auto& layer : m_layers)
+			p.drawImage(QPoint{0, 0}, layer.drawarea());
+		
+		
+		// -------- draw WITHOUT translation --------
+		p.restore();
+
 		// get current selected image
-		const QImage* current_img{nullptr};
 		if(m_ui->lw_tilesets->currentIndex().row() != -1)
-			current_img = &m_graphicsmgr->images().at(m_ui->lw_tilesets->currentItem()->text().toStdString());
+			m_current_img = &m_graphicsmgr->images().at(m_ui->lw_tilesets->currentItem()->text().toStdString());
 		
 		// draw image preview on space key press		
 		if(m_graphic_preview_active && m_ui->lw_tilesets->currentIndex().row() != -1)
-			p.drawImage(QPoint{0, 0}, *current_img);
+			p.drawImage(QPoint{0, 0}, *m_current_img);
+		
+		
+		// ---------------------------------------------------------------
 		
 		
 		// draw selected shape
@@ -143,8 +183,12 @@ namespace pce
 			p.drawText(QPoint{m_target_rect.x(), m_target_rect.y()}, QString{"w: %1(%2), h: %3(%4)"}.arg(w / 64).arg(w).arg(h / 64).arg(h));
 		}
 		
-		if((current_img != nullptr) && this->is_select_mode(select_mode::preview))
-			p.drawImage(m_target_rect, *current_img, m_brush.rect());
+		if((m_current_img != nullptr) && this->is_select_mode(select_mode::preview))
+			p.drawImage(m_target_rect, *m_current_img, m_brush.rect());
+		
+		
+		// ---------------------------------------------------------------
+		
 		
 		// draw the grid
 		if(m_grid_active)
@@ -206,6 +250,13 @@ namespace pce
 				// target begin == brush
 				m_target_rect = m_brush.rect();
 			}
+			else
+				if(m_current_img != nullptr)
+				{
+					auto validated(this->validate_mousepos(ev->x(), ev->y()));
+					validated -= QPoint{(int)m_layers[0].position().x(), (int)m_layers[0].position().y()};
+					m_layers[0].use_brush(m_brush.rect(), *m_current_img, {validated.x(), validated.y()});
+				}
 		}
 		else if(ev->button() == Qt::RightButton)
 		{
@@ -217,6 +268,8 @@ namespace pce
 			m_target_rect.setHeight(0);
 		}
 		
+		m_mousewheel_pressed = ev->button() == Qt::MiddleButton;
+		
 		this->repaint();
 	}
 	
@@ -224,17 +277,27 @@ namespace pce
 	{
 		ev->accept();
 		
+		
 		if(m_mouse_pressed)
 			m_brush.selecting(ev->pos() / m_scale);
 		else
 		{
 			if(this->is_select_mode_any()) // why need i "-1" here ??
 			{
-				auto x(mlk::math::round_to(static_cast<qreal>(ev->x()), 64 * m_scale) / m_scale);
-				auto y(mlk::math::round_to(static_cast<qreal>(ev->y()), 64 * m_scale) / m_scale);
-				m_target_rect.setCoords(x, y, x + m_brush.rect().width() - 1, y + m_brush.rect().height() - 1);
+				auto validated(this->validate_mousepos(ev->x(), ev->y()));
+				m_target_rect.setCoords(validated.x(), validated.y(), validated.x() + m_brush.rect().width() - 1, validated.y() + m_brush.rect().height() - 1);
 			}
 		}
+		
+		if(m_mousewheel_pressed)
+		{
+//			m_view_point.setX(m_view_point.x() + (ev->posF().x() - m_last_mousepos.x()));
+//			m_view_point.setY(m_view_point.y() + (ev->posF().y() - m_last_mousepos.y()));
+			
+			m_layers[0].move(ev->posF().x() - m_last_mousepos.x(), ev->posF().y() - m_last_mousepos.y());
+		}
+		
+		m_last_mousepos = ev->posF();
 		
 		this->repaint();
 	}
@@ -259,6 +322,9 @@ namespace pce
 			if(!m_brush.selection_end())
 				m_select_mode = select_mode::none;
 		}
+	
+		
+		m_mousewheel_pressed = false;
 		
 		this->repaint();
 	}
