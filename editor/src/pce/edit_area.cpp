@@ -23,9 +23,9 @@ namespace pce
 	edit_area::edit_area(QWidget* parent) :
 		QWidget{parent},
 		m_select_mode{select_mode::none},
-		m_scale{1.f},
+		m_scale{1.},
 		m_current_img{nullptr},
-		m_last_mousepos{0.f, 0.f},
+		m_mousewheel_offset{0., 0.},
 		m_graphic_preview_active{false},
 		m_mouse_pressed{false},
 		m_mousewheel_pressed{false},
@@ -62,7 +62,7 @@ namespace pce
 	
 	void edit_area::scale_change_requested(int i)
 	{
-		m_scale = i % 10 == 0 ? static_cast<qreal>(i) / 100 : 1.f;
+		m_scale = i % 10 == 0 ? static_cast<qreal>(i) / 100 : 1.;
 		m_ui->sb_scale->setValue(m_scale * 100);
 		this->recalc_grid();
 		this->repaint();
@@ -195,8 +195,8 @@ namespace pce
 		
 		// draw "world zero point"
 		p.setPen(Qt::green);
-		p.drawText(QPointF{0.f, 320.f}, "World zero point");
-		p.drawLine(QPointF{0.f, 320.f}, QPointF{this->width() / m_scale, 320.f});
+		p.drawText(QPointF{0., 320.}, "World zero point");
+		p.drawLine(QPointF{0., 320.}, QPointF{this->width() / m_scale, 320.});
 		
 		
 		
@@ -285,6 +285,8 @@ namespace pce
 		}
 		
 		m_mousewheel_pressed = ev->button() == Qt::MiddleButton;
+		if(m_mousewheel_pressed) // calc the offset between layer and mouse for better moving
+			m_mousewheel_offset = ev->posF() - m_layers[0].position();
 		
 		this->repaint();
 	}
@@ -306,10 +308,10 @@ namespace pce
 		
 		if(m_mousewheel_pressed)
 		{
-			m_layers[0].set_position(this->validate_mousepos(ev->x(), ev->y()));
+			// mousepos - start offset = moving the layer from the start-mouse-point, not from topleft corner
+			auto newpos(ev->posF() - m_mousewheel_offset);
+			m_layers[0].set_position({mlk::math::round_to(newpos.x(), 64.), mlk::math::round_to(newpos.y(), 64.)});
 		}
-		
-		m_last_mousepos = ev->posF();
 		
 		this->repaint();
 	}

@@ -47,7 +47,7 @@ namespace pce
 		// layers
 		QVector<layer> m_layers;
 		
-		QPointF m_last_mousepos;
+		QPointF m_mousewheel_offset;
 		
 		bool m_graphic_preview_active;
 		bool m_mouse_pressed;
