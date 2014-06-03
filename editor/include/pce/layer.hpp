@@ -28,7 +28,8 @@ namespace pce
 		layer(int width, int height);
 		
 		void use_brush(const QRect& source_rect, const QImage& source_img, const QPoint& target_point);
-		void move(qreal offx, qreal offy) noexcept;		
+		void move(qreal offx, qreal offy) noexcept;
+		void set_position(const QPointF& pos) noexcept;
 		
 		const auto& drawarea() const noexcept
 		{return m_drawarea;}

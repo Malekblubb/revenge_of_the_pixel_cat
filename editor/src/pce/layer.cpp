@@ -26,5 +26,10 @@ namespace pce
 		m_position.setX(m_position.x() + offx);
 		m_position.setY(m_position.y() + offy);
 	}
+	
+	void layer::set_position(const QPointF& pos) noexcept
+	{
+		m_position = pos;
+	}
 }
 

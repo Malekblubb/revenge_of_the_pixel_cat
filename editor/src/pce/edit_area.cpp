@@ -134,28 +134,9 @@ namespace pce
 		QTransform t;
 		t.scale(m_scale, m_scale);
 		p.setTransform(t);
-		p.save(); // save the painter before translating
-		
-		t.translate(m_layers[0].position().x(), m_layers[0].position().y());
-		p.setTransform(t);
-		
-		
-		// -------- draw ON translation --------
-		// draw layers outrect
-		p.setPen(Qt::red);
-		auto rect(m_layers[0].drawarea().rect());
-		p.drawText(QPoint{rect.x(), m_layers[0].position().y() <= 10 ? 10 : rect.y()}, "Layer rect");
-		p.setBrush(QColor{0, 0, 0, 0});
-		p.drawRect(rect);
-			
-		// draw layers
-		for(const auto& layer : m_layers)
-			p.drawImage(QPoint{0, 0}, layer.drawarea());
 		
 		
 		// -------- draw WITHOUT translation --------
-		p.restore();
-
 		// get current selected image
 		if(m_ui->lw_tilesets->currentIndex().row() != -1)
 			m_current_img = &m_graphicsmgr->images().at(m_ui->lw_tilesets->currentItem()->text().toStdString());
@@ -188,9 +169,22 @@ namespace pce
 		if((m_current_img != nullptr) && this->is_select_mode(select_mode::preview))
 			p.drawImage(m_target_rect, *m_current_img, m_brush.rect());
 		
-		
+		p.save(); // save the painter before translating
 		// ---------------------------------------------------------------
 		
+		
+		// -------- draw ON translation --------
+		t.translate(m_layers[0].position().x(), m_layers[0].position().y());
+		p.setTransform(t);
+		
+		// draw layers
+		for(const auto& layer : m_layers)
+			p.drawImage(QPoint{0, 0}, layer.drawarea());
+		
+		
+		
+		// -------- draw WITHOUT translation --------
+		p.restore();
 		
 		// draw the grid
 		if(m_grid_active)
@@ -203,6 +197,21 @@ namespace pce
 		p.setPen(Qt::green);
 		p.drawText(QPointF{0.f, 320.f}, "World zero point");
 		p.drawLine(QPointF{0.f, 320.f}, QPointF{this->width() / m_scale, 320.f});
+		
+		
+		
+		// -------- draw ON translation --------
+		p.setTransform(t);
+		
+		// draw layers outrect
+		p.setPen(Qt::red);
+		auto rect(m_layers[0].drawarea().rect());
+		p.drawText(QPoint{rect.x(), m_layers[0].position().y() <= 10 ? 10 : rect.y()}, "Layer rect");
+		p.setBrush(QColor{0, 0, 0, 0});
+		p.drawRect(rect);
+		
+		
+		
 		
 		std::cout << "repaint" << std::endl;
 		
@@ -297,7 +306,7 @@ namespace pce
 		
 		if(m_mousewheel_pressed)
 		{
-			m_layers[0].move(ev->posF().x() - m_last_mousepos.x(), ev->posF().y() - m_last_mousepos.y());
+			m_layers[0].set_position(this->validate_mousepos(ev->x(), ev->y()));
 		}
 		
 		m_last_mousepos = ev->posF();
