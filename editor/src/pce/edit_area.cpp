@@ -270,7 +270,7 @@ namespace pce
 				if(m_current_img != nullptr)
 				{
 					auto validated(this->validate_mousepos(ev->x(), ev->y()));
-					validated -= QPoint{(int)m_layers[0].position().x(), (int)m_layers[0].position().y()};
+					validated -= QPoint{static_cast<int>(m_layers[0].position().x()), static_cast<int>(m_layers[0].position().y())};
 					m_layers[0].use_brush(m_brush.rect(), *m_current_img, {validated.x(), validated.y()});
 				}
 		}
