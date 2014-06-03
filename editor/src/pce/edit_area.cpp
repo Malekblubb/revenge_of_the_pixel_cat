@@ -143,8 +143,10 @@ namespace pce
 		// -------- draw ON translation --------
 		// draw layers outrect
 		p.setPen(Qt::red);
+		auto rect(m_layers[0].drawarea().rect());
+		p.drawText(QPoint{rect.x(), m_layers[0].position().y() <= 10 ? 10 : rect.y()}, "Layer rect");
 		p.setBrush(QColor{0, 0, 0, 0});
-		p.drawRect(m_layers[0].drawarea().rect());
+		p.drawRect(rect);
 			
 		// draw layers
 		for(const auto& layer : m_layers)
@@ -196,6 +198,11 @@ namespace pce
 			p.setPen(QColor{"#" + m_ui->le_gridcolor->text()});
 			p.drawLines(m_grid_lines);
 		}
+		
+		// draw "world zero point"
+		p.setPen(Qt::green);
+		p.drawText(QPointF{0.f, 320.f}, "World zero point");
+		p.drawLine(QPointF{0.f, 320.f}, QPointF{this->width() / m_scale, 320.f});
 		
 		std::cout << "repaint" << std::endl;
 		
@@ -276,7 +283,6 @@ namespace pce
 	void edit_area::mouseMoveEvent(QMouseEvent* ev)
 	{
 		ev->accept();
-		
 		
 		if(m_mouse_pressed)
 			m_brush.selecting(ev->pos() / m_scale);
