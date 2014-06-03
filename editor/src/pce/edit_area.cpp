@@ -338,6 +338,6 @@ namespace pce
 		if(m_scale >= 1.9) m_scale = 1.9;
 		else if(m_scale <= 0.1) m_scale = 0.1;
 		
-		this->scale_change_requested(m_scale * 100);
+		this->scale_change_requested(std::round(m_scale * 100));
 	}
 }
