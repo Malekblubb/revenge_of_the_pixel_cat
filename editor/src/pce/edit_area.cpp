@@ -98,8 +98,8 @@ namespace pce
 	{		
 		return 
 		{
-			static_cast<int>(mlk::math::round_to(static_cast<qreal>(x /*- m_view_point.x()*/), 64 * m_scale) / m_scale),
-			static_cast<int>(mlk::math::round_to(static_cast<qreal>(y /*- m_view_point.y()*/), 64 * m_scale) / m_scale)
+			static_cast<int>(mlk::math::round_to(static_cast<qreal>(x), 64 * m_scale) / m_scale),
+			static_cast<int>(mlk::math::round_to(static_cast<qreal>(y), 64 * m_scale) / m_scale)
 		};
 	}
 	
@@ -291,9 +291,6 @@ namespace pce
 		
 		if(m_mousewheel_pressed)
 		{
-//			m_view_point.setX(m_view_point.x() + (ev->posF().x() - m_last_mousepos.x()));
-//			m_view_point.setY(m_view_point.y() + (ev->posF().y() - m_last_mousepos.y()));
-			
 			m_layers[0].move(ev->posF().x() - m_last_mousepos.x(), ev->posF().y() - m_last_mousepos.y());
 		}
 		
