@@ -147,7 +147,7 @@
     <widget class="QSpinBox" name="sb_grid_x">
      <property name="geometry">
       <rect>
-       <x>51</x>
+       <x>56</x>
        <y>31</y>
        <width>40</width>
        <height>23</height>
@@ -169,7 +169,7 @@
     <widget class="QSpinBox" name="sb_grid_y">
      <property name="geometry">
       <rect>
-       <x>140</x>
+       <x>149</x>
        <y>31</y>
        <width>40</width>
        <height>23</height>
@@ -191,27 +191,27 @@
     <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
-       <x>100</x>
-       <y>32</y>
-       <width>38</width>
-       <height>21</height>
+       <x>104</x>
+       <y>35</y>
+       <width>41</width>
+       <height>14</height>
       </rect>
      </property>
      <property name="text">
-      <string>Grid Y:</string>
+      <string>Grid H:</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>31</y>
-       <width>38</width>
-       <height>21</height>
+       <x>7</x>
+       <y>34</y>
+       <width>44</width>
+       <height>14</height>
       </rect>
      </property>
      <property name="text">
-      <string>Grid X:</string>
+      <string>Grid W:</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="le_gridcolor">
