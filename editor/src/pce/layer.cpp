@@ -8,7 +8,7 @@
 #include <mlk/log/log.h>
 
 #include <QPainter>
-#include <iostream>
+
 
 namespace pce
 {
