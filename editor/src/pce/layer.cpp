@@ -5,6 +5,8 @@
 
 #include <pce/layer.hpp>
 
+#include <mlk/log/log.h>
+
 #include <QPainter>
 #include <iostream>
 
@@ -14,7 +16,8 @@ namespace pce
 		m_num_tiles_x{width},
 		m_num_tiles_y{height},
 		m_drawarea{width * 64, height * 64, QImage::Format_ARGB32},
-		m_position{0.f, 0.f}
+		m_position{0.f, 0.f},
+		m_tiles(width * height)
 	{ }
 	
 	void layer::use_brush(const QRect& source_rect, const QImage& source_img, const QPoint& target_point)
@@ -22,9 +25,15 @@ namespace pce
 		for(auto sy(source_rect.y()), ty(target_point.y()); sy < source_rect.height() + source_rect.y(); sy += 64, ty += 64)
 		{
 			for(auto sx(source_rect.x()), tx(target_point.x()); sx < source_rect.width() + source_rect.x(); sx += 64, tx += 64)
-			{
-				std::cout << "tile index: " << sy/64*16+sx/64 << std::endl;
-				std::cout << "target tile: " << ty/64*m_num_tiles_x+tx/64 << std::endl;
+			{				
+				auto index(((sy / 64) * 16) + (sx / 64)), target_tile(((ty / 64) * m_num_tiles_x) + (tx / 64));
+				if(static_cast<mlk::st>(target_tile) >= m_tiles.size())
+				{
+					mlk::lerr()["pce::layer"] << "wrong target_tile index. requested: " << target_tile << ", max: " << m_tiles.size() - 1;
+					continue;
+				}
+				
+				m_tiles[target_tile] = {index, 0};
 			}
 		}
 		
