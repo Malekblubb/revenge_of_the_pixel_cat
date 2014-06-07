@@ -71,7 +71,7 @@ namespace pce
 	
 	void edit_area::init()
 	{
-		m_layers.push_back({5000,5000});
+		m_layers.push_back({16,16});
 		
 		// set focus policy
 		this->setFocusPolicy(Qt::StrongFocus);
@@ -267,7 +267,7 @@ namespace pce
 				m_target_rect = m_brush.rect();
 			}
 			else
-				if(m_current_img != nullptr)
+				if(m_current_img != nullptr && this->is_select_mode(select_mode::preview))
 				{
 					auto validated(this->validate_mousepos(ev->x(), ev->y()));
 					validated -= QPoint{static_cast<int>(m_layers[0].position().x()), static_cast<int>(m_layers[0].position().y())};

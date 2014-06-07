@@ -19,6 +19,8 @@ namespace pce
 {
 	class layer
 	{
+		int m_num_tiles_x;
+		int m_num_tiles_y;
 		QImage m_drawarea;
 		QPointF m_position;
 		std::vector<tile> m_tiles;		
@@ -36,6 +38,9 @@ namespace pce
 		
 		const auto& position() const noexcept
 		{return m_position;}
+		
+	private:
+		void clear(const QPoint& from, const QPoint& to);
 	};
 }
 
