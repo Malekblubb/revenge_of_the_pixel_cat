@@ -57,9 +57,9 @@ namespace pce
 	public:
 		edit_area(QWidget* parent = nullptr);
 		
-		void set_graphicsmgr(class graphics_manager* gmgr);
-		void set_layermgr(class layer_manager* lmgr);
-		void set_ui(Ui::main_window* ui);
+		void set_graphicsmgr(class graphics_manager* gmgr) noexcept;
+		void set_layermgr(class layer_manager* lmgr) noexcept;
+		void set_ui(Ui::main_window* ui) noexcept;
 		
 	public slots:
 		// provide an interface for other widgets

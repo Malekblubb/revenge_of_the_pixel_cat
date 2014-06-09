@@ -46,7 +46,6 @@ namespace pce
 		
 	private:
 		int get_newid() noexcept;
-		
 	};
 }
 

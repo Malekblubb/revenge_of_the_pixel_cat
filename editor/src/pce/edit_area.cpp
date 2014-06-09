@@ -34,13 +34,13 @@ namespace pce
 	{this->init();}
 	
 	
-	void edit_area::set_graphicsmgr(graphics_manager* gmgr)
+	void edit_area::set_graphicsmgr(graphics_manager* gmgr) noexcept
 	{m_graphicsmgr = gmgr;}
 	
-	void edit_area::set_layermgr(layer_manager* lmgr)
+	void edit_area::set_layermgr(layer_manager* lmgr) noexcept
 	{m_layermgr = lmgr;}
 	
-	void edit_area::set_ui(Ui::main_window* ui)
+	void edit_area::set_ui(Ui::main_window* ui) noexcept
 	{m_ui = ui;}
 	
 	
