@@ -25,6 +25,7 @@ namespace pce
 		// add to layers
 		auto id(this->get_newid());
 		m_layers[id] = l;
+		m_layers[id].set_name(QString{"Layer%1"}.arg(id).toStdString());
 		
 		// add to ui
 		auto* w(new list_widget_layer_item{id});
