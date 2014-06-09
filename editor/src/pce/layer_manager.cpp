@@ -23,17 +23,28 @@ namespace pce
 	void layer_manager::add_layer(const layer& l)
 	{
 		// add to layers
-		auto index(this->get_newid());
-		m_layers[index] = l;
+		auto id(this->get_newid());
+		m_layers[id] = l;
 		
 		// add to ui
-		auto* w(new list_widget_layer_item{index});
+		auto* w(new list_widget_layer_item{id});
 		m_ui->lw_layers->addItem(w);
 	}
 	
 	void layer_manager::remove_layer(int index)
 	{
 		delete m_ui->lw_layers->item(index);
+	}
+	
+	
+	layer* layer_manager::selected_layer()
+	{
+		auto* casted(static_cast<list_widget_layer_item*>(m_ui->lw_layers->currentItem()));
+		
+		if(m_layers.empty() || m_ui->lw_layers->count() == 0 || casted == nullptr)
+			return nullptr;
+		
+		return &m_layers[casted->index()];
 	}
 	
 	

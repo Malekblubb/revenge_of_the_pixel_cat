@@ -39,6 +39,8 @@ namespace pce
 		
 		auto& layers() noexcept
 		{return m_layers;}
+
+		layer* selected_layer();
 		
 	public slots:
 		void add_layer_request();
