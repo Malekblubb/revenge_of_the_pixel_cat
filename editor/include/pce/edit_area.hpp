@@ -8,7 +8,6 @@
 
 
 #include "brush.hpp"
-#include "layer.hpp"
 
 #include <QRect>
 #include <QVector>
@@ -44,9 +43,6 @@ namespace pce
 		qreal m_scale;
 		const QImage* m_current_img;
 		
-		// layers
-		QVector<layer> m_layers;
-		
 		QPointF m_mousewheel_offset;
 		
 		bool m_graphic_preview_active;
@@ -55,12 +51,14 @@ namespace pce
 		bool m_grid_active;
 		
 		class graphics_manager* m_graphicsmgr;
+		class layer_manager* m_layermgr;
 		Ui::main_window* m_ui;
 		
 	public:
 		edit_area(QWidget* parent = nullptr);
 		
 		void set_graphicsmgr(class graphics_manager* gmgr);
+		void set_layermgr(class layer_manager* lmgr);
 		void set_ui(Ui::main_window* ui);
 		
 	public slots:

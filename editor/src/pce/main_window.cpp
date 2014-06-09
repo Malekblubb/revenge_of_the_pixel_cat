@@ -28,9 +28,14 @@ namespace pce
 	{
 		// init all pointers
 		m_ui->w_edit_area->set_graphicsmgr(&m_graphicsmgr);
+		m_ui->w_edit_area->set_layermgr(&m_layermgr);
 		m_ui->w_edit_area->set_ui(m_ui);
 		
+		m_layermgr.set_ui(m_ui);
+		
+		
 		// connect
+		// -------- EDIT AREA --------
 		// send key input from list widget to edit area
 		this->connect(m_ui->lw_tilesets, SIGNAL(key_pressed(QKeyEvent*)), m_ui->w_edit_area, SLOT(key_pressed(QKeyEvent*)));
 		this->connect(m_ui->lw_tilesets, SIGNAL(key_released(QKeyEvent*)), m_ui->w_edit_area, SLOT(key_released(QKeyEvent*)));
@@ -43,6 +48,12 @@ namespace pce
 		
 		// scale
 		this->connect(m_ui->sb_scale, SIGNAL(valueChanged(int)), m_ui->w_edit_area, SLOT(scale_change_requested(int)));
+		
+		
+		// -------- LAYER LIST --------
+		this->connect(m_ui->pb_add_layer, SIGNAL(clicked()), &m_layermgr, SLOT(add_layer_request()));
+		this->connect(m_ui->pb_remove_layer, SIGNAL(clicked()), &m_layermgr, SLOT(remove_layer_request()));
+		
 		
 		// add image names to list
 		for(const auto& a : m_graphicsmgr.images())
