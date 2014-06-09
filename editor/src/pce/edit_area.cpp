@@ -171,25 +171,6 @@ namespace pce
 		if((m_current_img != nullptr) && this->is_select_mode(select_mode::preview))
 			p.drawImage(m_target_rect, *m_current_img, m_brush.rect());
 		
-		p.save(); // save the painter before translating
-		// ---------------------------------------------------------------
-		
-		
-		// -------- draw ON translation --------
-		if(m_layermgr->selected_layer() != nullptr)
-		{
-			t.translate(m_layermgr->selected_layer()->position().x(), m_layermgr->selected_layer()->position().y());
-			p.setTransform(t);
-		}
-		
-		// draw layers
-		for(const auto& layer : m_layermgr->layers())
-			p.drawImage(QPoint{0, 0}, layer.second.drawarea());
-		
-		
-		
-		// -------- draw WITHOUT translation --------
-		p.restore();
 		
 		// draw the grid
 		if(m_grid_active)
@@ -205,15 +186,22 @@ namespace pce
 		
 		
 		
-		// -------- draw ON translation --------
-		p.setTransform(t);
-		
-		// draw layers outrect
-		if(m_layermgr->selected_layer() != nullptr)
+		// -------- draw ON translation --------		
+		// draw layers
+		for(const auto& layer : m_layermgr->layers())
 		{
+			// copy the transform for each layer
+			auto tc(t);
+			tc.translate(layer.second.position().x(), layer.second.position().y());
+			p.setTransform(tc);
+			
+			// draw layer content
+			p.drawImage(QPoint{0, 0}, layer.second.drawarea());
+			
+			// draw layer outrect
 			p.setPen(Qt::red);
-			auto rect(m_layermgr->selected_layer()->drawarea().rect());
-			p.drawText(QPoint{rect.x(), m_layermgr->selected_layer()->position().y() <= 10 ? 10 : rect.y()}, "Layer rect");
+			auto rect(layer.second.drawarea().rect());
+			p.drawText(QPoint{rect.x(), layer.second.position().y() <= 10 ? 10 : rect.y()}, "Layer rect");
 			p.setBrush(QColor{0, 0, 0, 0});
 			p.drawRect(rect);
 		}
