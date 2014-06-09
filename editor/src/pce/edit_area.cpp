@@ -199,7 +199,10 @@ namespace pce
 			p.drawImage(QPoint{0, 0}, layer.second.drawarea());
 			
 			// draw layer outrect
-			p.setPen(Qt::red);
+			if(layer.first == m_layermgr->selected_id())
+				p.setPen(Qt::blue);
+			else
+				p.setPen(Qt::red);
 			auto rect(layer.second.drawarea().rect());
 			p.drawText(QPoint{rect.x(), layer.second.position().y() <= 10 ? 10 : rect.y()}, layer.second.name().c_str());
 			p.setBrush(QColor{0, 0, 0, 0});
