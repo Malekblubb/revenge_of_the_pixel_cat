@@ -19,6 +19,9 @@ namespace pce
 			static std::string s{"graphics"};
 			return s;
 		}
+		
+		inline int default_layersize()
+		{return 16;}
 	}
 }
 
