@@ -17,7 +17,8 @@ namespace pce
 		m_num_tiles_y{height},
 		m_drawarea{width * 64, height * 64, QImage::Format_ARGB32},
 		m_position{0.f, 0.f},
-		m_tiles(width * height)
+		m_tiles(width * height),
+		m_name{"Layer#"}
 	{ }
 	
 	void layer::use_brush(const QRect& source_rect, const QImage& source_img, const QPoint& target_point)
@@ -49,10 +50,12 @@ namespace pce
 		m_position.setY(m_position.y() + offy);
 	}
 	
+	
 	void layer::set_position(const QPointF& pos) noexcept
-	{
-		m_position = pos;
-	}
+	{m_position = pos;}
+	
+	void layer::set_name(const std::string &name) noexcept
+	{m_name = name;}
 	
 	
 	void layer::clear(const QPoint& from, const QPoint& to)
