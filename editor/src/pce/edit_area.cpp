@@ -201,7 +201,7 @@ namespace pce
 			// draw layer outrect
 			p.setPen(Qt::red);
 			auto rect(layer.second.drawarea().rect());
-			p.drawText(QPoint{rect.x(), layer.second.position().y() <= 10 ? 10 : rect.y()}, "Layer rect");
+			p.drawText(QPoint{rect.x(), layer.second.position().y() <= 10 ? 10 : rect.y()}, layer.second.name().c_str());
 			p.setBrush(QColor{0, 0, 0, 0});
 			p.drawRect(rect);
 		}
