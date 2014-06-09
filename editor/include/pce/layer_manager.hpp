@@ -39,7 +39,7 @@ namespace pce
 		
 		auto& layers() noexcept
 		{return m_layers;}
-
+		int selected_id() const;
 		layer* selected_layer();
 		
 	public slots:

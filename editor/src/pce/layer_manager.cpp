@@ -38,6 +38,14 @@ namespace pce
 	}
 	
 	
+	int layer_manager::selected_id() const
+	{
+		auto* casted(static_cast<list_widget_layer_item*>(m_ui->lw_layers->currentItem()));
+		if(casted == nullptr)
+			return -1;
+		return casted->index();
+	}
+	
 	layer* layer_manager::selected_layer()
 	{
 		auto* casted(static_cast<list_widget_layer_item*>(m_ui->lw_layers->currentItem()));
