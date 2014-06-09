@@ -176,8 +176,11 @@ namespace pce
 		
 		
 		// -------- draw ON translation --------
-		t.translate(m_layermgr->layers()[0].position().x(), m_layermgr->layers()[0].position().y());
-		p.setTransform(t);
+		if(m_layermgr->selected_layer() != nullptr)
+		{
+			t.translate(m_layermgr->selected_layer()->position().x(), m_layermgr->selected_layer()->position().y());
+			p.setTransform(t);
+		}
 		
 		// draw layers
 		for(const auto& layer : m_layermgr->layers())
@@ -206,11 +209,14 @@ namespace pce
 		p.setTransform(t);
 		
 		// draw layers outrect
-		p.setPen(Qt::red);
-		auto rect(m_layermgr->layers()[0].drawarea().rect());
-		p.drawText(QPoint{rect.x(), m_layermgr->layers()[0].position().y() <= 10 ? 10 : rect.y()}, "Layer rect");
-		p.setBrush(QColor{0, 0, 0, 0});
-		p.drawRect(rect);
+		if(m_layermgr->selected_layer() != nullptr)
+		{
+			p.setPen(Qt::red);
+			auto rect(m_layermgr->selected_layer()->drawarea().rect());
+			p.drawText(QPoint{rect.x(), m_layermgr->selected_layer()->position().y() <= 10 ? 10 : rect.y()}, "Layer rect");
+			p.setBrush(QColor{0, 0, 0, 0});
+			p.drawRect(rect);
+		}
 		
 		
 		
@@ -269,11 +275,11 @@ namespace pce
 				m_target_rect = m_brush.rect();
 			}
 			else
-				if(m_current_img != nullptr && this->is_select_mode(select_mode::preview))
+				if(m_current_img != nullptr && m_layermgr->selected_layer() != nullptr && this->is_select_mode(select_mode::preview))
 				{
 					auto validated(this->validate_mousepos(ev->x(), ev->y()));
-					validated -= QPoint{static_cast<int>(m_layermgr->layers()[0].position().x()), static_cast<int>(m_layermgr->layers()[0].position().y())};
-					m_layermgr->layers()[0].use_brush(m_brush.rect(), *m_current_img, {validated.x(), validated.y()});
+					validated -= QPoint{static_cast<int>(m_layermgr->selected_layer()->position().x()), static_cast<int>(m_layermgr->selected_layer()->position().y())};
+					m_layermgr->selected_layer()->use_brush(m_brush.rect(), *m_current_img, {validated.x(), validated.y()});
 				}
 		}
 		else if(ev->button() == Qt::RightButton)
@@ -287,8 +293,8 @@ namespace pce
 		}
 		
 		m_mousewheel_pressed = ev->button() == Qt::MiddleButton;
-		if(m_mousewheel_pressed) // calc the offset between layer and mouse for better moving
-			m_mousewheel_offset = ev->posF() - m_layermgr->layers()[0].position();
+		if(m_mousewheel_pressed && m_layermgr->selected_layer() != nullptr) // calc the offset between layer and mouse for better moving
+			m_mousewheel_offset = ev->posF() - m_layermgr->selected_layer()->position();
 		
 		this->repaint();
 	}
@@ -308,11 +314,11 @@ namespace pce
 			}
 		}
 		
-		if(m_mousewheel_pressed)
+		if(m_mousewheel_pressed && m_layermgr->selected_layer() != nullptr)
 		{
 			// mousepos - start offset = moving the layer from the start-mouse-point, not from topleft corner
 			auto newpos(ev->posF() - m_mousewheel_offset);
-			m_layermgr->layers()[0].set_position({mlk::math::round_to(newpos.x(), 64.), mlk::math::round_to(newpos.y(), 64.)});
+			m_layermgr->selected_layer()->set_position({mlk::math::round_to(newpos.x(), 64.), mlk::math::round_to(newpos.y(), 64.)});
 		}
 		
 		this->repaint();
