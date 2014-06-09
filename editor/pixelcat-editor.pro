@@ -38,7 +38,7 @@ HEADERS	    +=	include/pce/main_window.hpp \
 		include/pce/layer.hpp \
 		include/pce/tile.hpp \
 		include/pce/layer_manager.hpp \
-    include/pce/list_widget_layer_item.hpp
+		include/pce/list_widget_layer_item.hpp
 
 FORMS	    +=	main_window.ui
 
