@@ -41,6 +41,7 @@ namespace pce
 		{return m_layers;}
 		int selected_id() const;
 		layer* selected_layer();
+		layer* from_rowindex(int row);
 		
 	public slots:
 		void add_layer_request();

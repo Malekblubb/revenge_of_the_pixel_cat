@@ -56,6 +56,12 @@ namespace pce
 		return &m_layers[casted->index()];
 	}
 	
+	layer* layer_manager::from_rowindex(int row)
+	{
+		auto* casted(static_cast<list_widget_layer_item*>(m_ui->lw_layers->item(row)));
+		return &m_layers[casted->index()];
+	}
+	
 	
 	void layer_manager::add_layer_request()
 	{this->add_layer({constants::default_layersize(), constants::default_layersize()});}
