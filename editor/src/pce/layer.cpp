@@ -8,6 +8,7 @@
 #include <mlk/log/log.h>
 
 #include <QPainter>
+#include <cstdlib> 
 
 
 namespace pce
@@ -50,6 +51,57 @@ namespace pce
 		m_position.setY(m_position.y() + offy);
 	}
 	
+	
+	void layer::set_size(int num_tiles_x, int num_tiles_y)
+	{
+		std::vector<tile> new_vec(num_tiles_x * num_tiles_y);
+		
+		// copy to new vec
+		for(auto y(0); y < num_tiles_y; ++y)
+		{
+			for(auto x(0); x < num_tiles_x; ++x)	
+			{
+				if(x >= m_num_tiles_x || y >= m_num_tiles_y)
+					new_vec[y * num_tiles_x + x] = {0, 0};
+				else
+					new_vec[y * num_tiles_x + x] = m_tiles[y * m_num_tiles_x + x];
+			}
+		}
+		
+		std::cout << "OLD-----------" << std::endl;
+		for(auto y(0); y < m_num_tiles_y; ++y)
+		{
+			for(auto x(0); x < m_num_tiles_x; ++x)	
+			{
+				std::cout << m_tiles[y * m_num_tiles_x + x].index << " ";
+			}
+			std::cout << std::endl;
+		}
+		
+		std::cout << "\n\nNEW-----------" << std::endl;
+		for(auto y(0); y < num_tiles_y; ++y)
+		{
+			for(auto x(0); x < num_tiles_x; ++x)	
+			{
+				std::cout << new_vec[y * num_tiles_x + x].index << " ";
+			}
+			std::cout << std::endl;
+		}
+		
+		// create new drawarea
+		auto copy_img(m_drawarea.copy(0, 0, m_num_tiles_x * 64, m_num_tiles_y * 64));
+		m_drawarea = {num_tiles_x * 64, num_tiles_y * 64, QImage::Format_ARGB32};
+		this->clear({0, 0}, {num_tiles_x*64, num_tiles_y*64});
+		
+		// redraw old stuff
+		QPainter p{&m_drawarea};
+		p.drawImage(QPoint{0, 0}, copy_img);
+		
+		// copy all new stuff
+		m_num_tiles_x = num_tiles_x;
+		m_num_tiles_y = num_tiles_y;
+		m_tiles = new_vec;
+	}
 	
 	void layer::set_position(const QPointF& pos) noexcept
 	{m_position = pos;}

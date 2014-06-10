@@ -34,9 +34,16 @@ namespace pce
 		void use_brush(const QRect& source_rect, const QImage& source_img, const QPoint& target_point);
 		void move(qreal offx, qreal offy) noexcept;
 		
+		void set_size(int num_tiles_x, int num_tiles_y);
 		void set_position(const QPointF& pos) noexcept;
 		void set_name(const std::string& name) noexcept;
 	
+		
+		int num_tiles_x() const noexcept
+		{return m_num_tiles_x;}
+		
+		int num_tiles_y() const noexcept
+		{return m_num_tiles_y;}
 		
 		const auto& drawarea() const noexcept
 		{return m_drawarea;}
