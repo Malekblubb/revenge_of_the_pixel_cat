@@ -56,6 +56,7 @@ namespace pce
 		
 	private:
 		void clear(const QPoint& from, const QPoint& to);
+		void clear_all();
 	};
 }
 

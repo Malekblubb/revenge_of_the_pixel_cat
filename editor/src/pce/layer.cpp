@@ -8,7 +8,6 @@
 #include <mlk/log/log.h>
 
 #include <QPainter>
-#include <cstdlib> 
 
 
 namespace pce
@@ -91,16 +90,16 @@ namespace pce
 		// create new drawarea
 		auto copy_img(m_drawarea.copy(0, 0, m_num_tiles_x * 64, m_num_tiles_y * 64));
 		m_drawarea = {num_tiles_x * 64, num_tiles_y * 64, QImage::Format_ARGB32};
-		this->clear({0, 0}, {num_tiles_x*64, num_tiles_y*64});
-		
-		// redraw old stuff
-		QPainter p{&m_drawarea};
-		p.drawImage(QPoint{0, 0}, copy_img);
 		
 		// copy all new stuff
 		m_num_tiles_x = num_tiles_x;
 		m_num_tiles_y = num_tiles_y;
 		m_tiles = new_vec;
+		
+		// redraw old stuff
+		this->clear_all();
+		QPainter p{&m_drawarea};
+		p.drawImage(QPoint{0, 0}, copy_img);
 	}
 	
 	void layer::set_position(const QPointF& pos) noexcept
@@ -116,5 +115,8 @@ namespace pce
 			for(auto x(from.x()); x < to.x(); ++x)
 				m_drawarea.setPixel(x, y, 0);
 	}
+	
+	void layer::clear_all()
+	{this->clear({0, 0}, {m_num_tiles_x * 64, m_num_tiles_y * 64});}
 }
 
