@@ -34,11 +34,7 @@ namespace pce
 		m_layermgr.set_ui(m_ui);
 		
 		
-		// connect
-		// -------- this --------
-//		this->connect(m_ui->lw_layers, SIGNAL(currentRowChanged(int)), this, SLOT(on_lw_layers_current_row_changed(int)));
-		
-		
+		// connect		
 		// -------- EDIT AREA --------
 		// send key input from list widget to edit area
 		this->connect(m_ui->lw_tilesets, SIGNAL(key_pressed(QKeyEvent*)), m_ui->w_edit_area, SLOT(key_pressed(QKeyEvent*)));

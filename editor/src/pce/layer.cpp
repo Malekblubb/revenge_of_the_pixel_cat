@@ -19,7 +19,7 @@ namespace pce
 		m_position{0.f, 0.f},
 		m_tiles(width * height),
 		m_name{"Layer#"}
-	{ }
+	{this->clear_all();}
 	
 	void layer::use_brush(const QRect& source_rect, const QImage& source_img, const QPoint& target_point)
 	{
