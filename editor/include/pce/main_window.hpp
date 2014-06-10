@@ -35,6 +35,9 @@ namespace pce
 
 	private slots:
 		void on_pb_reset_scale_clicked();
+		void on_lw_layers_currentRowChanged(int row);
+		void on_sb_layer_width_valueChanged(int value);
+		void on_sb_layer_height_valueChanged(int value);
 		
 	private:
 		void init();

@@ -35,6 +35,10 @@ namespace pce
 		
 		
 		// connect
+		// -------- this --------
+//		this->connect(m_ui->lw_layers, SIGNAL(currentRowChanged(int)), this, SLOT(on_lw_layers_current_row_changed(int)));
+		
+		
 		// -------- EDIT AREA --------
 		// send key input from list widget to edit area
 		this->connect(m_ui->lw_tilesets, SIGNAL(key_pressed(QKeyEvent*)), m_ui->w_edit_area, SLOT(key_pressed(QKeyEvent*)));
@@ -64,5 +68,35 @@ namespace pce
 	void main_window::on_pb_reset_scale_clicked()
 	{
 		m_ui->w_edit_area->scale_change_requested(100);
+	}
+	
+	void main_window::on_lw_layers_currentRowChanged(int row)
+	{
+		if(row == -1)
+			return;
+		
+		auto* layer(m_layermgr.from_rowindex(row));
+		m_ui->sb_layer_width->setValue(layer->num_tiles_x());
+		m_ui->sb_layer_height->setValue(layer->num_tiles_y());
+	}
+	
+	void main_window::on_sb_layer_width_valueChanged(int value)
+	{
+		auto* layer(m_layermgr.selected_layer());
+		
+		if(layer == nullptr)
+			return;
+		
+		layer->set_size(value, layer->num_tiles_y());
+	}
+	
+	void main_window::on_sb_layer_height_valueChanged(int value)
+	{
+		auto* layer(m_layermgr.selected_layer());
+		
+		if(layer == nullptr)
+			return;
+		
+		layer->set_size(layer->num_tiles_x(), value);
 	}
 }
