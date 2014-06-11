@@ -36,6 +36,8 @@ namespace pce
 		
 		void set_size(int num_tiles_x, int num_tiles_y);
 		void set_position(const QPointF& pos) noexcept;
+		void set_position_x(qreal x) noexcept;
+		void set_position_y(qreal y) noexcept;
 		void set_name(const std::string& name) noexcept;
 	
 		
