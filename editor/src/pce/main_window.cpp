@@ -69,7 +69,12 @@ namespace pce
 	void main_window::on_lw_layers_currentRowChanged(int row)
 	{
 		if(row == -1)
+		{
+			m_ui->gb_layer_settings->setEnabled(false);
 			return;
+		}
+		
+		m_ui->gb_layer_settings->setEnabled(true);
 		
 		auto* layer(m_layermgr.from_rowindex(row));
 		m_ui->sb_layer_width->setValue(layer->num_tiles_x());

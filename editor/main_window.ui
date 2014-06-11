@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1336</width>
+    <width>1368</width>
     <height>720</height>
    </rect>
   </property>
@@ -90,19 +90,19 @@
      <rect>
       <x>1157</x>
       <y>29</y>
-      <width>170</width>
+      <width>200</width>
       <height>353</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>170</width>
+      <width>200</width>
       <height>0</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>170</width>
+      <width>200</width>
       <height>16777215</height>
      </size>
     </property>
@@ -287,19 +287,19 @@
      <rect>
       <x>1160</x>
       <y>400</y>
-      <width>170</width>
+      <width>200</width>
       <height>22</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>170</width>
+      <width>200</width>
       <height>0</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>170</width>
+      <width>200</width>
       <height>16777215</height>
      </size>
     </property>
@@ -312,19 +312,19 @@
      <rect>
       <x>1160</x>
       <y>430</y>
-      <width>170</width>
+      <width>200</width>
       <height>22</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>170</width>
+      <width>200</width>
       <height>0</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>170</width>
+      <width>200</width>
       <height>16777215</height>
      </size>
     </property>
@@ -332,24 +332,27 @@
      <string>Remove Layer(s)</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="groupBox_2">
+   <widget class="QGroupBox" name="gb_layer_settings">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>1160</x>
       <y>470</y>
-      <width>170</width>
+      <width>200</width>
       <height>231</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>170</width>
+      <width>200</width>
       <height>0</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>170</width>
+      <width>200</width>
       <height>16777215</height>
      </size>
     </property>
@@ -359,9 +362,9 @@
     <widget class="QSpinBox" name="sb_layer_width">
      <property name="geometry">
       <rect>
-       <x>100</x>
+       <x>50</x>
        <y>30</y>
-       <width>61</width>
+       <width>48</width>
        <height>23</height>
       </rect>
      </property>
@@ -378,9 +381,9 @@
     <widget class="QSpinBox" name="sb_layer_height">
      <property name="geometry">
       <rect>
-       <x>100</x>
-       <y>60</y>
-       <width>61</width>
+       <x>148</x>
+       <y>30</y>
+       <width>48</width>
        <height>23</height>
       </rect>
      </property>
@@ -397,9 +400,9 @@
     <widget class="QLabel" name="label_7">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>37</y>
-       <width>58</width>
+       <x>9</x>
+       <y>35</y>
+       <width>39</width>
        <height>14</height>
       </rect>
      </property>
@@ -410,14 +413,40 @@
     <widget class="QLabel" name="label_8">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>66</y>
-       <width>58</width>
+       <x>104</x>
+       <y>35</y>
+       <width>42</width>
        <height>14</height>
       </rect>
      </property>
      <property name="text">
       <string>Height:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>37</width>
+       <height>14</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Pos X:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>100</y>
+       <width>37</width>
+       <height>14</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Pos Y:</string>
      </property>
     </widget>
    </widget>
