@@ -129,8 +129,8 @@ namespace pce
 	{		
 		return 
 		{
-			static_cast<int>(mlk::math::round_to(static_cast<qreal>(x), 64 * m_scale) / m_scale),
-			static_cast<int>(mlk::math::round_to(static_cast<qreal>(y), 64 * m_scale) / m_scale)
+			static_cast<int>(mlk::math::round_to(static_cast<qreal>(x - m_global_translate.x()), 64 * m_scale) / m_scale),
+			static_cast<int>(mlk::math::round_to(static_cast<qreal>(y - m_global_translate.y()), 64 * m_scale) / m_scale)
 		};
 	}
 	
@@ -164,7 +164,6 @@ namespace pce
 		// transform
 		QTransform t;
 		t.scale(m_scale, m_scale);
-		t.translate(m_global_translate.x(), m_global_translate.y());
 		p.setTransform(t);
 		
 		
@@ -180,6 +179,8 @@ namespace pce
 		
 		// ---------------------------------------------------------------
 		
+		t.translate(m_global_translate.x(), m_global_translate.y());
+		p.setTransform(t);
 		
 		// draw selected shape
 		p.setBrush({{255, 255, 255, 100}});
