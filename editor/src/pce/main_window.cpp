@@ -40,6 +40,9 @@ namespace pce
 		this->connect(m_ui->lw_tilesets, SIGNAL(key_pressed(QKeyEvent*)), m_ui->w_edit_area, SLOT(key_pressed(QKeyEvent*)));
 		this->connect(m_ui->lw_tilesets, SIGNAL(key_released(QKeyEvent*)), m_ui->w_edit_area, SLOT(key_released(QKeyEvent*)));
 		
+		// edit_area
+		this->connect(m_ui->w_edit_area, SIGNAL(layer_moved()), this, SLOT(update_layer_settings()));
+		
 		// grid
 		this->connect(m_ui->cb_showgrid, SIGNAL(toggled(bool)), m_ui->w_edit_area, SLOT(grid_state_changed(bool)));
 		this->connect(m_ui->sb_grid_x, SIGNAL(valueChanged(QString)), m_ui->w_edit_area, SLOT(grid_update_requested(QString)));
@@ -74,11 +77,10 @@ namespace pce
 			return;
 		}
 		
+		// set ui
 		m_ui->gb_layer_settings->setEnabled(true);
 		
-		auto* layer(m_layermgr.from_rowindex(row));
-		m_ui->sb_layer_width->setValue(layer->num_tiles_x());
-		m_ui->sb_layer_height->setValue(layer->num_tiles_y());
+		this->update_layer_settings();
 	}
 	
 	void main_window::on_sb_layer_width_valueChanged(int value)
@@ -99,5 +101,19 @@ namespace pce
 			return;
 		
 		layer->set_size(layer->num_tiles_x(), value);
+	}
+	
+	
+	void main_window::update_layer_settings()
+	{
+		if(m_ui->lw_layers->currentRow() == -1)
+			return;
+		
+		auto* layer(m_layermgr.from_rowindex(m_ui->lw_layers->currentRow()));
+		m_ui->sb_layer_width->setValue(layer->num_tiles_x());
+		m_ui->sb_layer_height->setValue(layer->num_tiles_y());
+		
+		m_ui->sb_layer_pos_x->setValue(layer->position().x());
+		m_ui->sb_layer_pos_y->setValue(layer->position().y());
 	}
 }

@@ -39,6 +39,8 @@ namespace pce
 		void on_sb_layer_width_valueChanged(int value);
 		void on_sb_layer_height_valueChanged(int value);
 		
+		void update_layer_settings();
+		
 	private:
 		void init();
 	};

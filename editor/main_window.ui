@@ -427,7 +427,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>100</y>
+       <y>70</y>
        <width>37</width>
        <height>14</height>
       </rect>
@@ -439,14 +439,52 @@
     <widget class="QLabel" name="label_10">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>100</y>
+       <x>10</x>
+       <y>103</y>
        <width>37</width>
        <height>14</height>
       </rect>
      </property>
      <property name="text">
       <string>Pos Y:</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="sb_layer_pos_x">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>67</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>0</number>
+     </property>
+     <property name="maximum">
+      <number>100000</number>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="sb_layer_pos_y">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>100</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>0</number>
+     </property>
+     <property name="maximum">
+      <number>100000</number>
+     </property>
+     <property name="value">
+      <number>0</number>
      </property>
     </widget>
    </widget>
