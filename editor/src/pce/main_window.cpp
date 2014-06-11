@@ -39,9 +39,9 @@ namespace pce
 		// send key input from list widget to edit area
 		this->connect(m_ui->lw_tilesets, SIGNAL(key_pressed(QKeyEvent*)), m_ui->w_edit_area, SLOT(key_pressed(QKeyEvent*)));
 		this->connect(m_ui->lw_tilesets, SIGNAL(key_released(QKeyEvent*)), m_ui->w_edit_area, SLOT(key_released(QKeyEvent*)));
-		
-		// edit_area
+
 		this->connect(m_ui->w_edit_area, SIGNAL(layer_moved()), this, SLOT(update_layer_settings()));
+		this->connect(m_ui->w_edit_area, SIGNAL(global_translate_changed()), this, SLOT(edit_area_global_translate_changed()));
 		
 		// grid
 		this->connect(m_ui->cb_showgrid, SIGNAL(toggled(bool)), m_ui->w_edit_area, SLOT(grid_state_changed(bool)));
@@ -63,12 +63,8 @@ namespace pce
 			m_ui->lw_tilesets->addItem(a.first.c_str());
 	}
 	
-	// custom slots
-	void main_window::on_pb_reset_scale_clicked()
-	{
-		m_ui->w_edit_area->scale_change_requested(100);
-	}
 	
+	// -------- layer settings --------
 	void main_window::on_lw_layers_currentRowChanged(int row)
 	{
 		if(row == -1)
@@ -105,7 +101,74 @@ namespace pce
 		m_ui->w_edit_area->repaint_request();
 	}
 	
+	void main_window::on_sb_layer_pos_x_valueChanged(int value)
+	{
+		auto* layer(m_layermgr.selected_layer());
+		
+		if(layer == nullptr)
+			return;
+		
+		layer->set_position_x(value);
+		m_ui->w_edit_area->repaint_request();
+	}
 	
+	void main_window::on_sb_layer_pos_y_valueChanged(int value)
+	{
+		auto* layer(m_layermgr.selected_layer());
+		
+		if(layer == nullptr)
+			return;
+		
+		layer->set_position_y(value);
+		m_ui->w_edit_area->repaint_request();
+	}
+	
+	
+	// -------- global edit_area functions --------
+	void main_window::on_pb_reset_scale_clicked()
+	{
+		m_ui->w_edit_area->scale_change_requested(100);
+	}
+	
+	// global translate
+	void main_window::on_pb_translate_left_clicked()
+	{
+		m_ui->w_edit_area->translate_x_request(-m_ui->sb_translate_step_x->value());
+		m_ui->w_edit_area->repaint_request();
+	}
+	
+	void main_window::on_pb_translate_right_clicked()
+	{
+		m_ui->w_edit_area->translate_x_request(m_ui->sb_translate_step_x->value());
+		m_ui->w_edit_area->repaint_request();
+	}
+	
+	void main_window::on_pb_translate_down_clicked()
+	{
+		m_ui->w_edit_area->translate_y_request(m_ui->sb_translate_step_y->value());
+		m_ui->w_edit_area->repaint_request();
+	}
+	
+	void main_window::on_pb_translate_up_clicked()
+	{
+		m_ui->w_edit_area->translate_y_request(-m_ui->sb_translate_step_y->value());
+		m_ui->w_edit_area->repaint_request();
+	}
+	
+	void main_window::on_sb_view_x_valueChanged(int value)
+	{
+		m_ui->w_edit_area->set_translate_x(static_cast<qreal>(value));
+		m_ui->w_edit_area->repaint_request();
+	}
+	
+	void main_window::on_sb_view_y_valueChanged(int value)
+	{
+		m_ui->w_edit_area->set_translate_y(static_cast<qreal>(value));
+		m_ui->w_edit_area->repaint_request();
+	}
+	
+	
+	// -------- slots called from other objects --------
 	void main_window::update_layer_settings()
 	{
 		if(m_ui->lw_layers->currentRow() == -1)
@@ -117,5 +180,12 @@ namespace pce
 		
 		m_ui->sb_layer_pos_x->setValue(layer->position().x());
 		m_ui->sb_layer_pos_y->setValue(layer->position().y());
+	}
+	
+	void main_window::edit_area_global_translate_changed()
+	{
+		auto& newt(m_ui->w_edit_area->global_translate());
+		m_ui->sb_view_x->setValue(newt.x());
+		m_ui->sb_view_y->setValue(newt.y());
 	}
 }

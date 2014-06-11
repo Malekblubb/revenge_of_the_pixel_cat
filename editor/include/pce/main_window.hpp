@@ -38,8 +38,17 @@ namespace pce
 		void on_lw_layers_currentRowChanged(int row);
 		void on_sb_layer_width_valueChanged(int value);
 		void on_sb_layer_height_valueChanged(int value);
+		void on_sb_layer_pos_x_valueChanged(int value);
+		void on_sb_layer_pos_y_valueChanged(int value);
+		void on_pb_translate_left_clicked();
+		void on_pb_translate_right_clicked();
+		void on_pb_translate_down_clicked();
+		void on_pb_translate_up_clicked();
+		void on_sb_view_x_valueChanged(int value);
+		void on_sb_view_y_valueChanged(int value);
 		
 		void update_layer_settings();
+		void edit_area_global_translate_changed();
 		
 	private:
 		void init();
