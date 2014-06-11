@@ -26,6 +26,7 @@ namespace pce
 		// ui
 		Ui::main_window* m_ui;
 		
+		class edit_area* m_edit_area;
 		graphics_manager m_graphicsmgr;
 		layer_manager m_layermgr;
 

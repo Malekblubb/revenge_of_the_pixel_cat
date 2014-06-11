@@ -27,9 +27,11 @@ namespace pce
 	void main_window::init()
 	{
 		// init all pointers
-		m_ui->w_edit_area->set_graphicsmgr(&m_graphicsmgr);
-		m_ui->w_edit_area->set_layermgr(&m_layermgr);
-		m_ui->w_edit_area->set_ui(m_ui);
+		m_edit_area = m_ui->w_edit_area;
+		
+		m_edit_area->set_graphicsmgr(&m_graphicsmgr);
+		m_edit_area->set_layermgr(&m_layermgr);
+		m_edit_area->set_ui(m_ui);
 		
 		m_layermgr.set_ui(m_ui);
 		
@@ -37,20 +39,20 @@ namespace pce
 		// connect		
 		// -------- EDIT AREA --------
 		// send key input from list widget to edit area
-		this->connect(m_ui->lw_tilesets, SIGNAL(key_pressed(QKeyEvent*)), m_ui->w_edit_area, SLOT(key_pressed(QKeyEvent*)));
-		this->connect(m_ui->lw_tilesets, SIGNAL(key_released(QKeyEvent*)), m_ui->w_edit_area, SLOT(key_released(QKeyEvent*)));
+		this->connect(m_ui->lw_tilesets, SIGNAL(key_pressed(QKeyEvent*)), m_edit_area, SLOT(key_pressed(QKeyEvent*)));
+		this->connect(m_ui->lw_tilesets, SIGNAL(key_released(QKeyEvent*)), m_edit_area, SLOT(key_released(QKeyEvent*)));
 
-		this->connect(m_ui->w_edit_area, SIGNAL(layer_moved()), this, SLOT(update_layer_settings()));
-		this->connect(m_ui->w_edit_area, SIGNAL(global_translate_changed()), this, SLOT(edit_area_global_translate_changed()));
+		this->connect(m_edit_area, SIGNAL(layer_moved()), this, SLOT(update_layer_settings()));
+		this->connect(m_edit_area, SIGNAL(global_translate_changed()), this, SLOT(edit_area_global_translate_changed()));
 		
 		// grid
-		this->connect(m_ui->cb_showgrid, SIGNAL(toggled(bool)), m_ui->w_edit_area, SLOT(grid_state_changed(bool)));
-		this->connect(m_ui->sb_grid_x, SIGNAL(valueChanged(QString)), m_ui->w_edit_area, SLOT(grid_update_requested(QString)));
-		this->connect(m_ui->sb_grid_y, SIGNAL(valueChanged(QString)), m_ui->w_edit_area, SLOT(grid_update_requested(QString)));
-		this->connect(m_ui->le_gridcolor, SIGNAL(textChanged(QString)), m_ui->w_edit_area, SLOT(grid_update_requested(QString)));
+		this->connect(m_ui->cb_showgrid, SIGNAL(toggled(bool)), m_edit_area, SLOT(grid_state_changed(bool)));
+		this->connect(m_ui->sb_grid_x, SIGNAL(valueChanged(QString)), m_edit_area, SLOT(grid_update_requested(QString)));
+		this->connect(m_ui->sb_grid_y, SIGNAL(valueChanged(QString)), m_edit_area, SLOT(grid_update_requested(QString)));
+		this->connect(m_ui->le_gridcolor, SIGNAL(textChanged(QString)), m_edit_area, SLOT(grid_update_requested(QString)));
 		
 		// scale
-		this->connect(m_ui->sb_scale, SIGNAL(valueChanged(int)), m_ui->w_edit_area, SLOT(scale_change_requested(int)));
+		this->connect(m_ui->sb_scale, SIGNAL(valueChanged(int)), m_edit_area, SLOT(scale_change_requested(int)));
 		
 		
 		// -------- LAYER LIST --------
@@ -87,7 +89,7 @@ namespace pce
 			return;
 		
 		layer->set_size(value, layer->num_tiles_y());
-		m_ui->w_edit_area->repaint_request();
+		m_edit_area->repaint_request();
 	}
 	
 	void main_window::on_sb_layer_height_valueChanged(int value)
@@ -98,7 +100,7 @@ namespace pce
 			return;
 		
 		layer->set_size(layer->num_tiles_x(), value);
-		m_ui->w_edit_area->repaint_request();
+		m_edit_area->repaint_request();
 	}
 	
 	void main_window::on_sb_layer_pos_x_valueChanged(int value)
@@ -109,7 +111,7 @@ namespace pce
 			return;
 		
 		layer->set_position_x(value);
-		m_ui->w_edit_area->repaint_request();
+		m_edit_area->repaint_request();
 	}
 	
 	void main_window::on_sb_layer_pos_y_valueChanged(int value)
@@ -120,51 +122,51 @@ namespace pce
 			return;
 		
 		layer->set_position_y(value);
-		m_ui->w_edit_area->repaint_request();
+		m_edit_area->repaint_request();
 	}
 	
 	
 	// -------- global edit_area functions --------
 	void main_window::on_pb_reset_scale_clicked()
 	{
-		m_ui->w_edit_area->scale_change_requested(100);
+		m_edit_area->scale_change_requested(100);
 	}
 	
 	// global translate
 	void main_window::on_pb_translate_left_clicked()
 	{
-		m_ui->w_edit_area->translate_x_request(-m_ui->sb_translate_step_x->value());
-		m_ui->w_edit_area->repaint_request();
+		m_edit_area->translate_x_request(-m_ui->sb_translate_step_x->value());
+		m_edit_area->repaint_request();
 	}
 	
 	void main_window::on_pb_translate_right_clicked()
 	{
-		m_ui->w_edit_area->translate_x_request(m_ui->sb_translate_step_x->value());
-		m_ui->w_edit_area->repaint_request();
+		m_edit_area->translate_x_request(m_ui->sb_translate_step_x->value());
+		m_edit_area->repaint_request();
 	}
 	
 	void main_window::on_pb_translate_down_clicked()
 	{
-		m_ui->w_edit_area->translate_y_request(m_ui->sb_translate_step_y->value());
-		m_ui->w_edit_area->repaint_request();
+		m_edit_area->translate_y_request(m_ui->sb_translate_step_y->value());
+		m_edit_area->repaint_request();
 	}
 	
 	void main_window::on_pb_translate_up_clicked()
 	{
-		m_ui->w_edit_area->translate_y_request(-m_ui->sb_translate_step_y->value());
-		m_ui->w_edit_area->repaint_request();
+		m_edit_area->translate_y_request(-m_ui->sb_translate_step_y->value());
+		m_edit_area->repaint_request();
 	}
 	
 	void main_window::on_sb_view_x_valueChanged(int value)
 	{
-		m_ui->w_edit_area->set_translate_x(static_cast<qreal>(value));
-		m_ui->w_edit_area->repaint_request();
+		m_edit_area->set_translate_x(static_cast<qreal>(value));
+		m_edit_area->repaint_request();
 	}
 	
 	void main_window::on_sb_view_y_valueChanged(int value)
 	{
-		m_ui->w_edit_area->set_translate_y(static_cast<qreal>(value));
-		m_ui->w_edit_area->repaint_request();
+		m_edit_area->set_translate_y(static_cast<qreal>(value));
+		m_edit_area->repaint_request();
 	}
 	
 	
@@ -184,7 +186,7 @@ namespace pce
 	
 	void main_window::edit_area_global_translate_changed()
 	{
-		auto& newt(m_ui->w_edit_area->global_translate());
+		auto& newt(m_edit_area->global_translate());
 		m_ui->sb_view_x->setValue(newt.x());
 		m_ui->sb_view_y->setValue(newt.y());
 	}
