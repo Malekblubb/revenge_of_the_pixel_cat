@@ -61,6 +61,9 @@ namespace pce
 		void set_layermgr(class layer_manager* lmgr) noexcept;
 		void set_ui(Ui::main_window* ui) noexcept;
 		
+	signals:
+		void layer_moved();
+		
 	public slots:
 		// provide an interface for other widgets
 		// to send their key events

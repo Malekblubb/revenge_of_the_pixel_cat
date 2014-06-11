@@ -310,6 +310,9 @@ namespace pce
 			// mousepos - start offset = moving the layer from the start-mouse-point, not from topleft corner
 			auto newpos(ev->posF() - m_mousewheel_offset);
 			m_layermgr->selected_layer()->set_position({mlk::math::round_to(newpos.x(), 64.), mlk::math::round_to(newpos.y(), 64.)});
+			
+			// emit layer_moved signal
+			emit this->layer_moved();
 		}
 		
 		this->repaint();
