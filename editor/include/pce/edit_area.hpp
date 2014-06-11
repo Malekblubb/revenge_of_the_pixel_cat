@@ -75,6 +75,9 @@ namespace pce
 		void grid_update_requested(QString);
 		void scale_change_requested(int i);
 		
+		// repaint request
+		void repaint_request();
+		
 	private:
 		void init();
 		

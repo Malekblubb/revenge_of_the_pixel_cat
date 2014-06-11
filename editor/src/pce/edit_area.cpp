@@ -72,6 +72,9 @@ namespace pce
 		this->repaint();
 	}
 	
+	void edit_area::repaint_request()
+	{this->repaint();}
+	
 	
 	void edit_area::init()
 	{
