@@ -41,6 +41,7 @@ namespace pce
 		QVector<QLineF> m_grid_lines;
 		
 		qreal m_scale;
+		QPointF m_global_translate;
 		const QImage* m_current_img;
 		
 		QPointF m_mousewheel_offset;
@@ -61,8 +62,12 @@ namespace pce
 		void set_layermgr(class layer_manager* lmgr) noexcept;
 		void set_ui(Ui::main_window* ui) noexcept;
 		
+		const auto& global_translate() const noexcept
+		{return m_global_translate;}
+		
 	signals:
 		void layer_moved();
+		void global_translate_changed();
 		
 	public slots:
 		// provide an interface for other widgets
@@ -74,6 +79,12 @@ namespace pce
 		void grid_state_changed(bool b);
 		void grid_update_requested(QString);
 		void scale_change_requested(int i);
+		
+		// global transform slots
+		void translate_x_request(qreal value) noexcept;
+		void translate_y_request(qreal value) noexcept;
+		void set_translate_x(qreal value) noexcept;
+		void set_translate_y(qreal value) noexcept;
 		
 		// repaint request
 		void repaint_request();

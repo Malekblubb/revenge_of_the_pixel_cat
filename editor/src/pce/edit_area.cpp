@@ -25,6 +25,7 @@ namespace pce
 		QWidget{parent},
 		m_select_mode{select_mode::none},
 		m_scale{1.},
+		m_global_translate{0., 0.},
 		m_current_img{nullptr},
 		m_mousewheel_offset{0., 0.},
 		m_graphic_preview_active{false},
@@ -71,6 +72,31 @@ namespace pce
 		this->recalc_grid();
 		this->repaint();
 	}
+	
+	void edit_area::translate_x_request(qreal value) noexcept
+	{
+		m_global_translate.setX(m_global_translate.x() + value);
+		emit this->global_translate_changed();
+	}
+	
+	void edit_area::translate_y_request(qreal value) noexcept
+	{
+		m_global_translate.setY(m_global_translate.y() + value);
+		emit this->global_translate_changed();
+	}
+	
+	void edit_area::set_translate_x(qreal value) noexcept
+	{
+		m_global_translate.setX(value);
+		emit this->global_translate_changed();
+	}
+	
+	void edit_area::set_translate_y(qreal value) noexcept
+	{
+		m_global_translate.setY(value);
+		emit this->global_translate_changed();
+	}
+
 	
 	void edit_area::repaint_request()
 	{this->repaint();}
@@ -138,6 +164,7 @@ namespace pce
 		// transform
 		QTransform t;
 		t.scale(m_scale, m_scale);
+		t.translate(m_global_translate.x(), m_global_translate.y());
 		p.setTransform(t);
 		
 		
@@ -175,6 +202,10 @@ namespace pce
 			p.drawImage(m_target_rect, *m_current_img, m_brush.rect());
 		
 		
+		t.translate(-m_global_translate.x(), -m_global_translate.y());
+		p.setTransform(t);
+		
+		
 		// draw the grid
 		if(m_grid_active)
 		{
@@ -187,6 +218,9 @@ namespace pce
 		p.drawText(QPointF{0., 320.}, "World zero point");
 		p.drawLine(QPointF{0., 320.}, QPointF{this->width() / m_scale, 320.});
 		
+		
+		t.translate(m_global_translate.x(), m_global_translate.y());
+		p.setTransform(t);
 		
 		
 		// -------- draw ON translation --------		
