@@ -91,6 +91,7 @@ namespace pce
 			return;
 		
 		layer->set_size(value, layer->num_tiles_y());
+		m_ui->w_edit_area->repaint_request();
 	}
 	
 	void main_window::on_sb_layer_height_valueChanged(int value)
@@ -101,6 +102,7 @@ namespace pce
 			return;
 		
 		layer->set_size(layer->num_tiles_x(), value);
+		m_ui->w_edit_area->repaint_request();
 	}
 	
 	
