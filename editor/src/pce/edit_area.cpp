@@ -129,8 +129,8 @@ namespace pce
 	{		
 		return 
 		{
-			static_cast<int>(mlk::math::round_to(static_cast<qreal>(x - m_global_translate.x()), 64 * m_scale) / m_scale),
-			static_cast<int>(mlk::math::round_to(static_cast<qreal>(y - m_global_translate.y()), 64 * m_scale) / m_scale)
+			static_cast<int>(mlk::math::round_to(static_cast<qreal>(x), 64 * m_scale) / m_scale),
+			static_cast<int>(mlk::math::round_to(static_cast<qreal>(y), 64 * m_scale) / m_scale)
 		};
 	}
 	
@@ -179,17 +179,22 @@ namespace pce
 		
 		// ---------------------------------------------------------------
 		
-		t.translate(m_global_translate.x(), m_global_translate.y());
-		p.setTransform(t);
 		
 		// draw selected shape
 		p.setBrush({{255, 255, 255, 100}});
 		p.setPen(Qt::white);
 		
+		if(!m_graphic_preview_active)
+		{
+			t.translate(m_global_translate.x(), m_global_translate.y());
+			p.setTransform(t);
+		}
+		
 		if(this->is_select_mode(select_mode::selecting))
 			p.drawRect(m_brush.rect());
 		else if(this->is_select_mode_any())
 			p.drawRect(m_target_rect);
+		
 		
 		if(this->is_select_mode_any())
 		{
@@ -201,7 +206,7 @@ namespace pce
 		
 		if((m_current_img != nullptr) && this->is_select_mode(select_mode::preview))
 			p.drawImage(m_target_rect, *m_current_img, m_brush.rect());
-		
+			
 		
 		t.translate(-m_global_translate.x(), -m_global_translate.y());
 		p.setTransform(t);
@@ -298,7 +303,10 @@ namespace pce
 				m_select_mode = select_mode::selecting;
 				
 				// start the selection
-				m_brush.selection_begin(ev->pos() / m_scale);
+				if(m_graphic_preview_active)
+					m_brush.selection_begin(ev->pos() / m_scale);
+				else
+					m_brush.selection_begin(ev->pos() / m_scale - QPoint{static_cast<int>(m_global_translate.x()), static_cast<int>(m_global_translate.y())});
 				
 				// target begin == brush
 				m_target_rect = m_brush.rect();
@@ -307,7 +315,8 @@ namespace pce
 				if(m_current_img != nullptr && m_layermgr->selected_layer() != nullptr && this->is_select_mode(select_mode::preview))
 				{
 					auto validated(this->validate_mousepos(ev->x(), ev->y()));
-					validated -= QPoint{static_cast<int>(m_layermgr->selected_layer()->position().x()), static_cast<int>(m_layermgr->selected_layer()->position().y())};
+					validated -= QPoint{static_cast<int>(m_layermgr->selected_layer()->position().x() + m_global_translate.x()),
+										static_cast<int>(m_layermgr->selected_layer()->position().y() + m_global_translate.y())};
 					m_layermgr->selected_layer()->use_brush(m_brush.rect(), *m_current_img, {validated.x(), validated.y()});
 				}
 		}
@@ -339,6 +348,7 @@ namespace pce
 			if(this->is_select_mode_any()) // why need i "-1" here ??
 			{
 				auto validated(this->validate_mousepos(ev->x(), ev->y()));
+				validated -= {(int)m_global_translate.x(), (int)m_global_translate.y()};
 				m_target_rect.setCoords(validated.x(), validated.y(), validated.x() + m_brush.rect().width() - 1, validated.y() + m_brush.rect().height() - 1);
 			}
 		}
