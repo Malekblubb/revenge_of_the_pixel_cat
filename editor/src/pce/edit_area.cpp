@@ -7,6 +7,7 @@
 #include <pce/edit_area.hpp>
 #include <pce/graphics_manager.hpp>
 #include <pce/layer_manager.hpp>
+#include <pce/list_widget_layer_item.hpp>
 
 #include <mlk/containers/container_utl.h>
 #include <mlk/tools/math.h>
@@ -230,28 +231,33 @@ namespace pce
 		
 		
 		// -------- draw ON translation --------		
-		// draw layers
-		for(const auto& layer : m_layermgr->layers())
-		{
+		// draw layers (sorted)		
+		auto* layerlist(m_ui->lw_layers);
+		for(auto i(layerlist->count() - 1); i != -1; --i)
+		{			
+			std::cout << i << std::endl;
+			auto* layer(m_layermgr->from_rowindex(i));
+			if(layer == nullptr)
+				continue;
+			
 			// copy the transform for each layer
 			auto tc(t);
-			tc.translate(layer.second.position().x(), layer.second.position().y());
+			tc.translate(layer->position().x(), layer->position().y());
 			p.setTransform(tc);
 			
 			// draw layer content
-			p.drawImage(QPoint{0, 0}, layer.second.drawarea());
+			p.drawImage(QPoint{0, 0}, layer->drawarea());
 			
 			// draw layer outrect
-			if(layer.first == m_layermgr->selected_id())
+			if(i == layerlist->currentRow())
 				p.setPen(Qt::blue);
 			else
 				p.setPen(Qt::red);
-			auto rect(layer.second.drawarea().rect());
-			p.drawText(QPoint{rect.x(), layer.second.position().y() <= 10 ? 10 : rect.y()}, layer.second.name().c_str());
+			auto rect(layer->drawarea().rect());
+			p.drawText(QPoint{rect.x(), layer->position().y() <= 10 ? 10 : rect.y()}, layer->name().c_str());
 			p.setBrush(QColor{0, 0, 0, 0});
 			p.drawRect(rect);
 		}
-		
 		
 		
 		
