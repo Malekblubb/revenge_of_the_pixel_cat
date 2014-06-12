@@ -119,7 +119,8 @@ namespace pce
 	{
 		for(auto y(from.y()); y < to.y(); ++y)
 			for(auto x(from.x()); x < to.x(); ++x)
-				m_drawarea.setPixel(x, y, 0);
+				if(y < m_drawarea.height() &&  x < m_drawarea.width())
+					m_drawarea.setPixel(x, y, 0);
 	}
 	
 	void layer::clear_all()
