@@ -3,6 +3,7 @@
 // See LICENSE for more information.
 //
 
+#include <pce/constants.hpp>
 #include <pce/layer.hpp>
 
 #include <mlk/log/log.h>
@@ -118,6 +119,7 @@ namespace pce
 	{
 		m_image = img;
 		m_image_name = name;
+		this->on_image_change();
 	}
 	
 	
@@ -131,5 +133,24 @@ namespace pce
 	
 	void layer::clear_all()
 	{this->clear({0, 0}, {m_num_tiles_x * 64, m_num_tiles_y * 64});}
+	
+	void layer::on_image_change()
+	{
+		if(m_image == nullptr)
+			return;
+		
+		QPainter p{&m_drawarea};
+		for(auto y(0); y < m_num_tiles_y; ++y)
+			for(auto x(0); x < m_num_tiles_x; ++x)
+			{
+				auto& tile(m_tiles[y * m_num_tiles_x + x]);
+				if(tile.index == 0)
+					continue;
+				
+				auto coords(constants::coords_from_tileindex(tile.index));
+				this->clear({x * 64, y * 64}, {x * 2 * 64, x * 2 * 64});
+				p.drawImage(x * 64, y * 64, *m_image, coords.x(), coords.y(), 64, 64);
+			}
+	}
 }
 

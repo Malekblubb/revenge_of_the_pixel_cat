@@ -63,9 +63,13 @@ namespace pce
 		const auto& image_name() const noexcept
 		{return m_image_name;}
 		
+		const auto* image() const noexcept
+		{return m_image;}
+		
 	private:
 		void clear(const QPoint& from, const QPoint& to);
 		void clear_all();
+		void on_image_change();
 	};
 }
 
