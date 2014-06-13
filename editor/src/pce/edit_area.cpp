@@ -234,8 +234,7 @@ namespace pce
 		// draw layers (sorted)		
 		auto* layerlist(m_ui->lw_layers);
 		for(auto i(layerlist->count() - 1); i != -1; --i)
-		{			
-			std::cout << i << std::endl;
+		{
 			auto* layer(m_layermgr->from_rowindex(i));
 			if(layer == nullptr)
 				continue;
