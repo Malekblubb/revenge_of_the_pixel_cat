@@ -47,6 +47,7 @@ namespace pce
 		void on_pb_translate_up_clicked();
 		void on_sb_view_x_valueChanged(int value);
 		void on_sb_view_y_valueChanged(int value);
+		void on_pb_use_layer_image_clicked();
 		
 		void update_layer_settings();
 		void edit_area_global_translate_changed();

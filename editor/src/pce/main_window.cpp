@@ -7,6 +7,8 @@
 #include <pce/main_window.hpp>
 #include "ui_main_window.h"
 
+#include <QMessageBox>
+
 
 namespace pce
 {
@@ -125,6 +127,23 @@ namespace pce
 		m_edit_area->repaint_request();
 	}
 	
+	void main_window::on_pb_use_layer_image_clicked()
+	{
+		if(m_ui->lw_tilesets->currentRow() == -1)
+		{
+			QMessageBox::warning(this, "Failed to set image", "There is no graphic selected currently.");
+			return;
+		}
+		
+		auto name(m_ui->lw_tilesets->currentItem()->text().toStdString());	
+		auto* layer(m_layermgr.selected_layer());
+		if(layer != nullptr)
+			layer->set_image(&m_graphicsmgr.images().at(name), name);
+		
+		m_ui->le_layer_image->setText(name.c_str());
+		m_ui->lw_layers->currentItem()->setText(layer->name().c_str());
+	}
+	
 	
 	// -------- global edit_area functions --------
 	void main_window::on_pb_reset_scale_clicked()
@@ -182,6 +201,8 @@ namespace pce
 		
 		m_ui->sb_layer_pos_x->setValue(layer->position().x());
 		m_ui->sb_layer_pos_y->setValue(layer->position().y());
+		
+		m_ui->le_layer_image->setText(layer->image_name().c_str());
 	}
 	
 	void main_window::edit_area_global_translate_changed()
