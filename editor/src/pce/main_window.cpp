@@ -142,6 +142,7 @@ namespace pce
 		
 		m_ui->le_layer_image->setText(name.c_str());
 		m_ui->lw_layers->currentItem()->setText(layer->name().c_str());
+		m_edit_area->repaint_request();
 	}
 	
 	
