@@ -9,8 +9,10 @@
 
 #include "graphics_manager.hpp"
 #include "layer_manager.hpp"
+#include "status_manager.hpp"
 
 #include <QMainWindow>
+#include <QTimer>
 
 
 namespace Ui
@@ -29,6 +31,9 @@ namespace pce
 		class edit_area* m_edit_area;
 		graphics_manager m_graphicsmgr;
 		layer_manager m_layermgr;
+		status_manager m_statusmgr;
+		
+		QTimer m_update_timer;
 
 	public:
 		explicit main_window(QWidget* parent = nullptr);
@@ -51,6 +56,8 @@ namespace pce
 		
 		void update_layer_settings();
 		void edit_area_global_translate_changed();
+		
+		void timer_update();
 		
 	private:
 		void init();

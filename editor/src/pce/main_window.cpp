@@ -26,47 +26,6 @@ namespace pce
 		delete m_ui;
 	}
 	
-	void main_window::init()
-	{
-		// init all pointers
-		m_edit_area = m_ui->w_edit_area;
-		
-		m_edit_area->set_graphicsmgr(&m_graphicsmgr);
-		m_edit_area->set_layermgr(&m_layermgr);
-		m_edit_area->set_ui(m_ui);
-		
-		m_layermgr.set_ui(m_ui);
-		
-		
-		// connect		
-		// -------- EDIT AREA --------
-		// send key input from list widget to edit area
-		this->connect(m_ui->lw_tilesets, SIGNAL(key_pressed(QKeyEvent*)), m_edit_area, SLOT(key_pressed(QKeyEvent*)));
-		this->connect(m_ui->lw_tilesets, SIGNAL(key_released(QKeyEvent*)), m_edit_area, SLOT(key_released(QKeyEvent*)));
-
-		this->connect(m_edit_area, SIGNAL(layer_moved()), this, SLOT(update_layer_settings()));
-		this->connect(m_edit_area, SIGNAL(global_translate_changed()), this, SLOT(edit_area_global_translate_changed()));
-		
-		// grid
-		this->connect(m_ui->cb_showgrid, SIGNAL(toggled(bool)), m_edit_area, SLOT(grid_state_changed(bool)));
-		this->connect(m_ui->sb_grid_x, SIGNAL(valueChanged(QString)), m_edit_area, SLOT(grid_update_requested(QString)));
-		this->connect(m_ui->sb_grid_y, SIGNAL(valueChanged(QString)), m_edit_area, SLOT(grid_update_requested(QString)));
-		this->connect(m_ui->le_gridcolor, SIGNAL(textChanged(QString)), m_edit_area, SLOT(grid_update_requested(QString)));
-		
-		// scale
-		this->connect(m_ui->sb_scale, SIGNAL(valueChanged(int)), m_edit_area, SLOT(scale_change_requested(int)));
-		
-		
-		// -------- LAYER LIST --------
-		this->connect(m_ui->pb_add_layer, SIGNAL(clicked()), &m_layermgr, SLOT(add_layer_request()));
-		this->connect(m_ui->pb_remove_layer, SIGNAL(clicked()), &m_layermgr, SLOT(remove_layer_request()));
-		
-		
-		// add image names to list
-		for(const auto& a : m_graphicsmgr.images())
-			m_ui->lw_tilesets->addItem(a.first.c_str());
-	}
-	
 	
 	// -------- layer settings --------
 	void main_window::on_lw_layers_currentRowChanged(int row)
@@ -211,5 +170,64 @@ namespace pce
 		auto& newt(m_edit_area->global_translate());
 		m_ui->sb_view_x->setValue(newt.x());
 		m_ui->sb_view_y->setValue(newt.y());
+	}
+	
+	
+	void main_window::timer_update()
+	{
+		if(m_statusmgr.need_update())
+			m_statusmgr.update();
+	}
+	
+	
+	void main_window::init()
+	{
+		m_update_timer.setInterval(0);
+		
+		// init all pointers
+		m_edit_area = m_ui->w_edit_area;
+		
+		m_edit_area->set_graphicsmgr(&m_graphicsmgr);
+		m_edit_area->set_layermgr(&m_layermgr);
+		m_edit_area->set_statusmgr(&m_statusmgr);
+		m_edit_area->set_ui(m_ui);
+		
+		m_layermgr.set_ui(m_ui);
+		
+		m_statusmgr.set_ui(m_ui);
+		
+		
+		// connect		
+		// -------- this --------
+		this->connect(&m_update_timer, SIGNAL(timeout()), this, SLOT(timer_update()));
+		this->connect(&m_statusmgr, SIGNAL(start_update()), &m_update_timer, SLOT(start()));
+		this->connect(&m_statusmgr, SIGNAL(stop_update()), &m_update_timer, SLOT(stop()));
+		
+		// -------- EDIT AREA --------
+		// send key input from list widget to edit area
+		this->connect(m_ui->lw_tilesets, SIGNAL(key_pressed(QKeyEvent*)), m_edit_area, SLOT(key_pressed(QKeyEvent*)));
+		this->connect(m_ui->lw_tilesets, SIGNAL(key_released(QKeyEvent*)), m_edit_area, SLOT(key_released(QKeyEvent*)));
+
+		this->connect(m_edit_area, SIGNAL(layer_moved()), this, SLOT(update_layer_settings()));
+		this->connect(m_edit_area, SIGNAL(global_translate_changed()), this, SLOT(edit_area_global_translate_changed()));
+		
+		// grid
+		this->connect(m_ui->cb_showgrid, SIGNAL(toggled(bool)), m_edit_area, SLOT(grid_state_changed(bool)));
+		this->connect(m_ui->sb_grid_x, SIGNAL(valueChanged(QString)), m_edit_area, SLOT(grid_update_requested(QString)));
+		this->connect(m_ui->sb_grid_y, SIGNAL(valueChanged(QString)), m_edit_area, SLOT(grid_update_requested(QString)));
+		this->connect(m_ui->le_gridcolor, SIGNAL(textChanged(QString)), m_edit_area, SLOT(grid_update_requested(QString)));
+		
+		// scale
+		this->connect(m_ui->sb_scale, SIGNAL(valueChanged(int)), m_edit_area, SLOT(scale_change_requested(int)));
+		
+		
+		// -------- LAYER LIST --------
+		this->connect(m_ui->pb_add_layer, SIGNAL(clicked()), &m_layermgr, SLOT(add_layer_request()));
+		this->connect(m_ui->pb_remove_layer, SIGNAL(clicked()), &m_layermgr, SLOT(remove_layer_request()));
+		
+		
+		// add image names to list
+		for(const auto& a : m_graphicsmgr.images())
+			m_ui->lw_tilesets->addItem(a.first.c_str());
 	}
 }
