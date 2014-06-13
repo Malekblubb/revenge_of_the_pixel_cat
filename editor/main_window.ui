@@ -493,6 +493,35 @@
       <number>0</number>
      </property>
     </widget>
+    <widget class="QLineEdit" name="le_layer_image">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>160</y>
+       <width>181</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Image name</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pb_use_layer_image">
+     <property name="geometry">
+      <rect>
+       <x>59</x>
+       <y>190</y>
+       <width>131</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Use selected image</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QPushButton" name="pb_translate_left">
     <property name="geometry">
