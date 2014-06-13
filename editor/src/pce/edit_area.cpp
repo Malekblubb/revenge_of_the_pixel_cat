@@ -172,6 +172,7 @@ namespace pce
 		// get current selected image
 		if(m_ui->lw_tilesets->currentIndex().row() != -1)
 			m_current_img = &m_graphicsmgr->images().at(m_ui->lw_tilesets->currentItem()->text().toStdString());
+			
 		
 		// draw image preview on space key press		
 		if(m_graphic_preview_active && m_ui->lw_tilesets->currentIndex().row() != -1)
@@ -317,7 +318,8 @@ namespace pce
 				m_target_rect = m_brush.rect();
 			}
 			else
-				if(m_current_img != nullptr && m_layermgr->selected_layer() != nullptr && this->is_select_mode(select_mode::preview))
+				if(m_current_img != nullptr && m_layermgr->selected_layer() != nullptr &&
+						m_layermgr->selected_layer()->image() == m_current_img && this->is_select_mode(select_mode::preview))
 				{
 					auto validated(this->validate_mousepos(ev->x(), ev->y()));
 					validated -= QPoint{static_cast<int>(m_layermgr->selected_layer()->position().x() + m_global_translate.x()),
