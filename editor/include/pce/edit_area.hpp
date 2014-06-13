@@ -49,6 +49,7 @@ namespace pce
 		bool m_graphic_preview_active;
 		bool m_mouse_pressed;
 		bool m_mousewheel_pressed;
+		bool m_control_pressed;
 		bool m_grid_active;
 		
 		class graphics_manager* m_graphicsmgr;

@@ -32,6 +32,7 @@ namespace pce
 		m_graphic_preview_active{false},
 		m_mouse_pressed{false},
 		m_mousewheel_pressed{false},
+		m_control_pressed{false},
 		m_grid_active{false}
 	{this->init();}
 	
@@ -273,7 +274,9 @@ namespace pce
 			return;
 		}
 		
-		if((ev->key() == Qt::Key::Key_Space))
+		m_control_pressed = ev->key() == Qt::Key::Key_Control;
+		
+		if(ev->key() == Qt::Key::Key_Space)
 		{
 			m_graphic_preview_active = true;
 			this->repaint();
@@ -289,7 +292,10 @@ namespace pce
 			return;
 		}
 		
-		if((ev->key() == Qt::Key::Key_Space))
+		if(ev->key() == Qt::Key::Key_Control)
+			m_control_pressed = false;
+		
+		if(ev->key() == Qt::Key::Key_Space)
 		{
 			m_graphic_preview_active = false;
 			this->repaint();
@@ -405,10 +411,19 @@ namespace pce
 		ev->accept();
 		
 		auto d(ev->delta() / 8 / 15);
-		m_scale += d < 0 ? -0.1 : 0.1;
-		if(m_scale >= 1.9) m_scale = 1.9;
-		else if(m_scale <= 0.1) m_scale = 0.1;
 		
-		this->scale_change_requested(std::round(m_scale * 100));
+		// scale on control press
+		if(m_control_pressed)
+		{
+			m_scale += d < 0 ? -0.1 : 0.1;
+			if(m_scale >= 1.9) m_scale = 1.9;
+			else if(m_scale <= 0.1) m_scale = 0.1;
+			
+			this->scale_change_requested(std::round(m_scale * 100));
+		}
+		
+		// translate/scroll if not
+		else
+			d > 0 ? this->translate_x_request(-m_ui->sb_translate_step_x->value()) : this->translate_x_request(m_ui->sb_translate_step_x->value());
 	}
 }
