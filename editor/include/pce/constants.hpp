@@ -9,6 +9,8 @@
 
 #include <string>
 
+#include <QPoint>
+
 
 namespace pce
 {
@@ -22,6 +24,9 @@ namespace pce
 		
 		inline int default_layersize()
 		{return 16;}
+		
+		inline QPoint coords_from_tileindex(int index, int tile_size = 64)
+		{return {(index % 16) * tile_size, (index /16) * tile_size};}
 	}
 }
 
