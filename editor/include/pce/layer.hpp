@@ -27,6 +27,9 @@ namespace pce
 		std::vector<tile> m_tiles;		
 		std::string m_name;
 		
+		const QImage* m_image{nullptr};
+		std::string m_image_name;
+		
 	public:
 		layer() = default;
 		layer(int width, int height);
@@ -39,6 +42,7 @@ namespace pce
 		void set_position_x(qreal x) noexcept;
 		void set_position_y(qreal y) noexcept;
 		void set_name(const std::string& name) noexcept;
+		void set_image(const QImage* img, const std::string& name) noexcept;
 	
 		
 		int num_tiles_x() const noexcept
@@ -53,8 +57,11 @@ namespace pce
 		const auto& position() const noexcept
 		{return m_position;}
 		
-		const auto& name() const noexcept
-		{return m_name;}
+		auto name() const noexcept
+		{return m_name + " (" + m_image_name + ")";}
+		
+		const auto& image_name() const noexcept
+		{return m_image_name;}
 		
 	private:
 		void clear(const QPoint& from, const QPoint& to);

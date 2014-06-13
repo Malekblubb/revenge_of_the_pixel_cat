@@ -114,6 +114,12 @@ namespace pce
 	void layer::set_name(const std::string &name) noexcept
 	{m_name = name;}
 	
+	void layer::set_image(const QImage* img, const std::string& name) noexcept
+	{
+		m_image = img;
+		m_image_name = name;
+	}
+	
 	
 	void layer::clear(const QPoint& from, const QPoint& to)
 	{
