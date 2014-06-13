@@ -110,8 +110,12 @@ namespace pce
 		void keyReleaseEvent(QKeyEvent* ev) override;
 		void mousePressEvent(QMouseEvent* ev) override;
 		void mouseMoveEvent(QMouseEvent* ev) override;
-		void mouseReleaseEvent(QMouseEvent*) override;
+		void mouseReleaseEvent(QMouseEvent*ev) override;
 		void wheelEvent(QWheelEvent*) override;
+		
+		void handle_mousepress(QMouseEvent* ev);
+		void handle_mouse_move(QMouseEvent* ev);
+		void handle_mouse_release(QMouseEvent*);
 	};
 }
 

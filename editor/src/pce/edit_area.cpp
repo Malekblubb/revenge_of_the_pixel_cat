@@ -305,6 +305,45 @@ namespace pce
 	
 	void edit_area::mousePressEvent(QMouseEvent* ev)
 	{
+		this->handle_mousepress(ev);		
+		this->repaint();
+	}
+	
+	void edit_area::mouseMoveEvent(QMouseEvent* ev)
+	{
+		this->handle_mouse_move(ev);		
+		this->repaint();
+	}
+	
+	void edit_area::mouseReleaseEvent(QMouseEvent* ev)
+	{
+		this->handle_mouse_release(ev);		
+		this->repaint();
+	}
+	
+	void edit_area::wheelEvent(QWheelEvent* ev)
+	{
+		ev->accept();
+		
+		auto d(ev->delta() / 8 / 15);
+		
+		// scale on control press
+		if(m_control_pressed)
+		{
+			m_scale += d < 0 ? -0.1 : 0.1;
+			if(m_scale >= 1.9) m_scale = 1.9;
+			else if(m_scale <= 0.1) m_scale = 0.1;
+			
+			this->scale_change_requested(std::round(m_scale * 100));
+		}
+		
+		// translate/scroll if not
+		else
+			d > 0 ? this->translate_x_request(-m_ui->sb_translate_step_x->value()) : this->translate_x_request(m_ui->sb_translate_step_x->value());
+	}
+	
+	void edit_area::handle_mousepress(QMouseEvent* ev)
+	{
 		ev->accept();
 		
 		if(ev->button() == Qt::LeftButton)
@@ -346,11 +385,9 @@ namespace pce
 		m_mousewheel_pressed = ev->button() == Qt::MiddleButton;
 		if(m_mousewheel_pressed && m_layermgr->selected_layer() != nullptr) // calc the offset between layer and mouse for better moving
 			m_mousewheel_offset = ev->posF() - m_layermgr->selected_layer()->position();
-		
-		this->repaint();
 	}
 	
-	void edit_area::mouseMoveEvent(QMouseEvent* ev)
+	void edit_area::handle_mouse_move(QMouseEvent* ev)
 	{
 		ev->accept();
 		
@@ -375,12 +412,10 @@ namespace pce
 			// emit layer_moved signal
 			emit this->layer_moved();
 		}
-		
-		this->repaint();
 	}
 	
-	void edit_area::mouseReleaseEvent(QMouseEvent*)
-	{		
+	void edit_area::handle_mouse_release(QMouseEvent*)
+	{
 		m_mouse_pressed = false;
 		
 		if(this->is_select_mode(select_mode::selecting) || this->is_select_mode(select_mode::abort))
@@ -400,30 +435,6 @@ namespace pce
 				m_select_mode = select_mode::none;
 		}
 	
-		
 		m_mousewheel_pressed = false;
-		
-		this->repaint();
-	}
-	
-	void edit_area::wheelEvent(QWheelEvent* ev)
-	{
-		ev->accept();
-		
-		auto d(ev->delta() / 8 / 15);
-		
-		// scale on control press
-		if(m_control_pressed)
-		{
-			m_scale += d < 0 ? -0.1 : 0.1;
-			if(m_scale >= 1.9) m_scale = 1.9;
-			else if(m_scale <= 0.1) m_scale = 0.1;
-			
-			this->scale_change_requested(std::round(m_scale * 100));
-		}
-		
-		// translate/scroll if not
-		else
-			d > 0 ? this->translate_x_request(-m_ui->sb_translate_step_x->value()) : this->translate_x_request(m_ui->sb_translate_step_x->value());
 	}
 }
