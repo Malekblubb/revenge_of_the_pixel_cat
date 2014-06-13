@@ -54,6 +54,7 @@ namespace pce
 		
 		class graphics_manager* m_graphicsmgr;
 		class layer_manager* m_layermgr;
+		class status_manager* m_statusmgr;
 		Ui::main_window* m_ui;
 		
 	public:
@@ -61,6 +62,7 @@ namespace pce
 		
 		void set_graphicsmgr(class graphics_manager* gmgr) noexcept;
 		void set_layermgr(class layer_manager* lmgr) noexcept;
+		void set_statusmgr(class status_manager* smgr) noexcept;
 		void set_ui(Ui::main_window* ui) noexcept;
 		
 		const auto& global_translate() const noexcept

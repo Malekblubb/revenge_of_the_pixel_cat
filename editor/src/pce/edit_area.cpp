@@ -8,6 +8,7 @@
 #include <pce/graphics_manager.hpp>
 #include <pce/layer_manager.hpp>
 #include <pce/list_widget_layer_item.hpp>
+#include <pce/status_manager.hpp>
 
 #include <mlk/containers/container_utl.h>
 #include <mlk/tools/math.h>
@@ -42,6 +43,9 @@ namespace pce
 	
 	void edit_area::set_layermgr(layer_manager* lmgr) noexcept
 	{m_layermgr = lmgr;}
+	
+	void edit_area::set_statusmgr(status_manager* smgr) noexcept
+	{m_statusmgr = smgr;}
 	
 	void edit_area::set_ui(Ui::main_window* ui) noexcept
 	{m_ui = ui;}
@@ -363,13 +367,20 @@ namespace pce
 				m_target_rect = m_brush.rect();
 			}
 			else
-				if(m_current_img != nullptr && m_layermgr->selected_layer() != nullptr &&
-						m_layermgr->selected_layer()->image() == m_current_img && this->is_select_mode(select_mode::preview))
+				if(m_current_img != nullptr && m_layermgr->selected_layer() != nullptr && this->is_select_mode(select_mode::preview))
 				{
-					auto validated(this->validate_mousepos(ev->x(), ev->y()));
-					validated -= QPoint{static_cast<int>(m_layermgr->selected_layer()->position().x() + m_global_translate.x()),
-										static_cast<int>(m_layermgr->selected_layer()->position().y() + m_global_translate.y())};
-					m_layermgr->selected_layer()->use_brush(m_brush.rect(), *m_current_img, {validated.x(), validated.y()});
+					if(m_layermgr->selected_layer()->image() == m_current_img)
+					{
+						auto validated(this->validate_mousepos(ev->x(), ev->y()));
+						validated -= QPoint{static_cast<int>(m_layermgr->selected_layer()->position().x() + m_global_translate.x()),
+									 static_cast<int>(m_layermgr->selected_layer()->position().y() + m_global_translate.y())};
+						m_layermgr->selected_layer()->use_brush(m_brush.rect(), *m_current_img, {validated.x(), validated.y()});
+						
+						m_statusmgr->new_entry(QString{"Used brush (%1x%2) at %3, %4"}.
+											   arg(m_brush.rect().width()).arg(m_brush.rect().height()).arg(validated.x()).arg(validated.y()).toStdString());
+					}
+					else
+						m_statusmgr->new_entry("You can't use this brush, because the image is not owned by the layer.");
 				}
 		}
 		else if(ev->button() == Qt::RightButton)
