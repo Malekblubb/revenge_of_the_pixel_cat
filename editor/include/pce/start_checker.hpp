@@ -7,22 +7,26 @@
 #define PCE_START_CHECKER_HPP
 
 
-#include <mlk/filesystem/filesystem.h>
+#include <mlk/signals_slots/slot.h>
 
 #include <sstream>
+#include <vector>
 
 
 namespace pce
-{
+{	
 	class start_checker
-	{
-		mlk::fs::dir_handle m_graphicsdir;
-		
+	{		
 		bool m_valid;
 		std::ostringstream m_errorstream;
+		std::vector<mlk::slot<bool&, std::string&>> m_work;
 		
 	public:
 		start_checker();
+		
+		template<typename Work_Func>
+		void add_work(Work_Func&& wf)
+		{m_work.emplace_back(wf);}
 		
 		auto valid() const noexcept
 		{return m_valid;}
@@ -30,7 +34,6 @@ namespace pce
 		auto error_string() const
 		{return m_errorstream.str();}
 		
-	private:
 		void work();
 	};
 }

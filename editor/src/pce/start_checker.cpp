@@ -10,17 +10,20 @@
 namespace pce
 {
 	start_checker::start_checker() :
-		m_graphicsdir{constants::graphics_path()},
 		m_valid{true}
-	{this->work();}
+	{ }
 	
 	void start_checker::work()
 	{
-		if(!m_graphicsdir.exists())
+		for(auto& a : m_work)
 		{
-			m_valid = false;
-			m_errorstream << "The graphicsdirectory does not exist.\n" <<
-							 "Please create it. (Path: " << constants::graphics_path() << ")";
+			std::string error_str;
+			bool success{false};
+			a(success, error_str);
+			if(!success)
+				m_errorstream << error_str << "\n\n";				
 		}
+		
+		m_valid = m_errorstream.str().size() <= 0;
 	}	
 }
