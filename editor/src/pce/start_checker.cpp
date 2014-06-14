@@ -5,7 +5,7 @@
 
 #include <pce/constants.hpp>
 #include <pce/start_checker.hpp>
-
+#include <iostream>
 
 namespace pce
 {
@@ -18,10 +18,10 @@ namespace pce
 		for(auto& a : m_work)
 		{
 			std::string error_str;
-			bool success{false};
+			bool success{true};
 			a(success, error_str);
 			if(!success)
-				m_errorstream << error_str << "\n\n";				
+				m_errorstream << error_str << "\n\n";
 		}
 		
 		m_valid = m_errorstream.str().size() <= 0;
