@@ -154,6 +154,33 @@ namespace pce
 	}
 	
 	
+	void edit_area::move_target_rect_invalid(const QPoint& p)
+	{
+		auto validated(this->validate_mousepos(p.x(), p.y()));
+		validated -= {(int)m_global_translate.x(), (int)m_global_translate.y()};
+		m_target_rect.setCoords(validated.x(), validated.y(), validated.x() + m_brush.rect().width() - 1, validated.y() + m_brush.rect().height() - 1);
+	}
+	
+	void edit_area::use_brush_invalid(const QPoint& p)
+	{
+		if(m_current_img != nullptr && m_layermgr->selected_layer() != nullptr && this->is_select_mode(select_mode::preview))
+		{
+			if(m_layermgr->selected_layer()->image() == m_current_img)
+			{
+				auto validated(this->validate_mousepos(p.x(), p.y()));
+				validated -= QPoint{static_cast<int>(m_layermgr->selected_layer()->position().x() + m_global_translate.x()),
+							 static_cast<int>(m_layermgr->selected_layer()->position().y() + m_global_translate.y())};
+				m_layermgr->selected_layer()->use_brush(m_brush.rect(), *m_current_img, {validated.x(), validated.y()});
+				
+				m_statusmgr->new_entry(QString{"Used brush (%1x%2) at %3, %4"}.
+									   arg(m_brush.rect().width()).arg(m_brush.rect().height()).arg(validated.x()).arg(validated.y()).toStdString());
+			}
+			else
+				m_statusmgr->new_entry("You can't use this brush, because the image is not owned by the layer.");
+		}
+	}
+	
+	
 	void edit_area::paintEvent(QPaintEvent*)
 	{
 		QPainter p{this};
@@ -352,9 +379,10 @@ namespace pce
 		
 		if(ev->button() == Qt::LeftButton)
 		{
+			m_mouse_pressed = true;
+			
 			if(this->is_select_mode(select_mode::none))
 			{
-				m_mouse_pressed = true;
 				m_select_mode = select_mode::selecting;
 				
 				// start the selection
@@ -367,21 +395,7 @@ namespace pce
 				m_target_rect = m_brush.rect();
 			}
 			else
-				if(m_current_img != nullptr && m_layermgr->selected_layer() != nullptr && this->is_select_mode(select_mode::preview))
-				{
-					if(m_layermgr->selected_layer()->image() == m_current_img)
-					{
-						auto validated(this->validate_mousepos(ev->x(), ev->y()));
-						validated -= QPoint{static_cast<int>(m_layermgr->selected_layer()->position().x() + m_global_translate.x()),
-									 static_cast<int>(m_layermgr->selected_layer()->position().y() + m_global_translate.y())};
-						m_layermgr->selected_layer()->use_brush(m_brush.rect(), *m_current_img, {validated.x(), validated.y()});
-						
-						m_statusmgr->new_entry(QString{"Used brush (%1x%2) at %3, %4"}.
-											   arg(m_brush.rect().width()).arg(m_brush.rect().height()).arg(validated.x()).arg(validated.y()).toStdString());
-					}
-					else
-						m_statusmgr->new_entry("You can't use this brush, because the image is not owned by the layer.");
-				}
+				this->use_brush_invalid(ev->pos());
 		}
 		else if(ev->button() == Qt::RightButton)
 		{
@@ -403,16 +417,21 @@ namespace pce
 		ev->accept();
 		
 		if(m_mouse_pressed)
-			m_brush.selecting(ev->pos() / m_scale);
-		else
 		{
-			if(this->is_select_mode_any()) // why need i "-1" here ??
+			if(this->is_select_mode(select_mode::selecting))
+				m_brush.selecting(ev->pos() / m_scale);
+			else if(this->is_select_mode_any())
 			{
-				auto validated(this->validate_mousepos(ev->x(), ev->y()));
-				validated -= {(int)m_global_translate.x(), (int)m_global_translate.y()};
-				m_target_rect.setCoords(validated.x(), validated.y(), validated.x() + m_brush.rect().width() - 1, validated.y() + m_brush.rect().height() - 1);
+				// use the brush
+				this->use_brush_invalid(ev->pos());
+				
+				// move target rect
+				this->move_target_rect_invalid(ev->pos());
 			}
 		}
+		else
+			if(this->is_select_mode_any())
+				this->move_target_rect_invalid(ev->pos());
 		
 		if(m_mousewheel_pressed && m_layermgr->selected_layer() != nullptr)
 		{

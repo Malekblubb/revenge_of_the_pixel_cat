@@ -104,6 +104,9 @@ namespace pce
 		
 		void recalc_grid();
 		
+		void move_target_rect_invalid(const QPoint& p);
+		void use_brush_invalid(const QPoint& p);
+		
 		// events
 		void paintEvent(QPaintEvent*) override;
 		
@@ -112,7 +115,7 @@ namespace pce
 		void keyReleaseEvent(QKeyEvent* ev) override;
 		void mousePressEvent(QMouseEvent* ev) override;
 		void mouseMoveEvent(QMouseEvent* ev) override;
-		void mouseReleaseEvent(QMouseEvent*ev) override;
+		void mouseReleaseEvent(QMouseEvent* ev) override;
 		void wheelEvent(QWheelEvent*) override;
 		
 		void handle_mousepress(QMouseEvent* ev);
