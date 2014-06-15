@@ -205,10 +205,7 @@ namespace pce
 		
 		
 		// -------- draw WITHOUT translation --------
-		// get current selected image
-//		if(m_ui->lw_tilesets->currentIndex().row() != -1)
-//			m_current_img = &m_graphicsmgr->images().at(m_ui->lw_tilesets->currentItem()->text().toStdString());
-			
+		// get current selected image			
 		if(this->is_select_mode(select_mode::preview))
 		{
 			if(m_ui->lw_tilesets->currentIndex().row() != -1)
@@ -432,7 +429,12 @@ namespace pce
 		if(m_mouse_pressed)
 		{
 			if(this->is_select_mode(select_mode::selecting))
-				m_brush.selecting(ev->pos() / m_scale);
+			{
+				if(m_graphic_preview_active)
+					m_brush.selecting(ev->pos() / m_scale);
+				else
+					m_brush.selecting(ev->pos() / m_scale - QPoint{static_cast<int>(m_global_translate.x()), static_cast<int>(m_global_translate.y())});
+			}
 			else if(this->is_select_mode_any())
 			{
 				// use the brush
@@ -463,7 +465,6 @@ namespace pce
 		
 		if(this->is_select_mode(select_mode::selecting) || this->is_select_mode(select_mode::abort))
 		{
-			
 			// change select mode
 			if(m_graphic_preview_active)
 				m_select_mode = select_mode::preview;
