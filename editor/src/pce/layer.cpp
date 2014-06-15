@@ -22,7 +22,7 @@ namespace pce
 		m_name{"Layer#"}
 	{this->clear_all();}
 	
-	void layer::use_brush(const QRect& source_rect, const QImage& source_img, const QPoint& target_point)
+	void layer::use_brush(const QRect& source_rect, const QImage& source_img, const QPoint& target_point, bool self)
 	{
 		for(auto sy(source_rect.y()), ty(target_point.y()); sy < source_rect.height() + source_rect.y(); sy += 64, ty += 64)
 		{
@@ -35,9 +35,13 @@ namespace pce
 					continue;
 				}
 				
-				m_tiles[target_tile] = {index, 0};
+				if(self)
+					m_tiles[target_tile] = m_tiles[((sy / 64) * m_num_tiles_x) + (sx / 64)];
+				else
+					m_tiles[target_tile] = {index, 0};
 			}
 		}
+		
 		
 		this->clear({target_point.x(), target_point.y()}, {target_point.x() + source_rect.width(), target_point.y() + source_rect.height()});
 		
