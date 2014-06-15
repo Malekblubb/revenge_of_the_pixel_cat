@@ -34,7 +34,7 @@ namespace pce
 		layer() = default;
 		layer(int width, int height);
 		
-		void use_brush(const QRect& source_rect, const QImage& source_img, const QPoint& target_point, bool self);
+		void use_brush(const QRect& source_rect, const QPoint& target_point, bool self);
 		void move(qreal offx, qreal offy) noexcept;
 		
 		void set_size(int num_tiles_x, int num_tiles_y);
@@ -69,6 +69,7 @@ namespace pce
 	private:
 		void clear(const QPoint& from, const QPoint& to);
 		void clear_all();
+		void redraw();
 		void on_image_change();
 	};
 }

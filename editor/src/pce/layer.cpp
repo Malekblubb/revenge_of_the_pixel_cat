@@ -9,6 +9,7 @@
 #include <mlk/log/log.h>
 
 #include <QPainter>
+#include <iomanip>
 
 
 namespace pce
@@ -18,12 +19,15 @@ namespace pce
 		m_num_tiles_y{height},
 		m_drawarea{width * 64, height * 64, QImage::Format_ARGB32},
 		m_position{0.f, 0.f},
-		m_tiles(width * height),
+		m_tiles(width * height, {0, 0}),
 		m_name{"Layer#"}
 	{this->clear_all();}
 	
-	void layer::use_brush(const QRect& source_rect, const QImage& source_img, const QPoint& target_point, bool self)
+	void layer::use_brush(const QRect& source_rect, const QPoint& target_point, bool self)
 	{
+		if(self && source_rect.contains(target_point))
+			return;
+		
 		for(auto sy(source_rect.y()), ty(target_point.y()); sy < source_rect.height() + source_rect.y(); sy += 64, ty += 64)
 		{
 			for(auto sx(source_rect.x()), tx(target_point.x()); sx < source_rect.width() + source_rect.x(); sx += 64, tx += 64)
@@ -36,17 +40,18 @@ namespace pce
 				}
 				
 				if(self)
+				{
 					m_tiles[target_tile] = m_tiles[((sy / 64) * m_num_tiles_x) + (sx / 64)];
+				}
 				else
 					m_tiles[target_tile] = {index, 0};
 			}
 		}
 		
-		
 		this->clear({target_point.x(), target_point.y()}, {target_point.x() + source_rect.width(), target_point.y() + source_rect.height()});
 		
-		QPainter p{&m_drawarea};
-		p.drawImage(target_point, source_img, source_rect);
+		// redraw full layer
+		this->redraw();
 	}
 	
 	void layer::move(qreal offx, qreal offy) noexcept
@@ -77,7 +82,7 @@ namespace pce
 		{
 			for(auto x(0); x < m_num_tiles_x; ++x)	
 			{
-				std::cout << m_tiles[y * m_num_tiles_x + x].index << " ";
+				std::cout << std::setw(2) << std::setfill('0') << m_tiles[y * m_num_tiles_x + x].index << " ";
 			}
 			std::cout << std::endl;
 		}
@@ -87,7 +92,7 @@ namespace pce
 		{
 			for(auto x(0); x < num_tiles_x; ++x)	
 			{
-				std::cout << new_vec[y * num_tiles_x + x].index << " ";
+				std::cout << std::setw(2) << std::setfill('0') << new_vec[y * num_tiles_x + x].index << " ";
 			}
 			std::cout << std::endl;
 		}
@@ -137,6 +142,25 @@ namespace pce
 	
 	void layer::clear_all()
 	{this->clear({0, 0}, {m_num_tiles_x * 64, m_num_tiles_y * 64});}
+	
+	void layer::redraw()
+	{
+		if(m_image == nullptr)
+			return;
+		
+		QPainter p{&m_drawarea};
+
+		for(auto y(0); y < m_num_tiles_y; ++y)
+			for(auto x(0); x < m_num_tiles_x; ++x)
+			{
+				auto index(m_tiles[y*m_num_tiles_x+x].index);
+				if(index == 0)
+					continue;
+				
+				auto coords(constants::coords_from_tileindex(index));
+				p.drawImage(x*64, y*64, *m_image, coords.x(), coords.y(), 64, 64);
+			}
+	}
 	
 	void layer::on_image_change()
 	{
