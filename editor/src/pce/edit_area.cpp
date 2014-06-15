@@ -163,14 +163,18 @@ namespace pce
 	
 	void edit_area::use_brush_invalid(const QPoint& p)
 	{
-		if(m_current_img != nullptr && m_layermgr->selected_layer() != nullptr && this->is_select_mode(select_mode::preview))
+		if(m_current_img != nullptr && m_layermgr->selected_layer() != nullptr)
 		{
-			if(m_layermgr->selected_layer()->image() == m_current_img)
+			if(m_layermgr->selected_layer()->image() == m_current_img || &m_layermgr->selected_layer()->drawarea() == m_current_img)
 			{
 				auto validated(this->validate_mousepos(p.x(), p.y()));
 				validated -= QPoint{static_cast<int>(m_layermgr->selected_layer()->position().x() + m_global_translate.x()),
 							 static_cast<int>(m_layermgr->selected_layer()->position().y() + m_global_translate.y())};
-				m_layermgr->selected_layer()->use_brush(m_brush.rect(), *m_current_img, {validated.x(), validated.y()});
+				
+				auto self(false);
+				if(this->is_select_mode(select_mode::edit))
+					self = true;
+				m_layermgr->selected_layer()->use_brush(m_brush.rect(), {validated.x(), validated.y()}, self);
 				
 				m_statusmgr->new_entry(QString{"Used brush (%1x%2) at %3, %4"}.
 									   arg(m_brush.rect().width()).arg(m_brush.rect().height()).arg(validated.x()).arg(validated.y()).toStdString());
@@ -202,13 +206,22 @@ namespace pce
 		
 		// -------- draw WITHOUT translation --------
 		// get current selected image
-		if(m_ui->lw_tilesets->currentIndex().row() != -1)
-			m_current_img = &m_graphicsmgr->images().at(m_ui->lw_tilesets->currentItem()->text().toStdString());
+//		if(m_ui->lw_tilesets->currentIndex().row() != -1)
+//			m_current_img = &m_graphicsmgr->images().at(m_ui->lw_tilesets->currentItem()->text().toStdString());
 			
+		if(this->is_select_mode(select_mode::preview))
+		{
+			if(m_ui->lw_tilesets->currentIndex().row() != -1)
+				m_current_img = &m_graphicsmgr->images().at(m_ui->lw_tilesets->currentItem()->text().toStdString());
+		}
+		else if(this->is_select_mode(select_mode::edit))
+		{
+			m_current_img = &m_layermgr->selected_layer()->drawarea();
+		}
 		
 		// draw image preview on space key press		
 		if(m_graphic_preview_active && m_ui->lw_tilesets->currentIndex().row() != -1)
-			p.drawImage(QPoint{0, 0}, *m_current_img);
+			p.drawImage(QPoint{0, 0}, m_graphicsmgr->images().at(m_ui->lw_tilesets->currentItem()->text().toStdString()));
 		
 		
 		// ---------------------------------------------------------------
@@ -238,7 +251,7 @@ namespace pce
 			p.drawText(QPoint{m_target_rect.x(), m_target_rect.y()}, QString{"w: %1(%2), h: %3(%4)"}.arg(w / 64).arg(w).arg(h / 64).arg(h));
 		}
 		
-		if((m_current_img != nullptr) && this->is_select_mode(select_mode::preview))
+		if(m_current_img != nullptr)
 			p.drawImage(m_target_rect, *m_current_img, m_brush.rect());
 			
 		
