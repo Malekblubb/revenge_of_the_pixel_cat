@@ -34,7 +34,7 @@ namespace pce
 		layer() = default;
 		layer(int width, int height);
 		
-		void use_brush(const QRect& source_rect, const QPoint& target_point, bool self);
+		void use_brush(const class brush* b, const QRect& source_rect, const QPoint& target_point, bool self);
 		void move(qreal offx, qreal offy) noexcept;
 		
 		void set_size(int num_tiles_x, int num_tiles_y);
@@ -65,6 +65,11 @@ namespace pce
 		
 		const auto* image() const noexcept
 		{return m_image;}
+		
+		const auto& tiles() const noexcept
+		{return m_tiles;}
+		
+		std::vector<tile> tiles_from_to(const QRect& rect, bool self) const;
 		
 	private:
 		void clear(const QPoint& from, const QPoint& to);

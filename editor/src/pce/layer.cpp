@@ -3,6 +3,7 @@
 // See LICENSE for more information.
 //
 
+#include <pce/brush.hpp>
 #include <pce/constants.hpp>
 #include <pce/layer.hpp>
 
@@ -23,15 +24,16 @@ namespace pce
 		m_name{"Layer#"}
 	{this->clear_all();}
 	
-	void layer::use_brush(const QRect& source_rect, const QPoint& target_point, bool self)
+	void layer::use_brush(const brush* b, const QRect& source_rect, const QPoint& target_point, bool self)
 	{
 		if(self && source_rect.contains(target_point))
 			return;
 		
-		for(auto sy(source_rect.y()), ty(target_point.y()); sy < source_rect.height() + source_rect.y(); sy += 64, ty += 64)
-		{
-			for(auto sx(source_rect.x()), tx(target_point.x()); sx < source_rect.width() + source_rect.x(); sx += 64, tx += 64)
-			{				
+		auto bx(0), by(0);
+		for(auto sy(source_rect.y()), ty(target_point.y()); sy < source_rect.height() + source_rect.y(); sy += 64, ty += 64, ++by)
+		{bx = 0;
+			for(auto sx(source_rect.x()), tx(target_point.x()); sx < source_rect.width() + source_rect.x(); sx += 64, tx += 64, ++bx)
+			{		
 				auto index(((sy / 64) * 16) + (sx / 64)), target_tile(((ty / 64) * m_num_tiles_x) + (tx / 64));
 				if(static_cast<mlk::st>(target_tile) >= m_tiles.size())
 				{
@@ -39,12 +41,8 @@ namespace pce
 					continue;
 				}
 				
-				if(self)
-				{
-					m_tiles[target_tile] = m_tiles[((sy / 64) * m_num_tiles_x) + (sx / 64)];
-				}
-				else
-					m_tiles[target_tile] = {index, 0};
+
+				m_tiles[target_tile] = b->tiles().at(by * source_rect.width() / 64 + bx);
 			}
 		}
 		
@@ -121,7 +119,7 @@ namespace pce
 	void layer::set_position_y(qreal y) noexcept
 	{m_position.setY(y);}
 	
-	void layer::set_name(const std::string &name) noexcept
+	void layer::set_name(const std::string& name) noexcept
 	{m_name = name;}
 	
 	void layer::set_image(const QImage* img, const std::string& name) noexcept
@@ -129,6 +127,20 @@ namespace pce
 		m_image = img;
 		m_image_name = name;
 		this->on_image_change();
+	}
+	
+	
+	std::vector<tile> layer::tiles_from_to(const QRect& rect, bool self) const
+	{
+		auto num_tiles_x(rect.width() / 64), num_tiles_y(rect.height() / 64);
+		auto start(constants::index_from_coords(rect.topLeft())), end(constants::index_from_coords(rect.bottomRight()));
+		std::vector<tile> result(num_tiles_x * num_tiles_y);
+		
+		for(auto y(0); y < rect.height() / 64; ++y)
+			for(auto x(start); x < rect.width() / 64 + start; ++x)				
+				result[y* num_tiles_x+ (x-start)] = self ? m_tiles[y * m_num_tiles_x +x] : tile{y * m_num_tiles_x +x, 0};		
+		
+		return result;
 	}
 	
 	
