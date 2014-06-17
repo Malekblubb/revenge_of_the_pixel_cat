@@ -9,6 +9,7 @@
 
 #include <string>
 
+#include <QImage>
 #include <QPoint>
 
 
@@ -27,6 +28,21 @@ namespace pce
 		
 		inline QPoint coords_from_tileindex(int index, int tile_size = 64)
 		{return {(index % 16) * tile_size, (index /16) * tile_size};}
+		
+		inline int index_from_coords(const QPoint& coords, int num_tiles_x = 16, int tile_size = 64)
+		{return ((coords.y() / tile_size) * num_tiles_x) + (coords.x() / tile_size);}
+		
+		inline void clear_image_pixels(QImage& img, const QPoint& from = {0, 0}, const QPoint& to = {0, 0})
+		{
+			auto toc(to);
+			if(toc == QPoint{0, 0})
+				toc = {img.width(), img.height()};
+			
+			for(auto y(from.y()); y < toc.y(); ++y)
+				for(auto x(from.x()); x < toc.x(); ++x)
+					if(y < img.height() &&  x <img.width())
+						img.setPixel(x, y, 0);
+		}
 	}
 }
 
