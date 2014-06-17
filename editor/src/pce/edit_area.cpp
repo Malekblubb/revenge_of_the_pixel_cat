@@ -165,7 +165,7 @@ namespace pce
 	{
 		if(m_current_img != nullptr && m_layermgr->selected_layer() != nullptr)
 		{
-			if(m_layermgr->selected_layer()->image() == m_current_img || &m_layermgr->selected_layer()->drawarea() == m_current_img)
+//			if(m_layermgr->selected_layer()->image() == m_current_img || &m_layermgr->selected_layer()->drawarea() == m_current_img)
 			{
 				auto validated(this->validate_mousepos(p.x(), p.y()));
 				validated -= QPoint{static_cast<int>(m_layermgr->selected_layer()->position().x() + m_global_translate.x()),
@@ -174,13 +174,13 @@ namespace pce
 				auto self(false);
 				if(this->is_select_mode(select_mode::edit))
 					self = true;
-				m_layermgr->selected_layer()->use_brush(m_brush.rect(), {validated.x(), validated.y()}, self);
+				m_layermgr->selected_layer()->use_brush(&m_brush, m_brush.rect(), {validated.x(), validated.y()}, self);
 				
 				m_statusmgr->new_entry(QString{"Used brush (%1x%2) at %3, %4"}.
 									   arg(m_brush.rect().width()).arg(m_brush.rect().height()).arg(validated.x()).arg(validated.y()).toStdString());
 			}
-			else
-				m_statusmgr->new_entry("You can't use this brush, because the image is not owned by the layer.");
+//			else
+//				m_statusmgr->new_entry("You can't use this brush, because the image is not owned by the layer.");
 		}
 	}
 	
@@ -213,7 +213,7 @@ namespace pce
 		}
 		else if(this->is_select_mode(select_mode::edit))
 		{
-			m_current_img = &m_layermgr->selected_layer()->drawarea();
+			m_current_img = /*&m_layermgr->selected_layer()->drawarea()*/&m_brush.preview();
 		}
 		
 		// draw image preview on space key press		
@@ -249,7 +249,9 @@ namespace pce
 		}
 		
 		if(m_current_img != nullptr)
-			p.drawImage(m_target_rect, *m_current_img, m_brush.rect());
+			p.drawImage(m_target_rect, *m_current_img, this->is_select_mode(select_mode::preview) ?
+					   /* normal rect for prevew selec*/m_brush.rect() :
+					   /* layer-self needs other rect */QRect{0, 0, m_brush.rect().width(), m_brush.rect().height()});
 			
 		
 		t.translate(-m_global_translate.x(), -m_global_translate.y());
@@ -475,7 +477,8 @@ namespace pce
 			m_target_rect.setHeight(m_brush.rect().height());
 			
 			// reset invalid size
-			if(!m_brush.selection_end())
+			if(m_layermgr->selected_layer() != nullptr)
+			if(!m_brush.selection_end(m_layermgr->selected_layer(), this->is_select_mode(select_mode::edit)))
 				m_select_mode = select_mode::none;
 		}
 	
