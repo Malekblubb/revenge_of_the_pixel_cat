@@ -34,7 +34,7 @@ namespace pce
 		layer() = default;
 		layer(int width, int height);
 		
-		void use_brush(const class brush* b, const QRect& source_rect, const QPoint& target_point, bool self);
+		void use_brush(const class brush* b, const QPoint& target_point, bool self);
 		void move(qreal offx, qreal offy) noexcept;
 		
 		void set_size(int num_tiles_x, int num_tiles_y);

@@ -24,24 +24,26 @@ namespace pce
 		m_name{"Layer#"}
 	{this->clear_all();}
 	
-	void layer::use_brush(const brush* b, const QRect& source_rect, const QPoint& target_point, bool self)
+	void layer::use_brush(const brush* b, const QPoint& target_point, bool self)
 	{
+		auto source_rect(b->rect());
 		if(self && source_rect.contains(target_point))
 			return;
 		
 		auto bx(0), by(0);
 		for(auto sy(source_rect.y()), ty(target_point.y()); sy < source_rect.height() + source_rect.y(); sy += 64, ty += 64, ++by)
-		{bx = 0;
+		{
+			bx = 0;
+			
 			for(auto sx(source_rect.x()), tx(target_point.x()); sx < source_rect.width() + source_rect.x(); sx += 64, tx += 64, ++bx)
 			{		
-				auto index(((sy / 64) * 16) + (sx / 64)), target_tile(((ty / 64) * m_num_tiles_x) + (tx / 64));
+				auto target_tile(((ty / 64) * m_num_tiles_x) + (tx / 64));
 				if(static_cast<mlk::st>(target_tile) >= m_tiles.size())
 				{
 					mlk::lerr()["pce::layer"] << "wrong target_tile index. requested: " << target_tile << ", max: " << m_tiles.size() - 1;
 					continue;
 				}
 				
-
 				m_tiles[target_tile] = b->tiles().at(by * source_rect.width() / 64 + bx);
 			}
 		}
@@ -133,7 +135,7 @@ namespace pce
 	std::vector<tile> layer::tiles_from_to(const QRect& rect, bool self) const
 	{
 		auto num_tiles_x(rect.width() / 64), num_tiles_y(rect.height() / 64);
-		auto start(constants::index_from_coords(rect.topLeft())), end(constants::index_from_coords(rect.bottomRight()));
+		auto start(constants::index_from_coords(rect.topLeft()));
 		std::vector<tile> result(num_tiles_x * num_tiles_y);
 		
 		for(auto y(0); y < rect.height() / 64; ++y)
