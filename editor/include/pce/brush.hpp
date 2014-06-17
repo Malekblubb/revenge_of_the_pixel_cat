@@ -7,24 +7,37 @@
 #define PCE_BRUSH_HPP
 
 
+#include <pce/tile.hpp>
+
+#include <QImage>
 #include <QPoint>
 #include <QRect>
+
+#include <vector>
 
 
 namespace pce
 {
 	class brush
 	{
+		QImage m_preview;
 		QRect m_selection_rect;
+		std::vector<tile> m_tiles;
 		
 	public:
 		void selection_begin(const QPoint& p);
 		void selecting(const QPoint& p);
-		bool selection_end();
+		bool selection_end(const class layer* tiles_from_layer, bool from_layer_image);
 		void reset();
+		
+		const auto& preview() const noexcept
+		{return m_preview;}
 		
 		const auto& rect() const noexcept
 		{return m_selection_rect;}
+		
+		const auto& tiles() const noexcept
+		{return m_tiles;}
 	};
 }
 
