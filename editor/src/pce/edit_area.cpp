@@ -165,7 +165,7 @@ namespace pce
 	{
 		if(m_current_img != nullptr && m_layermgr->selected_layer() != nullptr)
 		{
-//			if(m_layermgr->selected_layer()->image() == m_current_img || &m_layermgr->selected_layer()->drawarea() == m_current_img)
+			if(m_layermgr->selected_layer()->image() == m_current_img || &m_brush.preview() == m_current_img)
 			{
 				auto validated(this->validate_mousepos(p.x(), p.y()));
 				validated -= QPoint{static_cast<int>(m_layermgr->selected_layer()->position().x() + m_global_translate.x()),
@@ -174,13 +174,13 @@ namespace pce
 				auto self(false);
 				if(this->is_select_mode(select_mode::edit))
 					self = true;
-				m_layermgr->selected_layer()->use_brush(&m_brush, m_brush.rect(), {validated.x(), validated.y()}, self);
+				m_layermgr->selected_layer()->use_brush(&m_brush, {validated.x(), validated.y()}, self);
 				
 				m_statusmgr->new_entry(QString{"Used brush (%1x%2) at %3, %4"}.
 									   arg(m_brush.rect().width()).arg(m_brush.rect().height()).arg(validated.x()).arg(validated.y()).toStdString());
 			}
-//			else
-//				m_statusmgr->new_entry("You can't use this brush, because the image is not owned by the layer.");
+			else
+				m_statusmgr->new_entry("You can't use this brush, because the image is not owned by the layer.");
 		}
 	}
 	

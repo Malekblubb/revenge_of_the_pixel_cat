@@ -44,6 +44,7 @@ namespace pce
 					continue;
 				}
 				
+				// copy tiles from brush
 				m_tiles[target_tile] = b->tiles().at(by * source_rect.width() / 64 + bx);
 			}
 		}

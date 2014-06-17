@@ -11,8 +11,6 @@
 
 #include <QPainter>
 
-#include <iostream>
-
 
 namespace pce
 {
@@ -41,9 +39,13 @@ namespace pce
 			return false;
 		}
 		
-		m_tiles = tiles_from_layer->tiles_from_to(m_selection_rect, from_layer_image);   
+		// get tiles inside of selection_rect
+		m_tiles = tiles_from_layer->tiles_from_to(m_selection_rect, from_layer_image);
+		
+		// recreate preview image
 		m_preview = {m_selection_rect.width(), m_selection_rect.height(), QImage::Format_ARGB32};
 		
+		// redraw image
 		QPainter p{&m_preview};
 		constants::clear_image_pixels(m_preview);
 		
