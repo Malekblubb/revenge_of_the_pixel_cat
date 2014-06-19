@@ -213,7 +213,7 @@ namespace pce
 		}
 		else if(this->is_select_mode(select_mode::edit))
 		{
-			m_current_img = /*&m_layermgr->selected_layer()->drawarea()*/&m_brush.preview();
+			m_current_img = &m_brush.preview();
 		}
 		
 		// draw image preview on space key press		
@@ -276,31 +276,34 @@ namespace pce
 		
 		
 		// -------- draw ON translation --------		
-		// draw layers (sorted)		
-		auto* layerlist(m_ui->lw_layers);
-		for(auto i(layerlist->count() - 1); i != -1; --i)
+		// draw layers (sorted)
+		if(!m_graphic_preview_active)
 		{
-			auto* layer(m_layermgr->from_rowindex(i));
-			if(layer == nullptr)
-				continue;
-			
-			// copy the transform for each layer
-			auto tc(t);
-			tc.translate(layer->position().x(), layer->position().y());
-			p.setTransform(tc);
-			
-			// draw layer content
-			p.drawImage(QPoint{0, 0}, layer->drawarea());
-			
-			// draw layer outrect
-			if(i == layerlist->currentRow())
-				p.setPen(Qt::blue);
-			else
-				p.setPen(Qt::red);
-			auto rect(layer->drawarea().rect());
-			p.drawText(QPoint{rect.x(), layer->position().y() <= 10 ? 10 : rect.y()}, layer->name().c_str());
-			p.setBrush(QColor{0, 0, 0, 0});
-			p.drawRect(rect);
+			auto* layerlist(m_ui->lw_layers);
+			for(auto i(layerlist->count() - 1); i != -1; --i)
+			{
+				auto* layer(m_layermgr->from_rowindex(i));
+				if(layer == nullptr)
+					continue;
+				
+				// copy the transform for each layer
+				auto tc(t);
+				tc.translate(layer->position().x(), layer->position().y());
+				p.setTransform(tc);
+				
+				// draw layer content
+				p.drawImage(QPoint{0, 0}, layer->drawarea());
+				
+				// draw layer outrect
+				if(i == layerlist->currentRow())
+					p.setPen(Qt::blue);
+				else
+					p.setPen(Qt::red);
+				auto rect(layer->drawarea().rect());
+				p.drawText(QPoint{rect.x(), layer->position().y() <= 10 ? 10 : rect.y()}, layer->name().c_str());
+				p.setBrush(QColor{0, 0, 0, 0});
+				p.drawRect(rect);
+			}
 		}
 		
 		
