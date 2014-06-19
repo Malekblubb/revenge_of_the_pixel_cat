@@ -40,7 +40,7 @@ namespace pce
 			
 			for(auto y(from.y()); y < toc.y(); ++y)
 				for(auto x(from.x()); x < toc.x(); ++x)
-					if(y < img.height() &&  x <img.width())
+					if(y < img.height() && y > 0 &&  x < img.width() && x > 0)
 						img.setPixel(x, y, 0);
 		}
 	}
