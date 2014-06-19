@@ -22,7 +22,7 @@ namespace pce
 		m_position{0.f, 0.f},
 		m_tiles(width * height, {0, 0}),
 		m_name{"Layer#"}
-	{this->clear_all();}
+	{constants::clear_image_pixels(m_drawarea);}
 	
 	void layer::use_brush(const brush* b, const QPoint& target_point, bool self)
 	{
@@ -38,7 +38,7 @@ namespace pce
 			for(auto sx(source_rect.x()), tx(target_point.x()); sx < source_rect.width() + source_rect.x(); sx += 64, tx += 64, ++bx)
 			{		
 				auto target_tile(((ty / 64) * m_num_tiles_x) + (tx / 64));
-				if(static_cast<mlk::st>(target_tile) >= m_tiles.size())
+				if(static_cast<mlk::st>(target_tile) >= m_tiles.size() || target_tile < 0)
 				{
 					mlk::lerr()["pce::layer"] << "wrong target_tile index. requested: " << target_tile << ", max: " << m_tiles.size() - 1;
 					continue;
@@ -49,7 +49,8 @@ namespace pce
 			}
 		}
 		
-		this->clear({target_point.x(), target_point.y()}, {target_point.x() + source_rect.width(), target_point.y() + source_rect.height()});
+		// clear old content
+		constants::clear_image_pixels(m_drawarea, {target_point.x(), target_point.y()}, {target_point.x() + source_rect.width(), target_point.y() + source_rect.height()});
 		
 		// redraw full layer
 		this->redraw();
@@ -64,6 +65,12 @@ namespace pce
 	
 	void layer::set_size(int num_tiles_x, int num_tiles_y)
 	{
+		if((num_tiles_x == m_num_tiles_x) && (num_tiles_y == m_num_tiles_y))
+		{
+			mlk::lout("pce::layer") << "set_size ignored. same size requested";
+			return;
+		}
+		
 		std::vector<tile> new_vec(num_tiles_x * num_tiles_y);
 		
 		// copy to new vec
@@ -108,7 +115,6 @@ namespace pce
 		m_tiles = new_vec;
 		
 		// redraw old stuff
-		this->clear_all();
 		QPainter p{&m_drawarea};
 		p.drawImage(QPoint{0, 0}, copy_img);
 	}
@@ -147,17 +153,6 @@ namespace pce
 	}
 	
 	
-	void layer::clear(const QPoint& from, const QPoint& to)
-	{
-		for(auto y(from.y()); y < to.y(); ++y)
-			for(auto x(from.x()); x < to.x(); ++x)
-				if(y < m_drawarea.height() &&  x < m_drawarea.width())
-					m_drawarea.setPixel(x, y, 0);
-	}
-	
-	void layer::clear_all()
-	{this->clear({0, 0}, {m_num_tiles_x * 64, m_num_tiles_y * 64});}
-	
 	void layer::redraw()
 	{
 		if(m_image == nullptr)
@@ -183,6 +178,7 @@ namespace pce
 			return;
 		
 		QPainter p{&m_drawarea};
+		
 		for(auto y(0); y < m_num_tiles_y; ++y)
 			for(auto x(0); x < m_num_tiles_x; ++x)
 			{
@@ -191,7 +187,7 @@ namespace pce
 					continue;
 				
 				auto coords(constants::coords_from_tileindex(tile.index));
-				this->clear({x * 64, y * 64}, {x * 2 * 64, x * 2 * 64});
+				constants::clear_image_pixels(m_drawarea, {x * 64, y * 64}, {x * 2 * 64, x * 2 * 64});
 				p.drawImage(x * 64, y * 64, *m_image, coords.x(), coords.y(), 64, 64);
 			}
 	}

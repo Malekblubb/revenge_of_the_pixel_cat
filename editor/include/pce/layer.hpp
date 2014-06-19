@@ -72,8 +72,6 @@ namespace pce
 		std::vector<tile> tiles_from_to(const QRect& rect, bool self) const;
 		
 	private:
-		void clear(const QPoint& from, const QPoint& to);
-		void clear_all();
 		void redraw();
 		void on_image_change();
 	};
