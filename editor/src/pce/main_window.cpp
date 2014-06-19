@@ -42,25 +42,25 @@ namespace pce
 		this->update_layer_settings();
 	}
 	
-	void main_window::on_sb_layer_width_valueChanged(int value)
+	void main_window::on_sb_layer_width_editingFinished()
 	{
 		auto* layer(m_layermgr.selected_layer());
 		
 		if(layer == nullptr)
 			return;
 		
-		layer->set_size(value, layer->num_tiles_y());
+		layer->set_size(m_ui->sb_layer_width->value(), layer->num_tiles_y());
 		m_edit_area->repaint_request();
 	}
 	
-	void main_window::on_sb_layer_height_valueChanged(int value)
+	void main_window::on_sb_layer_height_editingFinished()
 	{
 		auto* layer(m_layermgr.selected_layer());
 		
 		if(layer == nullptr)
 			return;
 		
-		layer->set_size(layer->num_tiles_x(), value);
+		layer->set_size(layer->num_tiles_x(), m_ui->sb_layer_height->value());
 		m_edit_area->repaint_request();
 	}
 	
