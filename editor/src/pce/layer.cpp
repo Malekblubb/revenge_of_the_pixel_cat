@@ -136,13 +136,13 @@ namespace pce
 	std::vector<tile> layer::tiles_from_to(const QRect& rect, bool self) const
 	{
 		auto num_tiles_x(rect.width() / 64), num_tiles_y(rect.height() / 64);
-		auto start(constants::index_from_coords(rect.topLeft()));
 		std::vector<tile> result(num_tiles_x * num_tiles_y);
 		
-		for(auto y(0); y < rect.height() / 64; ++y)
-			for(auto x(start); x < rect.width() / 64 + start; ++x)				
-				result[y* num_tiles_x+ (x-start)] = self ? m_tiles[y * m_num_tiles_x +x] : tile{y * m_num_tiles_x +x, 0};		
-		
+		auto target(0);
+		for(auto y(rect.y()); y < rect.bottomLeft().y(); y += 64)	
+			for(auto x(rect.x()); x < rect.topRight().x(); x += 64, ++target)
+				result[target] = self ? m_tiles[constants::index_from_coords({x,y}, m_num_tiles_x)] : tile{constants::index_from_coords({x,y}), 0};
+
 		return result;
 	}
 	
