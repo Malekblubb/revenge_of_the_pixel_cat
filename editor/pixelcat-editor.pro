@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 # compile settings
 QMAKE_CXX = clang++
-QMAKE_CXXFLAGS += -std=c++1y -Wno-deprecated-register
+QMAKE_CXXFLAGS += -std=c++1y -Wno-deprecated-register -g
 
 # project
 TARGET = pixelcat-editor
