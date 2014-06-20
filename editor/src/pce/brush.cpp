@@ -42,7 +42,7 @@ namespace pce
 		}
 		
 		// get tiles inside of selection_rect
-		m_tiles = tiles_from_layer->tiles_from_to(m_selection_rect, from_layer_image);
+		m_tiles = tiles_from_layer->tiles_in_rect(m_selection_rect, from_layer_image);
 		 
 		// recreate preview image
 		m_preview = {m_selection_rect.width(), m_selection_rect.height(), QImage::Format_ARGB32};

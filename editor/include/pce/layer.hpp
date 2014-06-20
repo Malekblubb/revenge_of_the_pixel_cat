@@ -69,7 +69,7 @@ namespace pce
 		const auto& tiles() const noexcept
 		{return m_tiles;}
 		
-		std::vector<tile> tiles_from_to(const QRect& rect, bool self) const;
+		std::vector<tile> tiles_in_rect(const QRect& rect, bool self) const;
 		
 	private:
 		void redraw();

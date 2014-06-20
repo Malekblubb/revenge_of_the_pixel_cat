@@ -139,7 +139,7 @@ namespace pce
 	}
 	
 	
-	std::vector<tile> layer::tiles_from_to(const QRect& rect, bool self) const
+	std::vector<tile> layer::tiles_in_rect(const QRect& rect, bool self) const
 	{
 		auto num_tiles_x(rect.width() / 64), num_tiles_y(rect.height() / 64);
 		std::vector<tile> result(num_tiles_x * num_tiles_y);
