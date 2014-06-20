@@ -89,6 +89,12 @@ namespace pce
 		void set_translate_x(qreal value) noexcept;
 		void set_translate_y(qreal value) noexcept;
 		
+		// brush slots
+		void brush_rotate_180_request();
+		void brush_rotate_90_request();
+		void brush_flip_horizontal_request();
+		void brush_flip_vertical_request();
+		
 		// repaint request
 		void repaint_request();
 		

@@ -148,6 +148,30 @@ namespace pce
 		m_edit_area->repaint_request();
 	}
 	
+	// brush settings
+	void main_window::on_pb_r_180_clicked()
+	{
+	    m_edit_area->brush_rotate_180_request();
+		m_edit_area->repaint_request();
+	}
+	
+	void main_window::on_pb_r_90_clicked()
+	{
+	    m_edit_area->brush_rotate_90_request();
+		m_edit_area->repaint_request();
+	}
+	
+	void main_window::on_pb_flip_hor_clicked()
+	{
+	    m_edit_area->brush_flip_horizontal_request();
+		m_edit_area->repaint_request();
+	}
+	
+	void main_window::on_pb_flip_vert_clicked()
+	{
+		m_edit_area->brush_flip_vertical_request();
+		m_edit_area->repaint_request();
+	}
 	
 	// -------- slots called from other objects --------
 	void main_window::update_layer_settings()

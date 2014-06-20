@@ -102,6 +102,22 @@ namespace pce
 		m_global_translate.setY(value);
 		emit this->global_translate_changed();
 	}
+	
+	void edit_area::brush_rotate_180_request()
+	{m_brush.rotate(180.);}
+	
+	void edit_area::brush_rotate_90_request()
+	{m_brush.rotate(90.);}
+	
+	void edit_area::brush_flip_horizontal_request()
+	{
+		
+	}
+	
+	void edit_area::brush_flip_vertical_request()
+	{
+		
+	}
 
 	
 	void edit_area::repaint_request()

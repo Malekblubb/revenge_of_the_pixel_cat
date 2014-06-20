@@ -20,7 +20,7 @@ namespace pce
 		m_num_tiles_y{height},
 		m_drawarea{width * 64, height * 64, QImage::Format_ARGB32},
 		m_position{0.f, 0.f},
-		m_tiles(width * height, {0, 0}),
+		m_tiles(width * height, {0, 0, 0.}),
 		m_name{"Layer#"}
 	{constants::clear_image_pixels(m_drawarea);}
 	
@@ -79,7 +79,7 @@ namespace pce
 			for(auto x(0); x < num_tiles_x; ++x)	
 			{
 				if(x >= m_num_tiles_x || y >= m_num_tiles_y)
-					new_vec[y * num_tiles_x + x] = {0, 0};
+					new_vec[y * num_tiles_x + x] = {0, 0, 0};
 				else
 					new_vec[y * num_tiles_x + x] = m_tiles[y * m_num_tiles_x + x];
 			}
@@ -147,7 +147,7 @@ namespace pce
 		auto target(0);
 		for(auto y(rect.y()); y < rect.bottomLeft().y(); y += 64)	
 			for(auto x(rect.x()); x < rect.topRight().x(); x += 64, ++target)
-				result[target] = self ? m_tiles[constants::index_from_coords({x,y}, m_num_tiles_x)] : tile{constants::index_from_coords({x,y}), 0};
+				result[target] = self ? m_tiles[constants::index_from_coords({x,y}, m_num_tiles_x)] : tile{constants::index_from_coords({x,y}), 0, 0.};
 
 		return result;
 	}
