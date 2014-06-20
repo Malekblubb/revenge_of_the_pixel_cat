@@ -752,30 +752,6 @@
       <string>&lt;</string>
      </property>
     </widget>
-    <zorder>pb_translate_down</zorder>
-    <zorder>sb_translate_step_x</zorder>
-    <zorder>sb_translate_step_y</zorder>
-    <zorder>label_14</zorder>
-    <zorder>sb_view_y</zorder>
-    <zorder>label_11</zorder>
-    <zorder>pb_translate_right</zorder>
-    <zorder>pb_translate_up</zorder>
-    <zorder>label_12</zorder>
-    <zorder>sb_view_x</zorder>
-    <zorder>label_13</zorder>
-    <zorder>pb_translate_left</zorder>
-    <zorder>pb_translate_down</zorder>
-    <zorder>sb_translate_step_x</zorder>
-    <zorder>sb_translate_step_y</zorder>
-    <zorder>label_14</zorder>
-    <zorder>sb_view_y</zorder>
-    <zorder>label_11</zorder>
-    <zorder>pb_translate_right</zorder>
-    <zorder>pb_translate_up</zorder>
-    <zorder>label_12</zorder>
-    <zorder>sb_view_x</zorder>
-    <zorder>label_13</zorder>
-    <zorder>pb_translate_left</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
@@ -826,6 +802,19 @@
      </property>
      <property name="text">
       <string>Flip horizontal</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pb_flip_vert">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>50</y>
+       <width>108</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Flip vertical</string>
      </property>
     </widget>
    </widget>
