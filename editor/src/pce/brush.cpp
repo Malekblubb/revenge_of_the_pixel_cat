@@ -10,7 +10,6 @@
 #include <mlk/tools/math.h>
 
 #include <QPainter>
-#include <iostream>
 
 
 namespace pce
@@ -91,13 +90,9 @@ namespace pce
 	
 	void brush::add_rotation(qreal angle) noexcept
 	{
-//		std::cout << m_current_rotation << std::endl;
-		
 		if(m_current_rotation + angle >= 360.)
 			m_current_rotation += angle - 360.;
 		else
 			m_current_rotation += angle;
-		
-		std::cout << m_current_rotation << std::endl;
 	}
 }
