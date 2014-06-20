@@ -10,6 +10,7 @@
 #include <mlk/tools/math.h>
 
 #include <QPainter>
+#include <iostream>
 
 
 namespace pce
@@ -20,6 +21,8 @@ namespace pce
 		m_selection_rect.setY(mlk::math::round_to(p.y(), 64));
 		m_selection_rect.setWidth(64);
 		m_selection_rect.setHeight(64);
+		
+		m_current_rotation = 0.;
 	}
 	
 	void brush::selecting(const QPoint& p)
@@ -41,7 +44,7 @@ namespace pce
 		
 		// get tiles inside of selection_rect
 		m_tiles = tiles_from_layer->tiles_from_to(m_selection_rect, from_layer_image);
-		
+		 
 		// recreate preview image
 		m_preview = {m_selection_rect.width(), m_selection_rect.height(), QImage::Format_ARGB32};
 		
@@ -51,7 +54,7 @@ namespace pce
 		
 		for(auto y(0); y < m_selection_rect.height() / 64; ++y)
 			for(auto x(0); x < m_selection_rect.width() / 64; ++x)
-			{				
+			{
 				auto coords(constants::coords_from_tileindex(m_tiles.at(y*(m_selection_rect.width()/64)+x).index));
 				p.drawImage(x*64, y*64, *tiles_from_layer->image(), coords.x(), coords.y(), 64, 64);
 			}
@@ -65,5 +68,36 @@ namespace pce
 		m_selection_rect.setY(0);
 		m_selection_rect.setWidth(0);
 		m_selection_rect.setHeight(0);
+	}
+
+
+	void brush::rotate(qreal angle)
+	{
+		auto cpy(m_preview);
+		if(angle == 90. && cpy.width() != cpy.height())
+		{
+			m_preview = {m_preview.height(), m_preview.width(), QImage::Format_ARGB32};
+			m_selection_rect.setWidth(m_preview.width());
+			m_selection_rect.setHeight(m_preview.height());
+		}
+		
+		QTransform t;
+		t.rotate(angle);
+		m_preview = cpy.transformed(t);
+		
+		this->add_rotation(angle);
+	}
+	
+	
+	void brush::add_rotation(qreal angle) noexcept
+	{
+//		std::cout << m_current_rotation << std::endl;
+		
+		if(m_current_rotation + angle >= 360.)
+			m_current_rotation += angle - 360.;
+		else
+			m_current_rotation += angle;
+		
+		std::cout << m_current_rotation << std::endl;
 	}
 }
