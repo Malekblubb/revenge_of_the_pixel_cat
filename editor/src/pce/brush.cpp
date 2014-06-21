@@ -54,8 +54,8 @@ namespace pce
 		for(auto y(0); y < m_selection_rect.height() / 64; ++y)
 			for(auto x(0); x < m_selection_rect.width() / 64; ++x)
 			{
-				auto coords(constants::coords_from_tileindex(m_tiles.at(y*(m_selection_rect.width()/64)+x).index));
-				p.drawImage(x*64, y*64, *tiles_from_layer->image(), coords.x(), coords.y(), 64, 64);
+				auto coords(constants::coords_from_tileindex(m_tiles.at(y * (m_selection_rect.width() / 64) + x).index));
+				p.drawImage(x * 64, y * 64, *tiles_from_layer->image(), coords.x(), coords.y(), 64, 64);
 			}
 		
 		return true;

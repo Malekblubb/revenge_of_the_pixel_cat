@@ -173,7 +173,7 @@ namespace pce
 	void edit_area::move_target_rect_invalid(const QPoint& p)
 	{
 		auto validated(this->validate_mousepos(p.x(), p.y()));
-		validated -= {(int)m_global_translate.x(), (int)m_global_translate.y()};
+		validated -= {static_cast<int>(m_global_translate.x()), static_cast<int>(m_global_translate.y())};
 		m_target_rect.setCoords(validated.x(), validated.y(), validated.x() + m_brush.rect().width() - 1, validated.y() + m_brush.rect().height() - 1);
 	}
 	
@@ -184,7 +184,7 @@ namespace pce
 			if(m_layermgr->selected_layer()->image() == m_current_img || &m_brush.preview() == m_current_img)
 			{
 				auto validated(this->validate_mousepos(p.x(), p.y()));
-				validated -= QPoint{static_cast<int>(m_layermgr->selected_layer()->position().x() + m_global_translate.x()),
+				validated -= {static_cast<int>(m_layermgr->selected_layer()->position().x() + m_global_translate.x()),
 							 static_cast<int>(m_layermgr->selected_layer()->position().y() + m_global_translate.y())};
 				
 				auto self(false);
