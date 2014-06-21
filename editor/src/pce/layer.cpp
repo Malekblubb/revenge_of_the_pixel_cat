@@ -173,23 +173,6 @@ namespace pce
 	}
 	
 	void layer::on_image_change()
-	{
-		if(m_image == nullptr)
-			return;
-		
-		QPainter p{&m_drawarea};
-		
-		for(auto y(0); y < m_num_tiles_y; ++y)
-			for(auto x(0); x < m_num_tiles_x; ++x)
-			{
-				auto& tile(m_tiles[y * m_num_tiles_x + x]);
-				if(tile.index == 0)
-					continue;
-				
-				auto coords(constants::coords_from_tileindex(tile.index));
-				constants::clear_image_pixels(m_drawarea, {x * 64, y * 64}, {x * 2 * 64, x * 2 * 64});
-				p.drawImage(x * 64, y * 64, *m_image, coords.x(), coords.y(), 64, 64);
-			}
-	}
+	{this->redraw();}
 }
 
