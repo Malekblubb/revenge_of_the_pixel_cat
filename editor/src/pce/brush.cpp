@@ -84,7 +84,15 @@ namespace pce
 		t.rotate(angle);
 		m_preview = cpy.transformed(t);
 		
+		// calculate current rotation
 		this->add_rotation(angle);
+		
+		// add the rotation to the tiles
+		for(auto& a : m_tiles)
+		{
+			a.flags = 0;
+			a.rotation = m_current_rotation;
+		}
 	}
 	
 	
