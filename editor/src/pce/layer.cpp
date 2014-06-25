@@ -163,12 +163,31 @@ namespace pce
 		for(auto y(0); y < m_num_tiles_y; ++y)
 			for(auto x(0); x < m_num_tiles_x; ++x)
 			{
-				auto index(m_tiles[y*m_num_tiles_x+x].index);
-				if(index == 0)
+				auto tile(m_tiles[y*m_num_tiles_x+x]);
+				if(tile.index == 0)
 					continue;
 				
-				auto coords(constants::coords_from_tileindex(index));
-				p.drawImage(x*64, y*64, *m_image, coords.x(), coords.y(), 64, 64);
+				
+				auto coords(constants::coords_from_tileindex(tile.index));
+				
+				// TODO: this will not work if multiple tiles were selected by the brush
+				// ----> fix
+				if(tile.rotation != 0)
+				{
+					QImage rotated{64,64, QImage::Format_ARGB32};
+					
+					QPainter imgpainter{&rotated};
+					imgpainter.drawImage(0, 0, *m_image, coords.x(), coords.y(), 64, 64);
+					imgpainter.end();
+					
+					QTransform t;
+					t.rotate(tile.rotation);
+					rotated = rotated.transformed(t);
+					
+					p.drawImage(x * 64, y * 64, rotated, 0, 0, 64, 64);
+				}
+				else
+					p.drawImage(x * 64, y * 64, *m_image, coords.x(), coords.y(), 64, 64);
 			}
 	}
 	
