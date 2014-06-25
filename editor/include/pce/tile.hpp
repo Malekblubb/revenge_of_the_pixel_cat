@@ -19,7 +19,7 @@ namespace pce
 	{
 		int index;
 		int flags;
-		float rotation;
+		double rotation;
 	};
 }
 
