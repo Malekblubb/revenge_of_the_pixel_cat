@@ -10,6 +10,7 @@
 #include <mlk/tools/math.h>
 
 #include <QPainter>
+#include <iostream>
 
 
 namespace pce
@@ -45,7 +46,7 @@ namespace pce
 		m_tiles = tiles_from_layer->tiles_in_rect(m_selection_rect, from_layer_image);
 		 
 		// recreate preview image
-		m_preview = {m_selection_rect.width(), m_selection_rect.height(), QImage::Format_ARGB32};
+		m_preview = {m_selection_rect.width(), m_selection_rect.height(), QImage::Format_ARGB32_Premultiplied};
 		
 		// redraw image
 		QPainter p{&m_preview};
@@ -72,10 +73,12 @@ namespace pce
 
 	void brush::rotate(qreal angle)
 	{
+		auto w(m_selection_rect.width() / 64), h(m_selection_rect.height() / 64);
+		
 		auto cpy(m_preview);
 		if(angle == 90. && cpy.width() != cpy.height())
 		{
-			m_preview = {m_preview.height(), m_preview.width(), QImage::Format_ARGB32};
+			m_preview = {m_preview.height(), m_preview.width(), QImage::Format_ARGB32_Premultiplied};
 			m_selection_rect.setWidth(m_preview.width());
 			m_selection_rect.setHeight(m_preview.height());
 		}
@@ -92,6 +95,20 @@ namespace pce
 		{
 			a.flags = 0;
 			a.rotation = m_current_rotation;
+		}
+		
+		auto old_tiles(m_tiles);
+		auto tile_index(0);
+		m_tiles.clear();
+		m_tiles.resize((m_selection_rect.width()/64)*(m_selection_rect.height()/64));
+		for(auto x(0); x < w; ++x)
+		{
+			for(auto y(h-1); y >= 0; --y, ++tile_index)  
+			{
+				std::cout << "old: " << old_tiles[y*w+x].index << "    new at: " << tile_index << std::endl;
+				m_tiles[tile_index] = old_tiles[y*w+x];
+				
+			}
 		}
 	}
 	
