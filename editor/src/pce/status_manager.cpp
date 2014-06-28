@@ -12,7 +12,7 @@ namespace pce
 {
 	status_manager::status_manager(QWidget* parent) :
 		QObject{parent},
-		m_timer{5000}
+		m_timer{1000}
 	{m_timer.run();}
 	
 	void status_manager::update()
