@@ -18,7 +18,7 @@ namespace pce
 	layer::layer(int width, int height) :
 		m_num_tiles_x{width},
 		m_num_tiles_y{height},
-		m_drawarea{width * 64, height * 64, QImage::Format_ARGB32},
+		m_drawarea{width * 64, height * 64, QImage::Format_ARGB32_Premultiplied},
 		m_position{0.f, 0.f},
 		m_tiles(width * height, {0, 0, 0.}),
 		m_name{"Layer#"}
@@ -52,8 +52,8 @@ namespace pce
 		// clear old content
 		constants::clear_image_pixels(m_drawarea, {target_point.x(), target_point.y()}, {target_point.x() + source_rect.width(), target_point.y() + source_rect.height()});
 		
-		// redraw full layer
-		this->redraw();
+		QPainter p{&m_drawarea};
+		p.drawImage(target_point, b->preview());
 	}
 	
 	void layer::move(qreal offx, qreal offy) noexcept
@@ -107,7 +107,7 @@ namespace pce
 		
 		// create new drawarea
 		auto copy_img(m_drawarea.copy(0, 0, m_num_tiles_x * 64, m_num_tiles_y * 64));
-		m_drawarea = {num_tiles_x * 64, num_tiles_y * 64, QImage::Format_ARGB32};
+		m_drawarea = {num_tiles_x * 64, num_tiles_y * 64, QImage::Format_ARGB32_Premultiplied};
 		
 		// copy all new stuff
 		m_num_tiles_x = num_tiles_x;
@@ -157,8 +157,9 @@ namespace pce
 	{
 		if(m_image == nullptr)
 			return;
-		
+
 		QPainter p{&m_drawarea};
+		constants::clear_image_pixels(m_drawarea);
 
 		for(auto y(0); y < m_num_tiles_y; ++y)
 			for(auto x(0); x < m_num_tiles_x; ++x)
@@ -167,24 +168,15 @@ namespace pce
 				if(tile.index == 0)
 					continue;
 				
-				
 				auto coords(constants::coords_from_tileindex(tile.index));
-				
-				// TODO: this will not work if multiple tiles were selected by the brush
-				// ----> fix
+		
 				if(tile.rotation != 0)
 				{
-					QImage rotated{64,64, QImage::Format_ARGB32};
-					
-					QPainter imgpainter{&rotated};
-					imgpainter.drawImage(0, 0, *m_image, coords.x(), coords.y(), 64, 64);
-					imgpainter.end();
-					
-					QTransform t;
-					t.rotate(tile.rotation);
-					rotated = rotated.transformed(t);
-					
-					p.drawImage(x * 64, y * 64, rotated, 0, 0, 64, 64);
+					// translate to the center of the tileposition to translate from this position					
+					p.translate(x * 64 + 32, y * 64 + 32);
+					p.rotate(tile.rotation);
+					p.drawImage(-32, -32, *m_image, coords.x(), coords.y(), 64, 64);
+					p.resetTransform();
 				}
 				else
 					p.drawImage(x * 64, y * 64, *m_image, coords.x(), coords.y(), 64, 64);
