@@ -200,7 +200,7 @@ namespace pce
 		}
 	}
 	
-	
+	// TODO: SORT THIS MESS
 	void edit_area::paintEvent(QPaintEvent*)
 	{
 		QPainter p{this};
@@ -240,13 +240,28 @@ namespace pce
 		if(!m_graphic_preview_active)
 		{
 			t.translate(m_global_translate.x(), m_global_translate.y());
+			
+			if(m_layermgr->selected_layer() != nullptr)
+				t.translate(m_layermgr->selected_layer()->position().x(), m_layermgr->selected_layer()->position().y());
+
 			p.setTransform(t);
 		}
+		
+		bool already_translated{false};
 		
 		if(this->is_select_mode(select_mode::selecting))
 			p.drawRect(m_brush.rect());
 		else if(this->is_select_mode_any())
+		{
+			if(!m_graphic_preview_active)
+			{
+				t.translate(-m_layermgr->selected_layer()->position().x(), -m_layermgr->selected_layer()->position().y());
+				p.setTransform(t);
+				already_translated = true;
+			}
+			
 			p.drawRect(m_target_rect);
+		}
 		
 		
 		if(this->is_select_mode_any())
@@ -263,6 +278,12 @@ namespace pce
 		
 		t.translate(-m_global_translate.x(), -m_global_translate.y());
 		p.setTransform(t);
+		
+		if(m_layermgr->selected_layer() != nullptr && !already_translated)
+		{
+			t.translate(-m_layermgr->selected_layer()->position().x(), -m_layermgr->selected_layer()->position().y());
+			p.setTransform(t);
+		}
 		
 		
 		// draw the grid
@@ -408,10 +429,11 @@ namespace pce
 				m_select_mode = select_mode::selecting;
 				
 				// start the selection
+				auto layerpos(m_layermgr->selected_layer()->position());
 				if(m_graphic_preview_active)
 					m_brush.selection_begin(ev->pos() / m_scale);
 				else
-					m_brush.selection_begin(ev->pos() / m_scale - QPoint{static_cast<int>(m_global_translate.x()), static_cast<int>(m_global_translate.y())});
+					m_brush.selection_begin(ev->pos() / m_scale - QPoint{static_cast<int>(m_global_translate.x() + layerpos.x()), static_cast<int>(m_global_translate.y() + layerpos.y())});
 				
 				// target begin == brush
 				m_target_rect = m_brush.rect();
@@ -442,10 +464,11 @@ namespace pce
 		{
 			if(this->is_select_mode(select_mode::selecting))
 			{
+				auto layerpos(m_layermgr->selected_layer()->position());
 				if(m_graphic_preview_active)
 					m_brush.selecting(ev->pos() / m_scale);
 				else
-					m_brush.selecting(ev->pos() / m_scale - QPoint{static_cast<int>(m_global_translate.x()), static_cast<int>(m_global_translate.y())});
+					m_brush.selecting(ev->pos() / m_scale - QPoint{static_cast<int>(m_global_translate.x() + layerpos.x()), static_cast<int>(m_global_translate.y() + layerpos.y())});
 			}
 			else if(this->is_select_mode_any())
 			{
