@@ -10,7 +10,6 @@
 #include <mlk/tools/math.h>
 
 #include <QPainter>
-#include <iostream>
 
 
 namespace pce

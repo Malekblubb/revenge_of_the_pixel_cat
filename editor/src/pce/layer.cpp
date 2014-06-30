@@ -24,6 +24,7 @@ namespace pce
 		m_name{"Layer#"}
 	{constants::clear_image_pixels(m_drawarea);}
 	
+	
 	void layer::use_brush(const brush* b, const QPoint& target_point, bool self)
 	{
 		auto source_rect(b->rect());
