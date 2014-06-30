@@ -222,15 +222,8 @@ namespace pce
 		
 		// -------- draw WITHOUT translation --------
 		// get current selected image			
-		if(this->is_select_mode(select_mode::preview))
-		{
-			if(m_ui->lw_tilesets->currentIndex().row() != -1)
-				m_current_img = &m_graphicsmgr->images().at(m_ui->lw_tilesets->currentItem()->text().toStdString());
-		}
-		else if(this->is_select_mode(select_mode::edit))
-		{
-			m_current_img = &m_brush.preview();
-		}
+		m_current_img = &m_brush.preview();
+
 		
 		// draw image preview on space key press		
 		if(m_graphic_preview_active && m_ui->lw_tilesets->currentIndex().row() != -1)
@@ -265,9 +258,7 @@ namespace pce
 		}
 		
 		if(m_current_img != nullptr)
-			p.drawImage(m_target_rect, *m_current_img, this->is_select_mode(select_mode::preview) ?
-					   /* normal rect for prevew selec*/m_brush.rect() :
-					   /* layer-self needs other rect */QRect{0, 0, m_brush.rect().width(), m_brush.rect().height()});
+			p.drawImage(m_target_rect, *m_current_img, QRect{0, 0, m_brush.rect().width(), m_brush.rect().height()});
 			
 		
 		t.translate(-m_global_translate.x(), -m_global_translate.y());
