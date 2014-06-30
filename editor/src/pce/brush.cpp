@@ -34,7 +34,7 @@ namespace pce
 		m_selection_rect.setHeight(h);
 	}
 	
-	bool brush::selection_end(const layer* tiles_from_layer, bool from_layer_image)
+	bool brush::selection_end(const layer* l, bool from_layer_image)
 	{
 		if(m_selection_rect.width() == 0 || m_selection_rect.height() == 0)
 		{
@@ -43,21 +43,15 @@ namespace pce
 		}
 		
 		// get tiles inside of selection_rect
-		m_tiles = tiles_from_layer->tiles_in_rect(m_selection_rect, from_layer_image);
+		m_tiles = l->tiles_in_rect(m_selection_rect, from_layer_image);
 		 
 		// recreate preview image
 		m_preview = {m_selection_rect.width(), m_selection_rect.height(), QImage::Format_ARGB32_Premultiplied};
 		
-		// redraw image
-		QPainter p{&m_preview};
+		// copy image
 		constants::clear_image_pixels(m_preview);
-		
-		for(auto y(0); y < m_selection_rect.height() / 64; ++y)
-			for(auto x(0); x < m_selection_rect.width() / 64; ++x)
-			{
-				auto coords(constants::coords_from_tileindex(m_tiles.at(y * (m_selection_rect.width() / 64) + x).index));
-				p.drawImage(x * 64, y * 64, *tiles_from_layer->image(), coords.x(), coords.y(), 64, 64);
-			}
+		QPainter p{&m_preview};
+		p.drawImage({0, 0}, from_layer_image ? l->drawarea() : *l->image(), m_selection_rect);
 		
 		return true;
 	}
@@ -72,9 +66,7 @@ namespace pce
 
 
 	void brush::rotate(qreal angle)
-	{
-		auto w(m_selection_rect.width() / 64), h(m_selection_rect.height() / 64);
-		
+	{		
 		auto cpy(m_preview);
 		if(angle == 90. && cpy.width() != cpy.height())
 		{
@@ -83,9 +75,7 @@ namespace pce
 			m_selection_rect.setHeight(m_preview.height());
 		}
 		
-		QTransform t;
-		t.rotate(angle);
-		m_preview = cpy.transformed(t);
+		m_preview = cpy.transformed(QTransform{}.rotate(angle));
 		
 		// calculate current rotation
 		this->add_rotation(angle);
@@ -97,19 +87,8 @@ namespace pce
 			a.rotation = m_current_rotation;
 		}
 		
-		auto old_tiles(m_tiles);
-		auto tile_index(0);
-		m_tiles.clear();
-		m_tiles.resize((m_selection_rect.width()/64)*(m_selection_rect.height()/64));
-		for(auto x(0); x < w; ++x)
-		{
-			for(auto y(h-1); y >= 0; --y, ++tile_index)  
-			{
-				std::cout << "old: " << old_tiles[y*w+x].index << "    new at: " << tile_index << std::endl;
-				m_tiles[tile_index] = old_tiles[y*w+x];
-				
-			}
-		}
+		// reorder tiles to fit rotation
+		this->reorder_tiles(angle);
 	}
 	
 	
@@ -119,5 +98,25 @@ namespace pce
 			m_current_rotation += angle - 360.;
 		else
 			m_current_rotation += angle;
+	}
+	
+	void brush::reorder_tiles(qreal angle)
+	{
+		auto w(m_selection_rect.width() / 64), h(m_selection_rect.height() / 64);
+		auto old_tiles(m_tiles);
+		auto tile_index(0);
+		m_tiles.clear();
+		m_tiles.resize(w*h);
+		
+		if(angle == 90.)
+		{
+			for(auto x(0); x < w; ++x)
+				for(auto y(h - 1); y >= 0; --y, ++tile_index)  
+					m_tiles[tile_index] = old_tiles[y * w + x];
+		}
+		else if(angle == 180.)
+		{
+			
+		}
 	}
 }

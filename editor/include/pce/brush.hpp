@@ -28,7 +28,7 @@ namespace pce
 	public:
 		void selection_begin(const QPoint& p);
 		void selecting(const QPoint& p);
-		bool selection_end(const class layer* tiles_from_layer, bool from_layer_image);
+		bool selection_end(const class layer* l, bool from_layer_image);
 		void reset();
 		
 		void rotate(qreal angle);
@@ -47,6 +47,7 @@ namespace pce
 		
 	private:
 		void add_rotation(qreal angle) noexcept;
+		void reorder_tiles(qreal angle);
 	};
 }
 
