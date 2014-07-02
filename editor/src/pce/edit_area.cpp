@@ -221,8 +221,10 @@ namespace pce
 		
 		
 		// -------- draw WITHOUT translation --------
-		// get current selected image			
-		m_current_img = &m_brush.preview();
+		// get current selected image	
+		if(this->is_select_mode_any() && !this->is_select_mode(select_mode::selecting))
+			m_current_img = &m_brush.preview();
+		else m_current_img = nullptr;
 
 		
 		// draw image preview on space key press		
