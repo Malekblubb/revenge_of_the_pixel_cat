@@ -426,7 +426,7 @@ namespace pce
 		{
 			m_mouse_pressed = true;
 			
-			if(this->is_select_mode(select_mode::none))
+			if(this->is_select_mode(select_mode::none) && m_layermgr->selected_layer())
 			{
 				m_select_mode = select_mode::selecting;
 				
@@ -464,7 +464,7 @@ namespace pce
 		
 		if(m_mouse_pressed)
 		{
-			if(this->is_select_mode(select_mode::selecting))
+			if(this->is_select_mode(select_mode::selecting) && m_layermgr->selected_layer() != nullptr)
 			{
 				auto layerpos(m_layermgr->selected_layer()->position());
 				if(m_graphic_preview_active)
@@ -513,8 +513,8 @@ namespace pce
 			
 			// reset invalid size
 			if(m_layermgr->selected_layer() != nullptr)
-			if(!m_brush.selection_end(m_layermgr->selected_layer(), this->is_select_mode(select_mode::edit)))
-				m_select_mode = select_mode::none;
+				if(!m_brush.selection_end(m_layermgr->selected_layer(), this->is_select_mode(select_mode::edit)))
+					m_select_mode = select_mode::none;
 		}
 	
 		m_mousewheel_pressed = false;
