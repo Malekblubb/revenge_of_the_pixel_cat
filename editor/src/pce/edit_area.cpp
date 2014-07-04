@@ -445,12 +445,15 @@ namespace pce
 		}
 		else if(ev->button() == Qt::RightButton)
 		{
-			m_mouse_pressed = false;
-			m_select_mode = select_mode::abort;
-			
-			m_brush.reset();
-			m_target_rect.setWidth(0);
-			m_target_rect.setHeight(0);
+			if(this->is_select_mode_any())
+			{
+				m_mouse_pressed = false;
+				m_select_mode = select_mode::abort;
+				
+				m_brush.reset();
+				m_target_rect.setWidth(0);
+				m_target_rect.setHeight(0);
+			}
 		}
 		
 		m_mousewheel_pressed = ev->button() == Qt::MiddleButton;
