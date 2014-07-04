@@ -499,6 +499,7 @@ namespace pce
 	void edit_area::handle_mouse_release(QMouseEvent*)
 	{
 		m_mouse_pressed = false;
+		m_mousewheel_pressed = false;
 		
 		if(this->is_select_mode(select_mode::selecting) || this->is_select_mode(select_mode::abort))
 		{
@@ -516,7 +517,5 @@ namespace pce
 				if(!m_brush.selection_end(m_layermgr->selected_layer(), this->is_select_mode(select_mode::edit)))
 					m_select_mode = select_mode::none;
 		}
-	
-		m_mousewheel_pressed = false;
 	}
 }
