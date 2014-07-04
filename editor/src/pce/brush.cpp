@@ -10,6 +10,7 @@
 #include <mlk/tools/math.h>
 
 #include <QPainter>
+#include <iostream>
 
 
 namespace pce
@@ -65,11 +66,17 @@ namespace pce
 
 
 	void brush::rotate(qreal angle)
-	{		
+	{	
+		// save current rect
+		m_last_rect = m_selection_rect;
+					  
 		auto cpy(m_preview);
 		if(angle == 90. && cpy.width() != cpy.height())
 		{
+			// recreate preview image
 			m_preview = {m_preview.height(), m_preview.width(), QImage::Format_ARGB32_Premultiplied};
+			
+			// change size
 			m_selection_rect.setWidth(m_preview.width());
 			m_selection_rect.setHeight(m_preview.height());
 		}
@@ -83,7 +90,7 @@ namespace pce
 		for(auto& a : m_tiles)
 		{
 			a.flags = 0;
-			a.rotation = m_current_rotation;
+			a.rotation = a.rotation + angle >= 360. ? a.rotation + angle - 360. : a.rotation + angle;
 		}
 		
 		// reorder tiles to fit rotation
@@ -101,11 +108,11 @@ namespace pce
 	
 	void brush::reorder_tiles(qreal angle)
 	{
-		auto w(m_selection_rect.width() / 64), h(m_selection_rect.height() / 64);
+		auto w(m_last_rect.width() / 64), h(m_last_rect.height() / 64);
 		auto old_tiles(m_tiles);
 		auto tile_index(0);
 		m_tiles.clear();
-		m_tiles.resize(w*h);
+		m_tiles.resize(w*h);std::cout << "in" << std::endl;
 		
 		if(angle == 90.)
 		{

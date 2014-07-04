@@ -22,6 +22,7 @@ namespace pce
 	{
 		QImage m_preview;
 		QRect m_selection_rect;
+		QRect m_last_rect;
 		std::vector<tile> m_tiles;
 		qreal m_current_rotation{0.};
 		
