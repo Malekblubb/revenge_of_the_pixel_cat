@@ -112,7 +112,7 @@ namespace pce
 		auto old_tiles(m_tiles);
 		auto tile_index(0);
 		m_tiles.clear();
-		m_tiles.resize(w*h);std::cout << "in" << std::endl;
+		m_tiles.resize(w*h);
 		
 		if(angle == 90.)
 		{
@@ -121,8 +121,10 @@ namespace pce
 					m_tiles[tile_index] = old_tiles[y * w + x];
 		}
 		else if(angle == 180.)
-		{
-			
+		{			
+			for(auto y(h - 1); y >= 0; --y)
+				for(auto x(w - 1); x >= 0; --x, ++tile_index)
+					m_tiles[tile_index] = old_tiles[y * w + x];
 		}
 	}
 }
