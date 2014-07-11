@@ -28,8 +28,7 @@ SOURCES	    +=	src/pce/main.cpp \
 		src/pce/layer.cpp \
 		src/pce/layer_manager.cpp \
 		src/pce/status_manager.cpp \
-		src/pce/level_generator.cpp \
-		src/pce/startscreen.cpp
+		src/pce/level_generator.cpp
 
 HEADERS	    +=	include/pce/main_window.hpp \
 		include/pce/edit_area.hpp \
