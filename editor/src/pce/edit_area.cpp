@@ -297,10 +297,12 @@ namespace pce
 		}
 		
 		// draw "world zero point"
-		p.setPen(Qt::green);
-		p.drawText(QPointF{0., 320.}, "World zero point");
-		p.drawLine(QPointF{0., 320.}, QPointF{this->width() / m_scale, 320.});
-		
+		if(!m_graphic_preview_active)
+		{
+			p.setPen(Qt::green);
+			p.drawText(QPointF{0., 320.}, "World zero point");
+			p.drawLine(QPointF{0., 320.}, QPointF{this->width() / m_scale, 320.});
+		}
 		
 		t.translate(m_global_translate.x(), m_global_translate.y());
 		p.setTransform(t);
