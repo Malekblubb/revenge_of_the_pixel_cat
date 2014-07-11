@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>assets/checker.png</file>
         <file>assets/icon.png</file>
+        <file>assets/logo_editor.png</file>
     </qresource>
 </RCC>
