@@ -4,11 +4,13 @@
 //
 
 #include <pce/constants.hpp>
+#include <pce/startscreen.hpp>
 #include <pce/main_window.hpp>
 #include <pce/start_checker.hpp>
 
 #include <mlk/filesystem/fs_handle.h>
 #include <mlk/log/log.h>
+#include <mlk/signals_slots/signals_slots.h>
 #include <mlk/tools/utils.h>
 
 #include <QApplication>
@@ -16,8 +18,13 @@
 
 
 int main(int argc, char* argv[])
-{	
-	QApplication app{argc, argv};
+{
+	QApplication app{argc, argv};	
+	
+	pce::startscreen s;
+	s.show();
+	mlk::lout("main") << "starting startscreen: " << app.exec();
+	
 	
 	// do checks before start app
 	pce::start_checker checker;
