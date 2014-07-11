@@ -334,12 +334,7 @@ namespace pce
 				p.setBrush(QColor{0, 0, 0, 0});
 				p.drawRect(rect);
 			}
-		}
-		
-		
-		
-		std::cout << "repaint" << std::endl;
-		
+		}		
 	}
 	
 	void edit_area::keyPressEvent(QKeyEvent* ev)
