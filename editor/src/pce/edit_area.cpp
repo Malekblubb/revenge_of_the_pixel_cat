@@ -216,7 +216,8 @@ namespace pce
 		
 		// transform
 		QTransform t;
-		t.scale(m_scale, m_scale);
+		if(!m_graphic_preview_active)
+			t.scale(m_scale, m_scale);
 		p.setTransform(t);
 		
 		
