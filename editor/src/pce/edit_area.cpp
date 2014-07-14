@@ -38,19 +38,6 @@ namespace pce
 	{this->init();}
 	
 	
-	void edit_area::set_graphicsmgr(graphics_manager* gmgr) noexcept
-	{m_graphicsmgr = gmgr;}
-	
-	void edit_area::set_layermgr(layer_manager* lmgr) noexcept
-	{m_layermgr = lmgr;}
-	
-	void edit_area::set_statusmgr(status_manager* smgr) noexcept
-	{m_statusmgr = smgr;}
-	
-	void edit_area::set_ui(Ui::main_window* ui) noexcept
-	{m_ui = ui;}
-	
-	
 	void edit_area::key_pressed(QKeyEvent* ev)
 	{this->keyPressEvent(ev);}
 	

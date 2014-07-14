@@ -60,10 +60,17 @@ namespace pce
 	public:
 		edit_area(QWidget* parent = nullptr);
 		
-		void set_graphicsmgr(class graphics_manager* gmgr) noexcept;
-		void set_layermgr(class layer_manager* lmgr) noexcept;
-		void set_statusmgr(class status_manager* smgr) noexcept;
-		void set_ui(Ui::main_window* ui) noexcept;
+		void set_graphicsmgr(class graphics_manager* gmgr) noexcept
+		{m_graphicsmgr = gmgr;}
+		
+		void set_layermgr(class layer_manager* lmgr) noexcept
+		{m_layermgr = lmgr;}
+		
+		void set_statusmgr(class status_manager* smgr) noexcept
+		{m_statusmgr = smgr;}
+		
+		void set_ui(Ui::main_window* ui) noexcept
+		{m_ui = ui;}
 		
 		const auto& global_translate() const noexcept
 		{return m_global_translate;}

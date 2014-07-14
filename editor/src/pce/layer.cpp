@@ -120,18 +120,6 @@ namespace pce
 		p.drawImage(QPoint{0, 0}, copy_img);
 	}
 	
-	void layer::set_position(const QPointF& pos) noexcept
-	{m_position = pos;}
-	
-	void layer::set_position_x(qreal x) noexcept
-	{m_position.setX(x);}
-
-	void layer::set_position_y(qreal y) noexcept
-	{m_position.setY(y);}
-	
-	void layer::set_name(const std::string& name) noexcept
-	{m_name = name;}
-	
 	void layer::set_image(const QImage* img, const std::string& name) noexcept
 	{
 		m_image = img;

@@ -17,9 +17,6 @@ namespace pce
 	{ }
 	
 	
-	void layer_manager::set_ui(Ui::main_window* ui) noexcept
-	{m_ui = ui;}
-	
 	void layer_manager::add_layer(const layer& l)
 	{
 		// add to layers

@@ -32,13 +32,15 @@ namespace pce
 		layer_manager(QWidget* parent = nullptr);
 		
 		
-		void set_ui(Ui::main_window* ui) noexcept;		
+		void set_ui(Ui::main_window* ui) noexcept
+		{m_ui = ui;}
 		
 		void add_layer(const layer& l);
 		void remove_layer(int index);
 		
 		auto& layers() noexcept
 		{return m_layers;}
+		
 		int selected_id() const;
 		layer* selected_layer();
 		layer* from_rowindex(int row);
