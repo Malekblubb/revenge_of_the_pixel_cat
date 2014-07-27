@@ -40,6 +40,7 @@ namespace pce
 		m_ui->gb_layer_settings->setEnabled(true);
 		
 		this->update_layer_settings();
+		m_edit_area->repaint_request();
 	}
 	
 	void main_window::on_sb_layer_width_editingFinished()
@@ -217,6 +218,8 @@ namespace pce
 		m_edit_area->set_ui(m_ui);
 		
 		m_layermgr.set_ui(m_ui);
+		
+		m_lvmgr.set_editarea(m_edit_area);
 		
 		m_statusmgr.set_ui(m_ui);
 		
