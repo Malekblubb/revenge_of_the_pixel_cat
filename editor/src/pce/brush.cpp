@@ -51,7 +51,8 @@ namespace pce
 		// copy image
 		constants::clear_image_pixels(m_preview);
 		QPainter p{&m_preview};
-		p.drawImage({0, 0}, from_layer_image ? l->drawarea() : *l->image(), m_selection_rect);
+		if(l->image() != nullptr)
+			p.drawImage({0, 0}, from_layer_image ? l->drawarea() : *l->image(), m_selection_rect);
 		
 		return true;
 	}
