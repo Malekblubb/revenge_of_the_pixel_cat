@@ -9,6 +9,7 @@
 
 #include "graphics_manager.hpp"
 #include "layer_manager.hpp"
+#include "level_manager.hpp"
 #include "status_manager.hpp"
 
 #include <QMainWindow>
@@ -31,6 +32,7 @@ namespace pce
 		class edit_area* m_edit_area;
 		graphics_manager m_graphicsmgr;
 		layer_manager m_layermgr;
+		level_manager m_lvmgr;
 		status_manager m_statusmgr;
 		
 		QTimer m_update_timer;
@@ -40,6 +42,8 @@ namespace pce
 		virtual ~main_window();
 
 	private slots:
+		void on_pb_save_clicked();
+		void on_lw_tilesets_itemSelectionChanged();
 		void on_pb_reset_scale_clicked();
 		void on_lw_layers_currentRowChanged(int row);
 		void on_sb_layer_width_editingFinished();

@@ -7,6 +7,7 @@
 #include <pce/main_window.hpp>
 #include "ui_main_window.h"
 
+#include <QFileDialog>
 #include <QMessageBox>
 
 
@@ -24,6 +25,19 @@ namespace pce
 	main_window::~main_window()
 	{
 		delete m_ui;
+	}
+	
+	// -------- load / save --------
+	void main_window::on_pb_save_clicked()
+	{
+		m_lvmgr.save(QFileDialog{}.getSaveFileName().toStdString());
+	}
+	
+	
+	// -------- graphics list --------
+	void main_window::on_lw_tilesets_itemSelectionChanged()
+	{
+	    m_edit_area->repaint_request();
 	}
 	
 	
@@ -220,6 +234,7 @@ namespace pce
 		m_layermgr.set_ui(m_ui);
 		
 		m_lvmgr.set_editarea(m_edit_area);
+		m_lvmgr.set_ui(m_ui);
 		
 		m_statusmgr.set_ui(m_ui);
 		
