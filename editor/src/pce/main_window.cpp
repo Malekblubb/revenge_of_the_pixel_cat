@@ -36,9 +36,7 @@ namespace pce
 	
 	// -------- graphics list --------
 	void main_window::on_lw_tilesets_itemSelectionChanged()
-	{
-	    m_edit_area->repaint_request();
-	}
+	{m_edit_area->repaint_request();}
 	
 	
 	// -------- layer settings --------
@@ -234,6 +232,7 @@ namespace pce
 		m_layermgr.set_ui(m_ui);
 		
 		m_lvmgr.set_editarea(m_edit_area);
+		m_lvmgr.set_graphicsmgr(&m_graphicsmgr);
 		m_lvmgr.set_ui(m_ui);
 		
 		m_statusmgr.set_ui(m_ui);
