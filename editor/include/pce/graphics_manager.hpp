@@ -27,6 +27,8 @@ namespace pce
 		const auto& images() const noexcept
 		{return m_images;}
 		
+		mlk::data_packet image_data(const std::string& name) const;
+		
 	private:
 		void init();
 	};

@@ -5,6 +5,11 @@
 
 #include <pce/graphics_manager.hpp>
 
+#include <mlk/containers/container_utl.h>
+
+#include <QBuffer>
+#include <QByteArray>
+
 
 namespace pce
 {
@@ -18,5 +23,18 @@ namespace pce
 		{
 			m_images.emplace(a.name, QImage{a.path.c_str()});
 		}
+	}
+	
+	mlk::data_packet graphics_manager::image_data(const std::string& name) const
+	{
+		if(!mlk::cnt::exists_map_first(name, m_images))
+			return {};
+		
+		QByteArray ba;
+		QBuffer buf{&ba};
+		buf.open(QIODevice::WriteOnly);
+		m_images.at(name).save(&buf, "PNG");
+		buf.close();
+		return {ba.begin(), ba.end()};
 	}
 }
