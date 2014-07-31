@@ -216,8 +216,45 @@ namespace pce
 			p.drawImage(QPoint{0, 0}, m_graphicsmgr->images().at(m_ui->lw_tilesets->currentItem()->text().toStdString()));
 		
 		
-		// ---------------------------------------------------------------
+		// ---------------------------------------------------------------		
+		t.translate(m_global_translate.x(), m_global_translate.y());
+		p.setTransform(t);
 		
+		
+		// -------- draw ON translation --------		
+		// draw layers (sorted)
+		if(!m_graphic_preview_active)
+		{
+			auto* layerlist(m_ui->lw_layers);
+			for(auto i(layerlist->count() - 1); i != -1; --i)
+			{
+				auto* layer(m_layermgr->from_rowindex(i));
+				if(layer == nullptr)
+					continue;
+				
+				// copy the transform for each layer
+				auto tc(t);
+				tc.translate(layer->position().x(), layer->position().y());
+				p.setTransform(tc);
+				
+				// draw layer content
+				p.drawImage(QPoint{0, 0}, layer->drawarea());
+				
+				// draw layer outrect
+				if(i == layerlist->currentRow())
+					p.setPen(Qt::blue);
+				else
+					p.setPen(Qt::red);
+				auto rect(layer->drawarea().rect());
+				p.drawText(QPoint{rect.x(), layer->position().y() <= 10 ? 10 : rect.y()}, layer->name().c_str());
+				p.setBrush(QColor{0, 0, 0, 0});
+				p.drawRect(rect);
+			}
+		}
+		
+		
+		t.translate(-m_global_translate.x(), -m_global_translate.y());
+		p.setTransform(t);
 		
 		// draw selected shape
 		p.setBrush({{255, 255, 255, 100}});
@@ -289,38 +326,6 @@ namespace pce
 		
 		t.translate(m_global_translate.x(), m_global_translate.y());
 		p.setTransform(t);
-		
-		
-		// -------- draw ON translation --------		
-		// draw layers (sorted)
-		if(!m_graphic_preview_active)
-		{
-			auto* layerlist(m_ui->lw_layers);
-			for(auto i(layerlist->count() - 1); i != -1; --i)
-			{
-				auto* layer(m_layermgr->from_rowindex(i));
-				if(layer == nullptr)
-					continue;
-				
-				// copy the transform for each layer
-				auto tc(t);
-				tc.translate(layer->position().x(), layer->position().y());
-				p.setTransform(tc);
-				
-				// draw layer content
-				p.drawImage(QPoint{0, 0}, layer->drawarea());
-				
-				// draw layer outrect
-				if(i == layerlist->currentRow())
-					p.setPen(Qt::blue);
-				else
-					p.setPen(Qt::red);
-				auto rect(layer->drawarea().rect());
-				p.drawText(QPoint{rect.x(), layer->position().y() <= 10 ? 10 : rect.y()}, layer->name().c_str());
-				p.setBrush(QColor{0, 0, 0, 0});
-				p.drawRect(rect);
-			}
-		}		
 	}
 	
 	void edit_area::keyPressEvent(QKeyEvent* ev)
