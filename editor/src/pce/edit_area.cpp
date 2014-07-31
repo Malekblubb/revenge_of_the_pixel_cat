@@ -233,7 +233,7 @@ namespace pce
 			p.setTransform(t);
 		}
 		
-		bool already_translated{false};
+		auto already_translated(false);
 		
 		if(this->is_select_mode(select_mode::selecting))
 			p.drawRect(m_brush.rect());
