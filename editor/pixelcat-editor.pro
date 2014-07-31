@@ -16,6 +16,8 @@ QMAKE_CXXFLAGS += -std=c++1y -Wno-deprecated-register -g
 TARGET = pixelcat-editor
 TEMPLATE = app
 
+LIBS	    +=	-ljsoncpp
+
 INCLUDEPATH +=	include/ \
 		../external/mlk/include/
 
