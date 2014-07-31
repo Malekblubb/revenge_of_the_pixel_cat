@@ -89,13 +89,30 @@ namespace pce
 		
 		// add the rotation to the tiles
 		for(auto& a : m_tiles)
-		{
-			a.flags = 0;
 			a.rotation = a.rotation + angle >= 360. ? a.rotation + angle - 360. : a.rotation + angle;
-		}
 		
 		// reorder tiles to fit rotation
-		this->reorder_tiles(angle);
+		this->reorder_tiles(angle == 90 ? reorder_action::rotate90 : reorder_action::rotate180);
+	}
+	
+	void brush::flip(tile_flag f)
+	{		
+		for(auto& a : m_tiles)
+			a.flags |= f;
+
+		
+		if(f == tile_flag::flip_horizontal)
+		{
+			auto cpy(m_preview);
+			m_preview = cpy.transformed(QTransform{}.scale(-1., 1.));
+		}
+		else if(f == tile_flag::flip_vertical)
+		{
+			auto cpy(m_preview);
+			m_preview = cpy.transformed(QTransform{}.scale(1., -1.));
+		}
+		
+		this->reorder_tiles(f == tile_flag::flip_horizontal ? reorder_action::flip_h : reorder_action::flip_v);
 	}
 	
 	
@@ -107,25 +124,42 @@ namespace pce
 			m_current_rotation += angle;
 	}
 	
-	void brush::reorder_tiles(qreal angle)
+	void brush::reorder_tiles(reorder_action a)
 	{
 		auto w(m_last_rect.width() / 64), h(m_last_rect.height() / 64);
-		auto old_tiles(m_tiles);
-		auto tile_index(0);
-		m_tiles.clear();
-		m_tiles.resize(w*h);
 		
-		if(angle == 90.)
+		if(a == reorder_action::rotate90 || a == reorder_action::rotate180)
 		{
-			for(auto x(0); x < w; ++x)
-				for(auto y(h - 1); y >= 0; --y, ++tile_index)  
-					m_tiles[tile_index] = old_tiles[y * w + x];
+			auto old_tiles(m_tiles);
+			auto tile_index(0);
+			m_tiles.clear();
+			m_tiles.resize(w*h);
+			
+			if(a == reorder_action::rotate90)
+			{
+				for(auto x(0); x < w; ++x)
+					for(auto y(h - 1); y >= 0; --y, ++tile_index)  
+						m_tiles[tile_index] = old_tiles[y * w + x];
+			}
+			else if(a == reorder_action::rotate180)
+			{			
+				for(auto y(h - 1); y >= 0; --y)
+					for(auto x(w - 1); x >= 0; --x, ++tile_index)
+						m_tiles[tile_index] = old_tiles[y * w + x];
+			}
 		}
-		else if(angle == 180.)
-		{			
-			for(auto y(h - 1); y >= 0; --y)
+		else if(a == reorder_action::flip_h)
+		{
+			auto old_tiles(m_tiles);
+			auto tile_index(0);
+			
+			for(auto y(0); y < h; ++y)
 				for(auto x(w - 1); x >= 0; --x, ++tile_index)
-					m_tiles[tile_index] = old_tiles[y * w + x];
+					m_tiles[tile_index] = old_tiles[y*w+x];
+		}
+		else if(a == reorder_action::flip_v)
+		{
+			
 		}
 	}
 }

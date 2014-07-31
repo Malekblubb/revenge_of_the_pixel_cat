@@ -26,6 +26,12 @@ namespace pce
 		std::vector<tile> m_tiles;
 		qreal m_current_rotation{0.};
 		
+		enum class reorder_action
+		{
+			rotate90, rotate180,
+			flip_h, flip_v
+		};
+		
 	public:
 		void selection_begin(const QPoint& p);
 		void selecting(const QPoint& p);
@@ -33,6 +39,7 @@ namespace pce
 		void reset();
 		
 		void rotate(qreal angle);
+		void flip(tile_flag f);
 		
 		const auto& preview() const noexcept
 		{return m_preview;}
@@ -48,7 +55,7 @@ namespace pce
 		
 	private:
 		void add_rotation(qreal angle) noexcept;
-		void reorder_tiles(qreal angle);
+		void reorder_tiles(reorder_action a);
 	};
 }
 
