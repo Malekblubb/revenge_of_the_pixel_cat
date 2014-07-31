@@ -23,6 +23,12 @@ namespace pce
 			return s;
 		}
 		
+		inline const auto& level_version_string()
+		{
+			static std::string s{"1"};
+			return s;
+		}
+		
 		inline int default_layersize()
 		{return 16;}
 		
