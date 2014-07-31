@@ -97,14 +97,10 @@ namespace pce
 	{m_brush.rotate(90.);}
 	
 	void edit_area::brush_flip_horizontal_request()
-	{
-		
-	}
+	{m_brush.flip(tile_flag::flip_horizontal);}
 	
 	void edit_area::brush_flip_vertical_request()
-	{
-		
-	}
+	{m_brush.flip(tile_flag::flip_vertical);}
 
 	
 	void edit_area::repaint_request()

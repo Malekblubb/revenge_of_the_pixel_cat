@@ -72,6 +72,9 @@ namespace pce
 		void set_ui(Ui::main_window* ui) noexcept
 		{m_ui = ui;}
 		
+		auto* layermgr() noexcept
+		{return m_layermgr;}
+		
 		const auto& global_translate() const noexcept
 		{return m_global_translate;}
 		
