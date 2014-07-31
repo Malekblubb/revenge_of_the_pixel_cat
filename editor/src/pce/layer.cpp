@@ -158,7 +158,17 @@ namespace pce
 					continue;
 				
 				auto coords(constants::coords_from_tileindex(tile.index));
-		
+				auto draw_normal(true);
+				
+				if(tile.flags & tile_flag::flip_horizontal)
+				{
+					p.scale(-1., 1.);
+					p.drawImage(-x * 64 - 64, y * 64, *m_image, coords.x(), coords.y(), 64, 64);
+					p.resetTransform();
+					
+					draw_normal = false;
+				}
+				
 				if(tile.rotation != 0)
 				{
 					// translate to the center of the tileposition to translate from this position					
@@ -166,8 +176,11 @@ namespace pce
 					p.rotate(tile.rotation);
 					p.drawImage(-32, -32, *m_image, coords.x(), coords.y(), 64, 64);
 					p.resetTransform();
+					
+					draw_normal = false;
 				}
-				else
+				
+				if(draw_normal)
 					p.drawImage(x * 64, y * 64, *m_image, coords.x(), coords.y(), 64, 64);
 			}
 	}
