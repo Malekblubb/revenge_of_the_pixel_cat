@@ -85,6 +85,7 @@ namespace pc {
 		}
 		
 		void recreateWindow() {
+			mRenderWindow.close();
 			mRenderWindow.create(mVideoMode, mTitle, mWindowStyles);
 			mNeedRecreate = false;
 		}
