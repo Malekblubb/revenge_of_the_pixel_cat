@@ -33,16 +33,20 @@ namespace pc {
 			, mWindowStyles{sf::Style::Default}
 			, mRunning{false}
 			, mNeedRecreate{true}
-			, mGame{game} {
-			mGame.run(this, &mGameUpdater);
-		}
+			, mGame{game} {	}
 		
 		int run() {
 			if(mRunning) return 1;
 			
+			mlk::lout("pc::GameWindow", true) << "Running gamewindow.";
+			mGame.run(this, &mGameUpdater);
 			mRunning = true;
 			while(mRunning) {
 				if(mNeedRecreate) recreateWindow();
+				if(!mRenderWindow.isOpen()) {
+					stop();
+					mlk::lerr() << "Something went wrong during window (re)creation. Stopping.";
+				}
 				
 				mGameUpdater.start();
 				
@@ -64,6 +68,7 @@ namespace pc {
 		void stop() {
 			mRunning = false;
 			onStop();
+			mlk::lout("pc::GameWindow") << "Stopping gamewindow.";
 		}
 		
 	private:
@@ -88,6 +93,7 @@ namespace pc {
 			mRenderWindow.close();
 			mRenderWindow.create(mVideoMode, mTitle, mWindowStyles);
 			mNeedRecreate = false;
+			mlk::lout("pc::GameWindow") << "Windowstatus after (re)creation; isOpen(): " << std::boolalpha << mRenderWindow.isOpen();
 		}
 	};
 	

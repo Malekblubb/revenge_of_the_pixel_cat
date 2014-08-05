@@ -19,17 +19,19 @@ namespace pc {
 			
 		}
 		
-		void run(TGameWindow* window, TGameUpdater* updater) {
+		void run(TGameWindow* window, TGameUpdater* updater) {			
 			mGameWindow = window;
 			mGameUpdater = updater;
+			
+			mlk::lout("pc::Game") << "Running game.";
 		}
 		
 		void update(Fd fd) {
-			MD("update");
+			
 		}
 		
 		void render() {
-			MD("render");
+			
 		}
 		
 		void onEvent(const sf::Event& event) {
