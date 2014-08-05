@@ -31,6 +31,10 @@ namespace pc {
 		void render() {
 			MD("render");
 		}
+		
+		void onEvent(const sf::Event& event) {
+			
+		}
 	};
 	
 }
