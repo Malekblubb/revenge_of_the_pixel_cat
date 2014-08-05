@@ -9,7 +9,6 @@
 #include <pc/common.hpp>
 
 namespace pc {
-	
 	template<typename TGameWindow, typename TGameUpdater>
 	class Game {
 		TGameWindow* mGameWindow{nullptr};

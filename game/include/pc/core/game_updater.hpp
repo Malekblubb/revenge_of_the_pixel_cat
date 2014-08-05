@@ -23,8 +23,8 @@ namespace pc {
 		GameUpdater(TGame& game)
 			: mGame{game} { }
 		
-		void start() { mLastUpdate = mlk::tm::time_pnt(); }
-		void end() { mFrameduration = mlk::tm::duration_to_now_as<float>(mLastUpdate); }
+		void start() noexcept { mLastUpdate = mlk::tm::time_pnt(); }
+		void end() noexcept { mFrameduration = mlk::tm::duration_to_now_as<float>(mLastUpdate); }
 		
 		void runUpdate() {
 			mCurrentCut += mFrameduration;
