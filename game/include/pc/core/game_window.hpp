@@ -6,6 +6,7 @@
 #ifndef PC_CORE_GAME_WINDOW_HPP
 #define PC_CORE_GAME_WINDOW_HPP
 
+#include "input.hpp"
 #include <pc/common.hpp>
 
 #include <mlk/signals_slots/slot.h>
@@ -13,12 +14,14 @@
 namespace pc {
 	
 	class GameWindow {
-		GameUpdater mGameUpdater;
 		sf::RenderWindow mRenderWindow;
 		sf::VideoMode mVideoMode;
 		std::string mTitle;
 		sf::Uint32 mWindowStyles;
 		bool mRunning, mNeedRecreate;
+		
+		GameUpdater mGameUpdater;
+		Input mInput;
 		
 		TGame& mGame;
 		
@@ -26,13 +29,13 @@ namespace pc {
 		mlk::slot<> onStop;
 		
 		GameWindow(sf::VideoMode videoMode, const std::string& title, TGame& game)
-			: mGameUpdater{game}
-			, mRenderWindow{videoMode, title}
+			: mRenderWindow{videoMode, title}
 			, mVideoMode{videoMode}
 			, mTitle{title}
 			, mWindowStyles{sf::Style::Default}
 			, mRunning{false}
 			, mNeedRecreate{true}
+			, mGameUpdater{game}
 			, mGame{game} {	}
 		
 		int run() {
@@ -51,6 +54,7 @@ namespace pc {
 				mGameUpdater.start();
 				
 				// update
+				mInput.update(mRenderWindow.mapPixelToCoords(sf::Mouse::getPosition(mRenderWindow)));
 				updateEvents();
 				mGameUpdater.runUpdate();
 				
@@ -71,17 +75,19 @@ namespace pc {
 			mlk::lout("pc::GameWindow") << "Stopping gamewindow.";
 		}
 		
+		Input& input() noexcept { return mInput; }
+		
 	private:
 		void updateEvents() {
 			sf::Event event;
 			while(mRenderWindow.pollEvent(event)) {
 				switch(event.type) {
 					case sf::Event::EventType::Closed: stop(); break;
-					case sf::Event::EventType::KeyPressed: break;
-					case sf::Event::EventType::KeyReleased: break;
-					case sf::Event::EventType::MouseButtonPressed: break;
-					case sf::Event::EventType::MouseButtonReleased: break;
-					case sf::Event::EventType::MouseWheelMoved: break;
+					case sf::Event::EventType::KeyPressed: mInput.keyPressed(event.key.code);  break;
+					case sf::Event::EventType::KeyReleased: mInput.keyReleased(event.key.code);  break;
+					case sf::Event::EventType::MouseButtonPressed: mInput.mousePressed(event.mouseButton.button);  break;
+					case sf::Event::EventType::MouseButtonReleased: mInput.mouseReleased(event.mouseButton.button);  break;
+					case sf::Event::EventType::MouseWheelMoved: mInput.mouseScrolled(event.mouseWheel.delta);  break;
 					default: break;
 				}
 				
