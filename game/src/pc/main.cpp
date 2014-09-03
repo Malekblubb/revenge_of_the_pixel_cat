@@ -11,10 +11,10 @@
 
 int main() {
 	// create all components (TODO: maybe do this automated)
-	pc::GameWindow*		gameWindow	= new pc::GameWindow{{400, 400}, "The Revenge of the Pixelcat"};
-	pc::Game*			game		= new pc::Game;
-	pc::GameUpdater*	gameUpdater = new pc::GameUpdater;
-	pc::Input*			input		= new pc::Input;
+	pc::GameWindow*	 gameWindow  = new pc::GameWindow{{400, 400}, "The Revenge of the Pixelcat"};
+	pc::Game*        game        = new pc::Game;
+	pc::GameUpdater* gameUpdater = new pc::GameUpdater;
+	pc::Input*       input       = new pc::Input;
 	
 	pc::EngineT engine{
 		gameWindow,
