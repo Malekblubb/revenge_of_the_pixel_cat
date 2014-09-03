@@ -6,28 +6,21 @@
 #ifndef PC_CORE_GAME_HPP
 #define PC_CORE_GAME_HPP
 
-#include "input.hpp"
+#include "engine_component.hpp"
 #include <pc/common.hpp>
 
 namespace pc {
 	
-	template<typename TGameWindow, typename TGameUpdater>
-	class Game {
-		TGameWindow* mGameWindow{nullptr};
-		TGameUpdater* mGameUpdater{nullptr};
-		Input* mInput{nullptr};
+	class Game : public EngineComponent {
 		
 	public:
 		Game() {
 			
 		}
 		
-		void run(TGameWindow* window, TGameUpdater* updater) {
+		void run() {
 			mlk::lout("pc::Game") << "Running game.";
-			mGameWindow = window;
-			mGameUpdater = updater;
-			mInput = &window->input();
-			
+
 		}
 		
 		void update(Fd fd) {
@@ -35,6 +28,11 @@ namespace pc {
 		}
 		
 		void render() {
+			
+		}
+		
+		template<typename... Args>
+		void renderObject(Args&&... args) {
 			
 		}
 		

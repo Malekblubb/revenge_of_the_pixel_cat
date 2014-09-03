@@ -1,4 +1,4 @@
- project(pixelcat)
+project(pixelcat)
 cmake_minimum_required(VERSION 2.8)
 
 # collect files
@@ -13,6 +13,8 @@ set(CMAKE_CXX_COMPILER "clang++")
 
 
 # link
+#target_link_libraries(${PROJECT_NAME} "-lGLEW")
+
 #zlib
 find_package(ZLIB REQUIRED)
 if(ZLIB_FOUND)

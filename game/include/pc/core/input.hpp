@@ -6,16 +6,15 @@
 #ifndef PC_CORE_INPUT_HPP
 #define PC_CORE_INPUT_HPP
 
+#include "engine_component.hpp"
 #include <pc/common.hpp>
 
 #include <mlk/tools/bitset.h>
 
-#include <set>
-
 namespace pc {
 	
 	// TODO: Implement onKeys in a nice way
-	class Input {
+	class Input : public EngineComponent {
 		mlk::bitset<Key, Key::KeyCount> mKeys;
 		mlk::bitset<Button, Button::ButtonCount> mButtons;
 		Vec2f mMousePosition{0.f, 0.f};

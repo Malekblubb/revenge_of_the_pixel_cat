@@ -6,6 +6,8 @@
 #ifndef PC_COMMON_HPP
 #define PC_COMMON_HPP
 
+#include <pc/core/engine.hpp>
+
 #include <mlk/log/log.h>
 #include <mlk/types/types.h>
 
@@ -16,12 +18,17 @@
 
 namespace pc {
 	// forwards
-	template<typename, typename> class Game;
-	class GameUpdater;
+	class Game;
 	class GameWindow;
+	class GameUpdater;
+	class Input;	
 	
 	// typedefs
-	using TGame = Game<GameWindow, GameUpdater>;
+	using EngineT = Engine<
+							pc::GameWindow,
+							pc::Game,
+							pc::GameUpdater,
+							pc::Input>;
 	using Fd = float;
 	using Key = sf::Keyboard::Key;
 	using Button = sf::Mouse::Button;
