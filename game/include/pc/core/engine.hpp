@@ -27,7 +27,7 @@ namespace pc {
 			});
 			
 			// tell the components that they can use all other components
-			mlk::tupleIteration(mComponents, [this](const auto& component) {
+			mlk::tupleIteration(mComponents, [](const auto& component) {
 				component->engineInitFinished();
 			});
 		}
