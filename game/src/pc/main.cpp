@@ -10,7 +10,7 @@
 #include <pc/core/input.hpp>
 
 int main() {
-	// create all components
+	// create all components (TODO: maybe do this automated)
 	pc::GameWindow*		gameWindow	= new pc::GameWindow{{400, 400}, "The Revenge of the Pixelcat"};
 	pc::Game*			game		= new pc::Game;
 	pc::GameUpdater*	gameUpdater = new pc::GameUpdater;
@@ -24,5 +24,14 @@ int main() {
 	};
 	engine.initializeAll();
 	
-	return engine.getComponent<pc::GameWindow>()->run();
+	// run the game
+	auto ret(engine.getComponent<pc::GameWindow>()->run());
+	
+	// clean up memory
+	delete gameWindow;
+	delete game;
+	delete gameUpdater;
+	delete input;
+	
+	return ret;
 }
