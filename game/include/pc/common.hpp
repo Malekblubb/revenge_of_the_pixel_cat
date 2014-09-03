@@ -25,10 +25,10 @@ namespace pc {
 	
 	// typedefs
 	using EngineT = Engine<
-							pc::GameWindow,
-							pc::Game,
-							pc::GameUpdater,
-							pc::Input>;
+							GameWindow,
+							Game,
+							GameUpdater,
+							Input>;
 	using Fd = float;
 	using Key = sf::Keyboard::Key;
 	using Button = sf::Mouse::Button;
