@@ -7,6 +7,7 @@
 #define PC_CORE_GAME_UPDATER_HPP
 
 #include "engine_component.hpp"
+#include "game.hpp"
 #include <pc/common.hpp>
 
 #include <mlk/time/time_utl.h>
@@ -21,6 +22,10 @@ namespace pc {
 		Game* mGame;
 		
 	public:		
+		virtual void engineInitFinished() override {
+			mGame = mEngine->getComponent<Game>();
+		}
+		
 		void start() noexcept { mLastUpdate = mlk::tm::time_pnt(); }
 		void end() noexcept { mFrameduration = mlk::tm::duration_to_now_as<float>(mLastUpdate); }
 		
@@ -36,7 +41,7 @@ namespace pc {
 		float frameduration() const noexcept { return mFrameduration; }
 		
 	private:
-
+		
 	};
 	
 }

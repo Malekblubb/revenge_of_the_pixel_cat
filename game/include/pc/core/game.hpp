@@ -18,6 +18,10 @@ namespace pc {
 			
 		}
 		
+		virtual void engineInitFinished() override {
+			
+		}
+		
 		void run() {
 			mlk::lout("pc::Game") << "Running game.";
 

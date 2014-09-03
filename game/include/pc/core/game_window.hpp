@@ -7,6 +7,8 @@
 #define PC_CORE_GAME_WINDOW_HPP
 
 #include "engine_component.hpp"
+#include "game.hpp"
+#include "game_updater.hpp"
 #include "input.hpp"
 #include <pc/common.hpp>
 
@@ -21,6 +23,10 @@ namespace pc {
 		sf::Uint32 mWindowStyles;
 		bool mRunning, mNeedRecreate;
 		
+		Game* mGame;
+		GameUpdater* mGameUpdater;
+		Input* mInput;
+		
 	public:
 		mlk::slot<> onStop;
 		
@@ -32,11 +38,17 @@ namespace pc {
 			, mRunning{false}
 			, mNeedRecreate{true} { }
 		
+		virtual void engineInitFinished() override {
+			mGame = mEngine->getComponent<Game>();
+			mGameUpdater = mEngine->getComponent<GameUpdater>();
+			mInput = mEngine->getComponent<Input>();
+		}
+		
 		int run() {
 			if(mRunning) return 1;
 			
 			mlk::lout("pc::GameWindow", true) << "Running gamewindow.";
-//			mGame.run();
+			mGame->run();
 			mRunning = true;
 			while(mRunning) {
 				if(mNeedRecreate) recreateWindow();
@@ -45,19 +57,19 @@ namespace pc {
 					mlk::lerr() << "Something went wrong during window (re)creation. Stopping.";
 				}
 				
-//				mGameUpdater.start();
+				mGameUpdater->start();
 				
 				// update
-//				mInput.update(mRenderWindow.mapPixelToCoords(sf::Mouse::getPosition(mRenderWindow)));
+				mInput->update(mRenderWindow.mapPixelToCoords(sf::Mouse::getPosition(mRenderWindow)));
 				updateEvents();
-//				mGameUpdater.runUpdate();
+				mGameUpdater->runUpdate();
 				
 				// render
 				mRenderWindow.clear();
-//				mGameUpdater.runRender();				
+				mGameUpdater->runRender();				
 				mRenderWindow.display();
 				
-//				mGameUpdater.end();
+				mGameUpdater->end();
 			}
 			
 			return 0;
@@ -74,24 +86,23 @@ namespace pc {
 			mRenderWindow.draw(std::forward<Args>(args)...);
 		}
 		
-//		Input& input() noexcept { return mInput; }
 		
 	private:
 		void updateEvents() {
 			sf::Event event;
-//			while(mRenderWindow.pollEvent(event)) {
-//				switch(event.type) {
-//					case sf::Event::EventType::Closed: stop(); break;
-//					case sf::Event::EventType::KeyPressed: mInput.keyPressed(event.key.code);  break;
-//					case sf::Event::EventType::KeyReleased: mInput.keyReleased(event.key.code);  break;
-//					case sf::Event::EventType::MouseButtonPressed: mInput.mousePressed(event.mouseButton.button);  break;
-//					case sf::Event::EventType::MouseButtonReleased: mInput.mouseReleased(event.mouseButton.button);  break;
-//					case sf::Event::EventType::MouseWheelMoved: mInput.mouseScrolled(event.mouseWheel.delta);  break;
-//					default: break;
-//				}
+			while(mRenderWindow.pollEvent(event)) {
+				switch(event.type) {
+					case sf::Event::EventType::Closed: stop(); break;
+					case sf::Event::EventType::KeyPressed: mInput->keyPressed(event.key.code);  break;
+					case sf::Event::EventType::KeyReleased: mInput->keyReleased(event.key.code);  break;
+					case sf::Event::EventType::MouseButtonPressed: mInput->mousePressed(event.mouseButton.button);  break;
+					case sf::Event::EventType::MouseButtonReleased: mInput->mouseReleased(event.mouseButton.button);  break;
+					case sf::Event::EventType::MouseWheelMoved: mInput->mouseScrolled(event.mouseWheel.delta);  break;
+					default: break;
+				}
 				
-//				mGame.onEvent(event);
-//			}
+				mGame->onEvent(event);
+			}
 		}
 		
 		void recreateWindow() {

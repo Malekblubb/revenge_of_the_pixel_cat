@@ -24,7 +24,5 @@ int main() {
 	};
 	engine.initializeAll();
 	
-	engine.getComponent<pc::GameWindow>();
-	
-//	return pc::GameWindow{{400, 400}, "The Revenge of the Pixelcat", game}.run();
+	return engine.getComponent<pc::GameWindow>()->run();
 }

@@ -15,7 +15,8 @@ namespace pc {
 		EngineT* mEngine;
 		
 	public:
-		void setEngine(EngineT* e) noexcept { mEngine = e; MD("set engine");}
+		void setEngine(EngineT* e) noexcept { mEngine = e; }
+		virtual void engineInitFinished() { }
 	};
 	
 }

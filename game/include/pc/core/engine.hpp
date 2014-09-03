@@ -21,8 +21,14 @@ namespace pc {
 		}
 		
 		void initializeAll() {
+			// set the engine to all components
 			mlk::tupleIteration(mComponents, [this](const auto& component) {
 				component->setEngine(this);
+			});
+			
+			// tell the components that they can use all other components
+			mlk::tupleIteration(mComponents, [this](const auto& component) {
+				component->engineInitFinished();
 			});
 		}
 		
