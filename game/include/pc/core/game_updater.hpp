@@ -19,7 +19,7 @@ namespace pc {
 		float mCurrentCut{0.f}, mNextCut{1.f}, mFrameduration{0.f};
 		mlk::hrs_time_pnt mLastUpdate{mlk::tm::time_pnt()};
 		
-		Game* mGame;
+		Game* mGame{nullptr};
 		
 	public:		
 		virtual void engineInitFinished() override {

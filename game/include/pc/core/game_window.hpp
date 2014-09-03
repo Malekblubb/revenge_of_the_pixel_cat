@@ -23,9 +23,9 @@ namespace pc {
 		sf::Uint32 mWindowStyles;
 		bool mRunning, mNeedRecreate;
 		
-		Game* mGame;
-		GameUpdater* mGameUpdater;
-		Input* mInput;
+		Game* mGame{nullptr};
+		GameUpdater* mGameUpdater{nullptr};
+		Input* mInput{nullptr};
 		
 	public:
 		mlk::slot<> onStop;
