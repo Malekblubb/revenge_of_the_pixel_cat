@@ -13,6 +13,7 @@ namespace pc {
 	template<typename... EngineComponents>
 	class Engine {
 		std::tuple<EngineComponents*...> mComponents;
+		using TupleType = decltype(mComponents);
 		
 	public:
 		template<typename... ComponentArgs>
@@ -34,8 +35,13 @@ namespace pc {
 		
 		template<typename ComponentType>
 		ComponentType* getComponent() {
-			return std::get<mlk::TupleTypeIndex<ComponentType*, decltype(mComponents)>::value>(mComponents);
+			return std::get<mlk::TupleTypeIndex<ComponentType*, TupleType>::value>(mComponents);
 		}
+		
+		template<typename ForwardedType>
+		struct GetComponentType {
+			using type = typename std::tuple_element<mlk::TupleTypeIndex<ForwardedType*, TupleType>::value, TupleType>::type;
+		};
 	};	
 }
 

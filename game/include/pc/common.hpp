@@ -22,13 +22,15 @@ namespace pc {
 	class GameWindow;
 	class GameUpdater;
 	class Input;	
+	class Render;
 	
 	// typedefs
 	using EngineT = Engine<
 							GameWindow,
 							Game,
 							GameUpdater,
-							Input>;
+							Input,
+							Render>;
 	using Fd = float;
 	using Key = sf::Keyboard::Key;
 	using Button = sf::Mouse::Button;

@@ -5,9 +5,7 @@
 
 #include <pc/core/engine.hpp>
 #include <pc/core/game.hpp>
-#include <pc/core/game_updater.hpp>
 #include <pc/core/game_window.hpp>
-#include <pc/core/input.hpp>
 
 int main() {
 	// create all components (TODO: maybe do this automated)
@@ -15,23 +13,26 @@ int main() {
 	pc::Game*        game        = new pc::Game;
 	pc::GameUpdater* gameUpdater = new pc::GameUpdater;
 	pc::Input*       input       = new pc::Input;
+	pc::Render*      render      = new pc::Render;
 	
-	pc::EngineT engine{
+	pc::EngineT engine {
 		gameWindow,
 		game,
 		gameUpdater,
-		input
+		input,
+		render
 	};
 	engine.initializeAll();
 	
 	// run the game
-	auto ret(engine.getComponent<pc::GameWindow>()->run());
+	auto ret(gameWindow->run());
 	
 	// clean up memory
 	delete gameWindow;
 	delete game;
 	delete gameUpdater;
 	delete input;
+	delete render;
 	
 	return ret;
 }

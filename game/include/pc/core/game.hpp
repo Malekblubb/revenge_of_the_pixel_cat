@@ -7,44 +7,39 @@
 #define PC_CORE_GAME_HPP
 
 #include "engine_component.hpp"
+#include "game_updater.hpp"
+#include <pc/core/input.hpp>
+#include <pc/core/render.hpp>
 #include <pc/common.hpp>
+#include <pc/world.hpp>
 
 namespace pc {
 	
 	class Game : public EngineComponent {
+		Input* mInput{nullptr};
+		Render* mRender{nullptr};
 		
-	public:
-		Game() {
-			
-		}
+		World mWorld;
 		
-		virtual void engineInitFinished() override {
-			
-		}
+    public:
+		virtual void engineInitFinished() override;
+		void run();
 		
-		void run() {
-			mlk::lout("pc::Game") << "Running game.";
+		void update(Fd fd);
+		void render();
+		
+		void onEvent(const sf::Event& event);
 
-		}
-		
-		void update(Fd fd) {
-			
-		}
-		
-		void render() {
-			
-		}
-		
-		template<typename... Args>
-		void renderObject(Args&&... args) {
-			
-		}
-		
-		void onEvent(const sf::Event& event) {
-			
-		}
+		// game
+		void startLevel();
+		void restartLevel();
+		void endLevel();
+
+		auto& world() noexcept { return mWorld; }
+
+	private:
+		void initialize();
 	};
-	
 }
 
 #endif // PC_CORE_GAME_HPP
