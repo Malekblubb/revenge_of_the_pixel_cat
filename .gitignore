@@ -16,6 +16,9 @@
 *.user.*
 *.user
 
+#CLion
+*.idea
+
 #Editors
 *~
 
