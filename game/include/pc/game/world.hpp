@@ -6,17 +6,26 @@
 #ifndef PC_WORLD_HPP
 #define PC_WORLD_HPP
 
-#include "common.hpp"
+#include "player.hpp"
+#include <pc/common.hpp>
 #include <pc/core/render.hpp>
 #include <pc/core/render_able.hpp>
 
 namespace pc {
 	
 	class World : public RenderAble {
-	public:
+		Player mPlayer;
+
 		EngineT* mEngine{nullptr};
-		
-		virtual void render() override;
+		Game* mGame{nullptr};
+
+	public:
+		const float* mGroundY{nullptr};
+
+		void initialize(EngineT* engine);
+
+		void update(Fd fd);
+		virtual void render(sf::RenderTarget& target) override;
 
 		// spawn player, enemies, etc...
 		void levelStart();

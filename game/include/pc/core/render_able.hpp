@@ -6,10 +6,12 @@
 #ifndef PC_CORE_RENDERABLE_HPP
 #define PC_CORE_RENDERABLE_HPP
 
+#include <SFML/Graphics.hpp>
+
 namespace pc {
 	
 	struct RenderAble {
-		virtual void render() = 0;
+		virtual void render(sf::RenderTarget& target) = 0;
 	};
 	
 }

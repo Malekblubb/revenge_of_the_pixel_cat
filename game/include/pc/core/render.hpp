@@ -14,13 +14,18 @@ namespace pc {
 	
 	class Render : public EngineComponent {
 		std::vector<RenderAble*> mRenderObjects;
-		
+
+		sf::RenderWindow& mRenderWindow;
+
 	public:
+		Render(sf::RenderWindow& rw)
+				: mRenderWindow{rw} { }
+
 		void add(RenderAble* obj) { mRenderObjects.push_back(obj); }
 		
 		void renderAll() {
 			for(auto& obj : mRenderObjects)
-				obj->render();
+				obj->render(mRenderWindow);
 		}
 	};
 	

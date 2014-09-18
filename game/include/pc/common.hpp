@@ -11,6 +11,7 @@
 #include <mlk/log/log.h>
 #include <mlk/types/types.h>
 
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
@@ -23,14 +24,16 @@ namespace pc {
 	class GameUpdater;
 	class Input;	
 	class Render;
+	class DataManager;
 	
 	// typedefs
 	using EngineT = Engine<
-							GameWindow,
-							Game,
-							GameUpdater,
-							Input,
-							Render>;
+			GameWindow,
+			Game,
+			GameUpdater,
+			Input,
+			Render,
+			DataManager>;
 	using Fd = float;
 	using Key = sf::Keyboard::Key;
 	using Button = sf::Mouse::Button;

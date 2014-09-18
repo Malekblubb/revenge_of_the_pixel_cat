@@ -64,11 +64,11 @@ namespace pc {
         while(mRenderWindow.pollEvent(event)) {
             switch(event.type) {
                 case sf::Event::EventType::Closed: stop(); break;
-                case sf::Event::EventType::KeyPressed: mInput->keyPressed(event.key.code);  break;
-                case sf::Event::EventType::KeyReleased: mInput->keyReleased(event.key.code);  break;
-                case sf::Event::EventType::MouseButtonPressed: mInput->mousePressed(event.mouseButton.button);  break;
-                case sf::Event::EventType::MouseButtonReleased: mInput->mouseReleased(event.mouseButton.button);  break;
-                case sf::Event::EventType::MouseWheelMoved: mInput->mouseScrolled(event.mouseWheel.delta);  break;
+                case sf::Event::EventType::KeyPressed: mInput->keyPressed(event.key.code); break;
+                case sf::Event::EventType::KeyReleased: mInput->keyReleased(event.key.code); break;
+                case sf::Event::EventType::MouseButtonPressed: mInput->mousePressed(event.mouseButton.button); break;
+                case sf::Event::EventType::MouseButtonReleased: mInput->mouseReleased(event.mouseButton.button); break;
+                case sf::Event::EventType::MouseWheelMoved: mInput->mouseScrolled(event.mouseWheel.delta); break;
                 default: break;
             }
 

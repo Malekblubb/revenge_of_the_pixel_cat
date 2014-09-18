@@ -42,6 +42,8 @@ namespace pc {
         }
 
         void setTitle(const std::string& title);
+
+		sf::RenderWindow& renderWindow() noexcept { return mRenderWindow; }
 		
 	private:
 		void updateEvents();
