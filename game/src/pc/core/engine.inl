@@ -3,6 +3,9 @@
 // See LICENSE for more information.
 //
 
+#ifndef PC_CORE_ENGINE_INL
+#define PC_CORE_ENGINE_INL
+
 #include <pc/core/engine.hpp>
 #include <pc/shared/datamanager.hpp>
 
@@ -16,3 +19,5 @@ namespace pc {
 	}
 
 }
+
+#endif // PC_CORE_ENGINE_INL
