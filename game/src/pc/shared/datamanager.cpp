@@ -24,7 +24,7 @@ namespace pc {
 			if(!mlk::cnt::exists_map_first(entry.name, mRegisteredFiles))
 				continue;
 
-			mFileHandle.reopen(entry.path, std::ios::in);
+			mFileHandle.reopen(entry.path, std::ios::in | std::ios::binary);
 			if(!mFileHandle.exists())
 				continue;
 			loadFile(mFileHandle.read_all(), entry.name);
@@ -48,9 +48,9 @@ namespace pc {
 			} break;
 
 			case EndingIndex::font: {
-				sf::Font tmp;
-				tmp.loadFromMemory(data.data(), data.size());
-				mFontStorage.emplace(name, tmp);
+				mRawStorage.emplace(name, data);
+				mFontStorage.emplace(name, sf::Font{});
+				mFontStorage[name].loadFromMemory(mRawStorage[name].data(), mRawStorage[name].size());
 			} break;
 
 			case EndingIndex::raw:

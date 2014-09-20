@@ -34,12 +34,11 @@ namespace pc {
 		std::map<std::string, sf::Font> mFontStorage;
 		std::map<std::string, mlk::data_packet> mRawStorage;
 		std::tuple<
-				std::map<std::string, sf::Texture>*,
-				std::map<std::string, sf::SoundBuffer>*,
-				std::map<std::string, sf::Font>*,
-				std::map<std::string, mlk::data_packet>*
+				decltype(mGraphicsStorage)*,
+				decltype(mAudioStorage)*,
+				decltype(mFontStorage)*,
+				decltype(mRawStorage)*
 		> mMaster{&mGraphicsStorage, &mAudioStorage, &mFontStorage, &mRawStorage};
-		using MasterType = decltype(mMaster);
 
 	public:
 		DataManager(const std::string& directory);
