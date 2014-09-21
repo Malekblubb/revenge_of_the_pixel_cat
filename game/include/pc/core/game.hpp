@@ -12,18 +12,21 @@
 #include <pc/core/render.hpp>
 #include <pc/common.hpp>
 #include <pc/game/main_menu.hpp>
+#include <pc/game/sprite_animator.hpp>
 #include <pc/game/world.hpp>
 
 namespace pc {
 	
 	class Game : public EngineComponent {
+		GameState mGameState{GameState::startScreen};
+		MainMenu mMainMenu;
+		SpriteAnimator mSpriteAnimator;
+		World mWorld;
+
 		GameWindow* mGameWindow;
 		Input* mInput{nullptr};
 		Render* mRender{nullptr};
 		DataManager* mDataManager{nullptr};
-
-		MainMenu mMainMenu;
-		World mWorld;
 		
     public:
 		virtual void engineInitFinished() override;
@@ -49,6 +52,8 @@ namespace pc {
 		void restartLevel();
 		void endLevel();
 
+		auto gameState() const noexcept { return mGameState; }
+		auto isGameState(GameState state) const noexcept { return gameState() == state; }
 		auto& world() noexcept { return mWorld; }
 
 	private:

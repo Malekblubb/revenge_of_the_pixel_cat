@@ -27,6 +27,8 @@ namespace pc {
 			for(auto& obj : mRenderObjects)
 				obj->render(mRenderWindow);
 		}
+
+		auto& renderTarget() noexcept { return mRenderWindow; }
 	};
 	
 }

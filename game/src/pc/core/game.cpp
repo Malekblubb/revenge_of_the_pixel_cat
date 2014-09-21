@@ -21,12 +21,14 @@ namespace pc {
 		mDataManager = mEngine->getComponent<pc::DataManager>();
 
 		// initialize other stuff
-		mMainMenu.initialize(mEngine);
+		mMainMenu.initialize(mEngine, &mSpriteAnimator);
+		mSpriteAnimator.initialize(mEngine);
 		mWorld.initialize(mEngine);
 
 		// add all render objects in the right order
 		mRender->add(&mMainMenu);
 		mRender->add(&mWorld);
+		mRender->add(&mSpriteAnimator);
 
 		// add standard input
 		registerKey(Key::Escape, [this]{ mGameWindow->stop(); });
@@ -40,6 +42,9 @@ namespace pc {
 
     void Game::update(Fd fd) {
         mEngine->getComponent<pc::GameWindow>()->setTitle(std::to_string(mEngine->getComponent<pc::GameUpdater>()->fps()));
+
+		mMainMenu.update(fd);
+		mSpriteAnimator.update(fd);
 		mWorld.update(fd);
     }
 

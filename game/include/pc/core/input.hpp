@@ -35,7 +35,7 @@ namespace pc {
 		void mouseReleased(Button button) { mButtons.remove(button); }
 		
 		void mouseScrolled(int delta) {
-			delta < 0 ? onWheel[MouseWheel::Down](mMousePosition) : onWheel[MouseWheel::Up](mMousePosition);
+			delta < 0 ? onWheel[MouseWheel::down](mMousePosition) : onWheel[MouseWheel::up](mMousePosition);
 		}
 	};
 	
