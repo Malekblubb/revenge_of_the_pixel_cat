@@ -8,6 +8,7 @@
 
 #include <pc/core/engine.hpp>
 
+#include <mlk/graphics/color.h>
 #include <mlk/log/log.h>
 #include <mlk/types/types.h>
 
@@ -45,9 +46,22 @@ namespace pc {
 	
 	// enums
 	enum class MouseWheel : int {
-		Down,
-		Up
+		down,
+		up
 	};
+
+	enum class GameState : short {
+		startScreen,
+		game,
+		gameMenuPause,
+		gameOver
+	};
+
+	// utils
+	inline sf::Color fromHex(const std::string& hex, uint8_t alpha = 255) {
+		mlk::gcs::color_rgb tmp{hex};
+		return {tmp.r, tmp.g, tmp.b, alpha};
+	}
 }
 
 #endif // PC_COMMON_HPP 
